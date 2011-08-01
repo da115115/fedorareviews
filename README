@@ -1,0 +1,8 @@
+
+Repository to follow up on the Fedora/RedHat/CentOS package reviews.
+
+Each directory corresponds to a given Fedora package.
+
+Then, each sub-directory corresponds to a specific Bugzilla bug request.
+
+
