@@ -1,0 +1,8 @@
+
+# FTBFS (Failed To Build From Source):
+midori https://bugzilla.redhat.com/show_bug.cgi?id=631175
+
+# Source tar-ball (soci-3.0.0.tar.gz) is pristine.
+md5sum /home/dan/dev/soci/soci-3.0.0.tar.gz
+1bf7dd244764e53557c1ecc01fdfac96
+

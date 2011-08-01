@@ -1,0 +1,30 @@
+diff -up /home/petr/rpm/SPECS/boost.spec\~ /home/petr/rpm/SPECS/boost.spec
+--- boost.spec~	2010-01-13 08:13:09.000000000 +0100
++++ boost.spec	2010-01-13 18:49:50.000000000 +0100
+@@ -7,9 +7,7 @@
+ # Boost-CMake needs a variable to be defined for the lib directory on
+ # 64bit platforms
+ # http://gitorious.org/boost/cmake/blobs/raw/HEAD/tools/build/CMake/docs/build/html/build_configuration.html
+-%if "%{?_lib}" == "lib64"
+-  %define _cmake_lib_suffix -DBOOST_INSTALL_LIB_SUBDIR_NAME=lib64
+-%endif
++%define _cmake_lib_suffix -DBOOST_INSTALL_LIB_SUBDIR_NAME=%{?_lib}
+ 
+ # Support for long double
+ %define disable_long_double 0
+@@ -61,7 +58,6 @@ BuildRequires: chrpath
+ BuildRequires: mpich2-devel
+ 
+ Patch0: boost-graph-compile.patch
+-Patch1: boost-cmake-soname.patch
+ 
+ %bcond_with tests
+ %bcond_with docs_generated
+@@ -260,7 +247,6 @@ web page (http://www.boost.org/doc/libs/
+ %prep
+ %setup -q -n %{full_version}
+ %patch0 -p0
+-#%patch1 -p0
+ 
+ %build
+ %{__mkdir_p} build

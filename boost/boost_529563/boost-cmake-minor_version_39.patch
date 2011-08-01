@@ -1,0 +1,11 @@
+--- boost_1_39_0/CMakeLists.txt	2009-02-01 22:02:21.000000000 +0100
++++ boost_1_39_0_working/CMakeLists.txt	2009-10-24 21:59:28.000000000 +0200
+@@ -65,7 +65,7 @@
+ # Version information                                                    #
+ ##########################################################################
+ set(BOOST_VERSION_MAJOR 1)
+-set(BOOST_VERSION_MINOR 38)
++set(BOOST_VERSION_MINOR 39)
+ set(BOOST_VERSION_SUBMINOR 0)
+ set(BOOST_VERSION "${BOOST_VERSION_MAJOR}.${BOOST_VERSION_MINOR}.${BOOST_VERSION_SUBMINOR}")
+ ##########################################################################

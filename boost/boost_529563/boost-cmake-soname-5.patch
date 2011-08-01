@@ -1,0 +1,12 @@
+diff -ru boost-1.40.0.cmake5/tools/build/CMake/BoostCore.cmake boost-1.40.0.cmake5_working/tools/build/CMake/BoostCore.cmake
+--- boost-1.40.0.cmake5/tools/build/CMake/BoostCore.cmake	2009-11-04 18:30:31.000000000 +0100
++++ boost-1.40.0.cmake5_working/tools/build/CMake/BoostCore.cmake	2009-11-30 19:29:10.000000000 +0100
+@@ -725,7 +725,7 @@
+       if (BUILD_SOVERSIONED)
+ 	set_target_properties(${VARIANT_LIBNAME}
+ 	  PROPERTIES
+-	  SOVERSION "${BOOST_VERSION}"
++	  SOVERSION "5"
+ 	  )
+       endif()
+     endif ()

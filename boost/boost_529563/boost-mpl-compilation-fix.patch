@@ -1,0 +1,21 @@
+--- boost-1.40.0.cmake2/boost/mpi/detail/mpi_datatype_oarchive.hpp	2009-10-16 18:18:45.000000000 +0200
++++ boost-1.40.0.cmake2_working/boost/mpi/detail/mpi_datatype_oarchive.hpp	2009-10-26 14:45:25.000000000 +0100
+@@ -61,7 +61,7 @@
+     {
+       // select the right sized integer for the enum
+       typedef typename boost::uint_t<8*sizeof(T)>::least int_type;
+-      BOOST_MPL_ASSERT((sizeof(T)==sizeof(int_type)));
++      BOOST_MPL_ASSERT_RELATION( sizeof(T), ==, sizeof(int_type) );
+       this->save(*reinterpret_cast<int_type const*>(&t));
+     }
+ 
+--- boost-1.40.0.cmake2/boost/graph/distributed/detail/mpi_process_group.ipp	2009-10-16 18:18:45.000000000 +0200
++++ boost-1.40.0.cmake2_working/boost/graph/distributed/detail/mpi_process_group.ipp	2009-10-26 13:58:22.000000000 +0100
+@@ -19,6 +19,7 @@
+ #endif
+ 
+ #include <cassert>
++#include <cstdio>
+ #include <algorithm>
+ #include <boost/graph/parallel/detail/untracked_pair.hpp>
+ #include <numeric>

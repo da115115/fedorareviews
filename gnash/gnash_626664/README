@@ -1,0 +1,29 @@
+
+
+# Bug report about Boost-1.44.0 on Fedora 14:
+galeon https://bugzilla.redhat.com/show_bug.cgi?id=626664
+
+# To get the source tar-ball for Gnash, the easiest may be to checkout the Fedora Git repository
+mkdir gnash
+cd gnash
+fedpkg co gnash
+mv gnash gnashgit
+cd gnashgit
+fedpkg sources
+
+# To generate the patch
+mkdir tmp
+cd tmp
+tar jxf ../gnash-0.8.8.tar.bz2
+mv gnash-0.8.8 gnash-0.8.8-pristine
+cp -r gnash-0.8.8-pristine gnash-0.8.8-working
+cp -r gnash-0.8.8-pristine gnash-0.8.8-working-reconf
+
+cd gnash-0.8.8-working-reconf
+./autogen.sh
+cd ..
+
+# Then, run the genGnashConfigurePatch.sh script:
+# it generates gnash-088-fix-configure.patch* files
+
+

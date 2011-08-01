@@ -1,0 +1,145 @@
+diff -Nur soci-3.0.0/src/backends/mysql/common.h soci-3.0.0_4-pack/src/backends/mysql/common.h
+--- soci-3.0.0/src/backends/mysql/common.h	2008-07-03 09:22:57.000000000 +0200
++++ soci-3.0.0_4-pack/src/backends/mysql/common.h	2009-05-23 13:11:03.000000000 +0200
+@@ -10,6 +10,7 @@
+ 
+ #include <sstream>
+ #include "soci-mysql.h"
++#include <ctime>
+ 
+ namespace soci
+ {
+diff -Nur soci-3.0.0/src/backends/mysql/session.cpp soci-3.0.0_4-pack/src/backends/mysql/session.cpp
+--- soci-3.0.0/src/backends/mysql/session.cpp	2008-05-15 15:58:38.000000000 +0200
++++ soci-3.0.0_4-pack/src/backends/mysql/session.cpp	2009-05-23 13:11:03.000000000 +0200
+@@ -11,7 +11,8 @@
+ #include <cctype>
+ #include <cerrno>
+ #include <ciso646>
+-
++#include <cstdlib>
++#include <climits>
+ 
+ #ifdef _MSC_VER
+ #pragma warning(disable:4355)
+diff -Nur soci-3.0.0/src/backends/mysql/soci-mysql.h soci-3.0.0_4-pack/src/backends/mysql/soci-mysql.h
+--- soci-3.0.0/src/backends/mysql/soci-mysql.h  2011-02-08 23:17:06.389543409 +0100
++++ soci-3.0.0_4-pack/src/backends/mysql/soci-mysql.h 2011-02-08 22:29:54.000000000 +0100
+@@ -245,6 +256,7 @@
+ 
+ struct mysql_backend_factory : backend_factory
+ {
++	mysql_backend_factory() {}
+     virtual mysql_session_backend * make_session(
+         std::string const &connectString) const;
+ };
+@@ -259,6 +271,6 @@
+ 
+ } // extern "C"
+ 
+-} // namespace SOCI
++} // namespace soci
+ 
+ #endif // SOCI_MYSQL_H_INCLUDED
+diff -Nur soci-3.0.0/src/backends/mysql/standard-into-type.cpp soci-3.0.0_4-pack/src/backends/mysql/standard-into-type.cpp
+--- soci-3.0.0/src/backends/mysql/standard-into-type.cpp	2008-05-30 13:33:45.000000000 +0200
++++ soci-3.0.0_4-pack/src/backends/mysql/standard-into-type.cpp	2009-05-23 13:11:03.000000000 +0200
+@@ -12,6 +12,8 @@
+ #include "common.h"
+ #include <ciso646>
+ #include <cassert>
++#include <ctime>
++#include <cstring>
+ 
+ #ifdef _MSC_VER
+ #pragma warning(disable:4355)
+diff -Nur soci-3.0.0/src/backends/mysql/standard-use-type.cpp soci-3.0.0_4-pack/src/backends/mysql/standard-use-type.cpp
+--- soci-3.0.0/src/backends/mysql/standard-use-type.cpp	2008-05-15 15:58:38.000000000 +0200
++++ soci-3.0.0_4-pack/src/backends/mysql/standard-use-type.cpp	2009-05-23 13:24:42.000000000 +0200
+@@ -10,8 +10,10 @@
+ #include "soci-mysql.h"
+ #include "common.h"
+ #include <soci-platform.h>
++//
+ #include <ciso646>
+ #include <limits>
++#include <cstdio>
+ #include <cstring>
+ 
+ #ifdef _MSC_VER
+diff -Nur soci-3.0.0/src/backends/mysql/vector-use-type.cpp soci-3.0.0_4-pack/src/backends/mysql/vector-use-type.cpp
+--- soci-3.0.0/src/backends/mysql/vector-use-type.cpp	2008-05-15 15:58:38.000000000 +0200
++++ soci-3.0.0_4-pack/src/backends/mysql/vector-use-type.cpp	2009-05-23 13:25:11.000000000 +0200
+@@ -10,9 +10,12 @@
+ #include "soci-mysql.h"
+ #include "common.h"
+ #include <soci-platform.h>
++//
+ #include <ciso646>
+ #include <limits>
++#include <cstdio>
+ #include <cstring>
++#include <ctime>
+ 
+ #ifdef _MSC_VER
+ #pragma warning(disable:4355)
+diff -Nur soci-3.0.0_4-pack/src/backends/oracle/soci-oracle.h soci-3.0.0_trep300/src/backends/oracle/soci-oracle.h
+--- soci-3.0.0_4-pack/src/backends/oracle/soci-oracle.h        2011-02-08 23:17:06.389543409 +0100
++++ soci-3.0.0_trep300/src/backends/oracle/soci-oracle.h       2011-02-08 22:29:54.000000000 +0100
+@@ -269,6 +274,7 @@
+ 
+ struct oracle_backend_factory : backend_factory
+ {
++	oracle_backend_factory() {}
+     virtual oracle_session_backend * make_session(
+         std::string const &connectString) const;
+ };
+diff -Nur soci-3.0.0/src/backends/postgresql/common.cpp soci-3.0.0_4-pack/src/backends/postgresql/common.cpp
+--- soci-3.0.0/src/backends/postgresql/common.cpp	2008-06-27 16:38:05.000000000 +0200
++++ soci-3.0.0_4-pack/src/backends/postgresql/common.cpp	2009-05-23 13:23:38.000000000 +0200
+@@ -7,7 +7,9 @@
+ 
+ #include "common.h"
+ #include <soci-backend.h>
++//
+ #include <cstdlib>
++#include <cstdio>
+ #include <ctime>
+ 
+ 
+diff -Nur soci-3.0.0/src/backends/postgresql/soci-postgresql.h soci-3.0.0_4-pack/src/backends/postgresql/soci-postgresql.h
+--- soci-3.0.0/src/backends/postgresql/soci-postgresql.h        2011-02-08 23:17:06.386543353 +0100
++++ soci-3.0.0_4-pack/src/backends/postgresql/soci-postgresql.h       2011-02-08 22:29:54.000000000 +0100
+@@ -241,6 +246,7 @@
+ 
+ struct postgresql_backend_factory : backend_factory
+ {
++	postgresql_backend_factory() {}
+     virtual postgresql_session_backend * make_session(
+         std::string const & connectString) const;
+ };
+diff -Nur soci-3.0.0/src/core/soci-simple.cpp soci-3.0.0_4-pack/src/core/soci-simple.cpp
+--- soci-3.0.0/src/core/soci-simple.cpp	2008-07-01 09:42:25.000000000 +0200
++++ soci-3.0.0_4-pack/src/core/soci-simple.cpp	2009-05-23 13:21:14.000000000 +0200
+@@ -9,6 +9,8 @@
+ 
+ #include "soci-simple.h"
+ #include "soci.h"
++//
++#include <cstdio>
+ 
+ using namespace soci;
+
+
+diff -Nur soci-3.0.0/src/backends/postgresql/test/test-postgresql.cpp soci-3.0.0_4-pack/src/backends/postgresql/test/test-postgresql.cpp
+--- soci-3.0.0/src/backends/postgresql/test/test-postgresql.cpp 2008-06-05 22:41:58.000000000 +0200
++++ soci-3.0.0_4-pack/src/backends/postgresql/test/test-postgresql.cpp  2010-01-23 13:17:28.000000000 +0100
+@@ -15,6 +15,7 @@
+ #include <cmath>
+ #include <ctime>
+ #include <cstdlib>
++#include <cstring>
+ 
+ using namespace soci;
+ using namespace soci::tests;
+

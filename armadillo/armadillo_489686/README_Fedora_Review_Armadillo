@@ -1,0 +1,28 @@
+#
+# Information on how to review Armadillo (arma)
+# Review Request: https://bugzilla.redhat.com/show_bug.cgi?id=489686
+
+# RPM Specification file
+wget http://arma.sourceforge.net/fedora/armadillo.spec
+
+# Source RPM file:
+wget http://arma.sourceforge.net/fedora/armadillo-0.6.11-2.fc10.src.rpm
+
+# Sources:
+wget http://dl.sourceforge.net/arma/armadillo-0.6.11.tar.gz
+
+# Patches:
+# No patch
+
+# (For information) Checkout from the Subversion repository
+svn co https://arma.svn.sourceforge.net/svnroot/arma armadillosvn
+
+# Create the pristine directory
+tar zxf armadillo-0.6.11.tar.gz
+
+# Create the working directory
+cp -r armadillo-0.6.11 armadillo-0.6.11_working
+
+# Work on the project
+cd armadillo-0.6.11_working
+

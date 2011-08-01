@@ -1,0 +1,20 @@
+diff -ru --exclude=Makefile --exclude=CMakeFiles --exclude=cmake_install.cmake boost_1_39_0/libs/accumulators/example/main.cpp boost_1_39_0_working/libs/accumulators/example/main.cpp
+--- boost_1_39_0/libs/accumulators/example/main.cpp	2008-06-20 05:47:42.000000000 +0200
++++ boost_1_39_0_working/libs/accumulators/example/main.cpp	2009-10-22 14:51:29.000000000 +0200
+@@ -14,7 +14,6 @@
+ #include <boost/accumulators/accumulators.hpp>
+ #include <boost/accumulators/statistics.hpp>
+ 
+-using namespace boost;
+ using namespace boost::accumulators;
+ 
+ // Helper that uses BOOST_FOREACH to display a range of doubles
+@@ -60,7 +59,7 @@
+     // since mean depends on count and sum, we can get their results, too.
+     std::cout << "  count(acc)      = " << count(acc) << std::endl;
+     std::cout << "  sum(acc)        = " << sum(acc) << std::endl;
+-    std::cout << "  moment<2>(acc)  = " << moment<2>(acc) << std::endl;
++    std::cout << "  moment<2>(acc)  = " << boost::accumulators::moment<2>(acc) << std::endl;
+ }
+ 
+ ///////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,15 @@
+diff -ru boost-1.41.0.cmake0/tools/build/CMake/externals/MPI.cmake boost-1.41.0.cmake0_working/tools/build/CMake/externals/MPI.cmake
+--- boost-1.41.0.cmake0/tools/build/CMake/externals/MPI.cmake	2009-12-25 13:38:30.000000000 +0100
++++ boost-1.41.0.cmake0_working/tools/build/CMake/externals/MPI.cmake	2009-12-27 12:57:28.000000000 +0100
+@@ -7,5 +7,11 @@
+ set(MPI_FIND_QUIETLY TRUE)
+ find_package(MPI)
+ 
++set(MPI_INCLUDE_PATH /usr/include/openmpi-x86_64)
++set(MPI_COMPILE_FLAGS -I/usr/include/openmpi-x86_64)
++set(MPI_LINK_FLAGS -L/usr/lib64/openmpi/lib -L/usr/lib64/openmpi/lib/openmpi -lmpi_cxx -lmpi)
++set(MPI_LIBRARIES /usr/lib64/openmpi/lib/libmpi.so /usr/lib64/openmpi/lib/libmpi_cxx.so)
++set(MPI_FOUND 1)
++
+ boost_external_report(MPI INCLUDE_PATH COMPILE_FLAGS LINK_FLAGS LIBRARIES)
+   

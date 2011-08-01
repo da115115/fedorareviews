@@ -1,0 +1,24 @@
+diff -Nur soci-3.0.0-working/Makefile.am soci-3.0.0-patched/Makefile.am
+--- soci-3.0.0-working/Makefile.am	2010-09-08 05:25:43.551813131 +0200
++++ soci-3.0.0-patched/Makefile.am	2010-09-08 05:27:37.397812563 +0200
+@@ -45,7 +45,7 @@
+ 
+ 
+ snapshot-src:
+-        $(MAKE) dist distdir=@PACKAGE_TARNAME@-`date +"%Y%m%d"`
++	$(MAKE) dist distdir=@PACKAGE_TARNAME@-`date +"%Y%m%d"`
+ 
+ snapshot-html:
+ 	$(MAKE) -C doc dist-html html_tarname=@PACKAGE_TARNAME@-html-doc-`date +"%Y%m%d"`
+diff -Nur soci-3.0.0-working/Makefile.in soci-3.0.0-patched/Makefile.in
+--- soci-3.0.0-working/Makefile.in	2010-09-07 21:14:41.829940853 +0200
++++ soci-3.0.0-patched/Makefile.in	2010-09-08 05:27:28.039812849 +0200
+@@ -904,7 +904,7 @@
+ snapshot: snapshot-src snapshot-html
+ 
+ snapshot-src:
+-        $(MAKE) dist distdir=@PACKAGE_TARNAME@-`date +"%Y%m%d"`
++	$(MAKE) dist distdir=@PACKAGE_TARNAME@-`date +"%Y%m%d"`
+ 
+ snapshot-html:
+ 	$(MAKE) -C doc dist-html html_tarname=@PACKAGE_TARNAME@-html-doc-`date +"%Y%m%d"`

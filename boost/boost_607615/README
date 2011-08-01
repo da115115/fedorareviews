@@ -1,0 +1,142 @@
+
+##
+# Boost Fedora package (Package DB):
+# old: galeon https://admin.fedoraproject.org/pkgdb/packages/name/boost
+galeon https://admin.fedoraproject.org/pkgdb/acls/name/boost
+
+# Boost Fedora Koji (build) status:
+galeon http://koji.fedoraproject.org/koji/packageinfo?packageID=1074
+# Boost Fedora Update status:
+galeon https://admin.fedoraproject.org/updates/boost
+# Boost Fedora bug reports:
+# old: galeon https://admin.fedoraproject.org/pkgdb/packages/bugs/boost
+galeon https://admin.fedoraproject.org/pkgdb/acls/bugs/boost
+# Boost Fedora package sources:
+galeon http://cvs.fedoraproject.org/viewvc/rpms/boost/
+
+##
+# Boost sources
+#
+wget http://sourceforge.net/projects/boost/files/boost/1.43.0/boost_1_43_0.tar.bz2/download
+
+##
+# Boost-CMake
+# On gitorious:
+# 1. Automatic Subversion->Git update integrator on upstream Boost (no CMake):
+galeon http://gitorious.org/boost/svn
+# 2. By Troy Straszheim (no longer maintained, since Dec. 2009)
+galeon http://gitorious.org/boost/cmake
+# 3. By Isidor Zeuner (maintained, from Apr. 2010)
+galeon http://gitorious.org/~zeuner/boost/zeuners-boost-cmake
+
+# Documentation on those repositories:
+galeon http://gitorious.org/boost/git-docs/blobs/raw/master/build/html/index.html
+ 
+# 4. Versioned documentation, by Troy Straszheim (no longer maintained, since Dec. 2009)
+galeon http://gitorious.org/boost/git-docs
+
+# To clone git repositories:
+# 3.1. Zeuner's (http://gitorious.org/~zeuner) repository:
+git clone git://gitorious.org/~zeuner/boost/zeuners-boost-cmake.git
+git clone http://git.gitorious.org/~zeuner/boost/zeuners-boost-cmake.git
+# 3.2. Denis' (http://gitorious.org/~denisarnaud) clone:
+git clone git://gitorious.org/~denisarnaud/boost/denisarnauds-zeuners-boost-cmake.git
+git clone http://git.gitorious.org/~denisarnaud/boost/denisarnauds-zeuners-boost-cmake.git
+# 1. Automatic Subversion->Git update integrator:
+git clone git://gitorious.org/boost/svn.git
+git clone http://git.gitorious.org/boost/svn.git
+# 2. Troy Straszheim's (http://gitorious.org/~straszheim) repository:
+git clone git://gitorious.org/boost/cmake.git
+git clone http://git.gitorious.org/boost/cmake.git
+# 4. Troy Straszheim's (http://gitorious.org/~straszheim) documentation repository:
+git clone git://gitorious.org/boost/git-docs.git
+git clone http://git.gitorious.org/boost/git-docs.git
+
+
+# On Boost Subversion
+# See the download section of the Boost Web site (http://www.boost.org)
+galeon http://www.boost.org/users/download/#repository
+galeon http://svn.boost.org/trac/boost/browser
+
+# Main repository, for code, Web site and sandbox (https://svn.boost.org/trac/boost/wiki/BoostSandbox):
+svn co http://svn.boost.org/svn/boost/trunk boosttrunksvn
+mkdir boostsvn
+mv boosttrunksvn boostsvn/trunk
+cd boostsvn
+svn co http://svn.boost.org/svn/boost/website
+svn co http://svn.boost.org/svn/boost/sandbox
+
+
+##
+# Boost RPM package:
+# On Fedora devel (version 1.41, split in sub-packages):
+wget http://mirror.ovh.net/download.fedora.redhat.com/linux/development/source/SRPMS/boost-1.41.0-12.fc14.src.rpm
+
+# On Fedora 13 (version 1.41, split in sub-packages):
+wget http://mirror.ovh.net/download.fedora.redhat.com/linux/releases/13/Everything/source/SRPMS/boost-1.41.0-7.fc13.src.rpm
+
+# On Fedora 12 (version 1.39, split in sub-packages):
+wget http://mirror.ovh.net/download.fedora.redhat.com/linux/releases/12/Everything/source/SRPMS/boost-1.39.0-8.fc12.src.rpm 
+
+# On Fedora 11 (version 1.37, not split in sub-packages):
+wget http://mirror.ovh.net/download.fedora.redhat.com/linux/releases/11/Everything/source/SRPMS/boost-1.37.0-6.fc11.src.rpm
+ 
+
+
+# Spec file (for Fedora Rawhide)
+wget http://cvs.fedoraproject.org/viewvc/rpms/boost/devel/boost.spec?revision=1.83&view=co
+#           (for Fedora 13)
+wget http://cvs.fedoraproject.org/viewvc/rpms/boost/F-13/boost.spec?revision=1.79&view=co
+#           (for Fedora 12)
+wget http://cvs.fedoraproject.org/viewvc/rpms/boost/F-12/boost.spec?revision=1.69&view=co
+# Then, additional patch files have to be downloaded/obtained from the CVS repository either:
+wget http://cvs.fedoraproject.org/viewvc/rpms/boost/F-13/boost-1.41.0-shared_ptr_serialization.patch?revision=1.1&view=co
+wget http://cvs.fedoraproject.org/viewvc/rpms/boost/F-13/boost-cmake-soname.patch?revision=1.2&view=co
+wget http://cvs.fedoraproject.org/viewvc/rpms/boost/F-13/boost-graph-compile.patch?revision=1.1&view=co
+
+
+##
+# MinGW-Boost RPM package:
+# On Fedora devel (version 1.41):
+wget http://mirror.ovh.net/download.fedora.redhat.com/linux/development/source/SRPMS/mingw32-boost-1.41.0-2.fc14.src.rpm
+
+
+## Boost BJam
+# BJAM 3.1.17
+wget http://sourceforge.net/projects/boost/files/boost-jam/3.1.18/boost-jam-3.1.18.tgz/download
+
+### Souce tar-balls
+## Upstream (on Sourceforge)
+# Version 1.43.0
+wget http://sourceforge.net/projects/boost/files/boost/1.43.0/boost_1_43_0.tar.bz2/download
+# Version 1.42.0
+wget http://sourceforge.net/projects/boost/files/boost/1.42.0/boost_1_42_0.tar.bz2/download
+# Version 1.41.0
+wget http://sourceforge.net/projects/boost/files/boost/1.41.0/boost_1_41_0.tar.bz2/download
+# Version 1.40.0
+wget http://sourceforge.net/projects/boost/files/boost/1.40.0/boost_1_40_0.tar.bz2/download
+# Version 1.39.0
+wget http://sourceforge.net/projects/boost/files/boost/1.39.0/boost_1_39_0.tar.bz2/download
+# Version 1.37.0
+wget http://sourceforge.net/projects/boost/files/boost/1.37.0/boost_1_37_0.tar.bz2/download
+
+## Boost-CMake (on gitorious and fedorapeople)
+# Boost-CMake buildable version 1.44.0
+wget http://denisarnaud.fedorapeople.org/boost/1.44.0/14/boost_1_44_0.cmake0.tar.gz
+# Boost-CMake buildable version 1.41.0
+wget http://sodium.resophonic.com/boost-cmake/1.41.0.cmakebeta4/boost-1.41.0.cmake0.tar.gz
+# Boost-CMake buildable version 1.40.0
+wget http://sodium.resophonic.com/boost-cmake/1.40.0.cmake4/boost-1.40.0.cmake4.tar.gz
+
+
+## Extras-Boost (GNU Boost)
+# GNU Boost 1.0
+wget https://sourceforge.net/projects/boost-extras/files/gnu-boost%20%28setup%20files%29/1.0/gnu-boost-1.0.tar.bz2/download
+
+
+# ==========================================
+# Author: Denis Arnaud (denis.arnaud_fedora@m4x.org)
+# Last updated: Jul. 11, 2010
+#
+
+

@@ -1,0 +1,220 @@
+--- boost_1_41_0_3.1.spec	2010-01-28 23:11:58.572846796 +0200
++++ boost_1_41_0_3.1.spec.new	2010-01-28 23:22:07.747847534 +0200
+@@ -17,22 +17,6 @@
+ # Default values are --with mpich2 --without openmpi
+ %bcond_without mpich2
+ %bcond_with openmpi
+-# Set the C/C++ compiler here
+-%global opt_cc gcc
+-# Optional CFLAGS to use with the specific compiler...gcc doesn't need any,
+-# so uncomment and define to use
+-#global opt_cflags
+-%global opt_cxx g++
+-#global opt_cxxflags
+-%global opt_f77 gfortran
+-#global opt_fflags
+-%global opt_fc gfortran
+-#global opt_fcflags
+-
+-# Optional name suffix to use...we leave it off when compiling with gcc, but
+-# for other compiled versions to install side by side, it will need a
+-# suffix in order to keep the names from conflicting.
+-#global cc_name_suffix -gcc
+ 
+ Name: boost
+ Summary: The free peer-reviewed portable C++ source libraries
+@@ -148,32 +132,52 @@ update, old libraries from boost-math pa
+ %{?with_mpich2:%package mpich2
+ Summary: Runtime component of MPICH2-based boost mpi library
+ Group: System Environment/Libraries
+-Requires: boost-mpich2 = %{version}-%{release}
+-Requires: boost-mpich2-python = %{version}-%{release}
+ BuildRequires: mpich2-devel
++Requires: mpich2
+ 
+ %description mpich2
+ Runtime support for Boost.MPI, library providing a clean C++ API over
+ the MPICH2 implementation of MPI.
+ 
++%package mpich2-devel
++Summary: Development library for MPICH2-based boost mpi library
++Group: System Environment/Libraries
++Requires: boost-mpich2 = %{version}-%{release}
++Requires: mpich2
++
++%description mpich2-devel
++Runtime support for Boost.MPI, library providing a clean C++ API over
++the MPICH2 implementation of MPI.
++
+ %package mpich2-python
+ Summary: Python runtime component of boost mpi library
+ Group: System Environment/Libraries
++Requires: mpich2
+ 
+ %description mpich2-python
+ Python support for Boost.MPI, library providing a clean C++ API over
+ the MPICH2 implementation of MPI.}
+ 
+ %{?with_openmpi:%package openmpi
+-Summary: Runtime component of OPENMPI-based boost mpi library
++Summary: Runtime component of Open MPI-based boost mpi library
+ Group: System Environment/Libraries
+-Requires: boost-openmpi = %{version}-%{release}
+-Requires: boost-openmpi-python = %{version}-%{release}
+ BuildRequires: openmpi-devel
++Requires: openmpi
+ 
+ %description openmpi
+ Runtime support for Boost.MPI, library providing a clean C++ API over
+-the OPENMPI implementation of MPI.
++the Open MPI implementation of MPI.
++
++%package openmpi-devel
++Summary: Development libraries for Open MPI-based boost mpi library
++Group: System Environment/Libraries
++Requires: boost-openmpi = %{version}-%{release}
++Requires: openmpi
++
++%description openmpi-devel
++Runtime support for Boost.MPI, library providing a clean C++ API over
++the Open MPI implementation of MPI. This package contains development
++libraries.
+ 
+ %package openmpi-python
+ Summary: Python runtime component of boost mpi library
+@@ -317,17 +321,30 @@ cd build
+   %define boost_testflags -DBUILD_TESTS="ALL"
+ %endif
+ 
+-# Support for MPICH2
+-%{?with_mpich2:%{_mpich2_load}}
+-# Support for OpenMPI
+-%{?with_openmpi:%{_openmpi_load}}
+ 
+ # CMake set-up
+ %cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo %{boost_testflags} \
+        -DENABLE_SINGLE_THREADED=YES -DINSTALL_VERSIONED=OFF .. 
+-# Build
++# Build serial version
+ make VERBOSE=1 %{?_smp_mflags}
+-cd %{_builddir}/%{full_version}
++
++# Build Open MPI version
++%{?with_openmpi:
++# Load Open MPI variables
++%{_openmpi_load}
++# Build the boost.MPI library
++make -C openmpi
++# Unload Open MPI variables
++%{_openmpi_unload}}
++
++# Build MPICH2 version
++%{?with_mpich2:
++# Load MPICH2 variables
++%{_mpich2_load}
++# Build the boost.MPI library
++make -C mpich2
++# Unload MPICH2 variables
++%{_mpich2_unload}}
+ 
+ %check
+ %if %{with tests}
+@@ -363,14 +380,14 @@ cd %{_builddir}/%{full_version}/build
+ DESTDIR=$RPM_BUILD_ROOT make VERBOSE=1 install
+ 
+ # Move the MPICH2-dependent libraries into the appropriate directory
+-%{?with_mpich2:%{__mkdir_p} $RPM_BUILD_ROOT%{_libdir}/mpich2%{?_cc_name_suffix}
++%{?with_mpich2:%{__mkdir_p} $RPM_BUILD_ROOT%{_libdir}/mpich2/lib
+ %{__mv} -f $RPM_BUILD_ROOT%{_libdir}/libboost_mpi*.so* \
+-		$RPM_BUILD_ROOT%{_libdir}/mpich2%{?_cc_name_suffix}}
++		$RPM_BUILD_ROOT%{_libdir}/mpich2/lib}
+ 
+ # Move the OpenMPI-dependent libraries into the appropriate directory
+-%{?with_openmpi:%{__mkdir_p} $RPM_BUILD_ROOT%{_libdir}/openmpi%{?_cc_name_suffix}
++%{?with_openmpi:%{__mkdir_p} $RPM_BUILD_ROOT%{_libdir}/openmpi/lib
+ %{__mv} -f $RPM_BUILD_ROOT%{_libdir}/libboost_mpi*.so* \
+-		$RPM_BUILD_ROOT%{_libdir}/openmpi%{?_cc_name_suffix}}
++		$RPM_BUILD_ROOT%{_libdir}/openmpi/lib}
+ 
+ 
+ # Suppress the mpi.so library, as it not currently properly generated (some
+@@ -378,13 +395,13 @@ DESTDIR=$RPM_BUILD_ROOT make VERBOSE=1 i
+ # fixes that (see http://lists.boost.org/boost-cmake/2009/12/0859.php for
+ # more details)
+ # Whenever it is fixed, it should then be installed in 
+-# %{python_sitearch}/mpich2%{?_cc_name_suffix}
++# %{python_sitearch}/mpich2/ or %{python_sitearch}/openmpi/
+ %{__rm} -f $RPM_BUILD_ROOT%{_libdir}/mpi.so
+ 
+ # Kill any debug library versions that may show up un-invited.
+ %{__rm} -f $RPM_BUILD_ROOT%{_libdir}/*-d.*
+-%{?with_mpich2:%{__rm} -f $RPM_BUILD_ROOT%{_libdir}/mpich2%{?_cc_name_suffix}/*-d.*}
+-%{?with_openmpi:%{__rm} -f $RPM_BUILD_ROOT%{_libdir}/openmpi%{?_cc_name_suffix}/*-d.*}
++%{?with_mpich2:%{__rm} -f $RPM_BUILD_ROOT%{_libdir}/mpich2/lib/*-d.*}
++%{?with_openmpi:%{__rm} -f $RPM_BUILD_ROOT%{_libdir}/openmpi/lib/*-d.*}
+ 
+ # Prepare the place to temporary store the generated documentation
+ %{__rm} -rf %{boost_docdir} && %{__mkdir_p} %{boost_docdir}/html
+@@ -429,22 +446,6 @@ find $RPM_BUILD_ROOT%{_libdir}/ -name '*
+ 
+ %postun iostreams -p /sbin/ldconfig
+ 
+-%{?with_mpich2:%post mpich2 -p /sbin/ldconfig
+-
+-%postun mpich2 -p /sbin/ldconfig
+-
+-%post mpich2-python -p /sbin/ldconfig
+-
+-%postun mpich2-python -p /sbin/ldconfig}
+-
+-%{?with_openmpi:%post openmpi -p /sbin/ldconfig
+-
+-%postun openmpi -p /sbin/ldconfig
+-
+-%post openmpi-python -p /sbin/ldconfig
+-
+-%postun openmpi-python -p /sbin/ldconfig}
+-
+ %post program-options -p /sbin/ldconfig
+ 
+ %postun program-options -p /sbin/ldconfig
+@@ -556,24 +557,24 @@ find $RPM_BUILD_ROOT%{_libdir}/ -name '*
+ %{?with_mpich2:%files mpich2
+ %defattr(-, root, root, -)
+ %doc LICENSE_1_0.txt
+-%{_libdir}/mpich2%{?_cc_name_suffix}/libboost_mpi.so.%{sonamever}
+-%{_libdir}/mpich2%{?_cc_name_suffix}/libboost_mpi-mt.so.%{sonamever}
++%{_libdir}/mpich2/lib/libboost_mpi.so.%{sonamever}
++%{_libdir}/mpich2/lib/libboost_mpi-mt.so.%{sonamever}
+ 
+ %files mpich2-python
+ %defattr(-, root, root, -)
+ %doc LICENSE_1_0.txt
+-%{_libdir}/mpich2%{?_cc_name_suffix}/libboost_mpi_python*.so.%{sonamever}}
++%{_libdir}/mpich2/lib/libboost_mpi_python*.so.%{sonamever}}
+ 
+ %{?with_openmpi:%files openmpi
+ %defattr(-, root, root, -)
+ %doc LICENSE_1_0.txt
+-%{_libdir}/openmpi%{?_cc_name_suffix}/libboost_mpi.so.%{sonamever}
+-%{_libdir}/openmpi%{?_cc_name_suffix}/libboost_mpi-mt.so.%{sonamever}
++%{_libdir}/openmpi/lib/libboost_mpi.so.%{sonamever}
++%{_libdir}/openmpi/lib/libboost_mpi-mt.so.%{sonamever}
+ 
+ %files openmpi-python
+ %defattr(-, root, root, -)
+ %doc LICENSE_1_0.txt
+-%{_libdir}/openmpi%{?_cc_name_suffix}/libboost_mpi_python*.so.%{sonamever}}
++%{_libdir}/openmpi/lib/libboost_mpi_python*.so.%{sonamever}}
+ 
+ %files doc
+ %defattr(-, root, root, -)
+@@ -584,8 +585,6 @@ find $RPM_BUILD_ROOT%{_libdir}/ -name '*
+ %doc LICENSE_1_0.txt
+ %{_includedir}/%{name}
+ %{_libdir}/*.so
+-%{?with_mpich2:%{_libdir}/mpich2%{?_cc_name_suffix}/*.so}
+-%{?with_openmpi:%{_libdir}/openmpi%{?_cc_name_suffix}/*.so}
+ %{_datadir}/%{name}-%{version}
+ %{_datadir}/cmake/%{name}/BoostConfig*.cmake
+ 

@@ -1,0 +1,20 @@
+
+# There is a problem of compilation with Boost-1.46 and OpenCog:
+galeon https://bugzilla.redhat.com/show_bug.cgi?id=698371
+galeon http://wiki.opencog.org/w/Building_OpenCog
+
+# To check-out the code (with Bazaar from Launchpad):
+galeon https://code.launchpad.net/~opencog-dev/opencog/trunk
+
+mkdir -p ~/dev/opencog
+cd ~/dev/opencog
+bzr launchpad-login denis-arnaud-lp
+bzr branch lp:opencog
+mv opencog opencogbzr
+alias cdopencogbzr='cd ~/dev/opencog/opencogbzr'
+cdopencogbzr
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX:STRING=/home/user/dev/deliveries/opencog-99.99.99 -DCONFDIR=/home/user/dev/deliveries/opencog-99.99.99/etc -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo ..
+make
+

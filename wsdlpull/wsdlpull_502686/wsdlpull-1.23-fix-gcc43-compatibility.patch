@@ -1,0 +1,112 @@
+diff -Nur wsdlpull-1.23/src/schemaparser/SchemaParser.cpp wsdlpull-1.23_working/src/schemaparser/SchemaParser.cpp
+--- wsdlpull-1.23/src/schemaparser/SchemaParser.cpp	2009-02-09 19:40:27.000000000 +0100
++++ wsdlpull-1.23_working/src/schemaparser/SchemaParser.cpp	2009-05-26 14:35:12.000000000 +0200
+@@ -24,6 +24,9 @@
+ #include "xmlpull/ConfigFile.h"
+ #endif
+ 
++//
++#include <climits>
++
+ namespace Schema {
+ using namespace std;
+ SchemaParser::SchemaParser(XmlPullParser * parser, 
+diff -Nur wsdlpull-1.23/src/tools/schema.cpp wsdlpull-1.23_working/src/tools/schema.cpp
+--- wsdlpull-1.23/src/tools/schema.cpp	2009-01-07 19:37:36.000000000 +0100
++++ wsdlpull-1.23_working/src/tools/schema.cpp	2009-05-26 14:48:33.000000000 +0200
+@@ -98,12 +98,12 @@
+ 	}
+ 	else if (opt =="h"){
+ 	  usage();
+-	  exit(0);
++	  return 0;
+ 	}
+ 	else{
+ 	  std::cerr<<"Unknown option "<<argv[i]<<std::endl;
+ 	  usage();
+-	  exit(2);
++	  return 2;
+ 	}
+ 	break;
+       }
+diff -Nur wsdlpull-1.23/src/tools/wsdl.cpp wsdlpull-1.23_working/src/tools/wsdl.cpp
+--- wsdlpull-1.23/src/tools/wsdl.cpp	2009-01-18 12:56:11.000000000 +0100
++++ wsdlpull-1.23_working/src/tools/wsdl.cpp	2009-05-26 14:48:06.000000000 +0200
+@@ -20,6 +20,9 @@
+ 
+ //A generic web service invocation tool which uses the invocation API
+ #include "wsdlparser/WsdlInvoker.h"
++//
++#include <cstdlib>
++
+ using namespace std;
+ using namespace WsdlPull;
+ 
+@@ -178,13 +181,13 @@
+ 	  else if (opt =="p"){
+ 	    
+ 	    if(printPortTypes(argv[i+1]))
+-	      exit(0);
++	      return 0;
+ 	    else 
+-	      exit(1);
++	      return 1;
+ 	  }
+ 	  else if (opt =="h"){
+ 	    usage();
+-	    exit(0);
++	    return 0;
+ 	  }
+ 	  else if (opt == "g"){
+ 
+@@ -207,7 +210,7 @@
+ 	  else{
+ 	    std::cerr<<"Unknown option "<<argv[i]<<std::endl;
+ 	    usage();
+-	    exit(2);
++	    return 2;
+ 	  }
+ 
+ 	}
+@@ -243,7 +246,7 @@
+   else{
+     
+     usage();
+-    exit (2);
++    return 2;
+   }
+ 
+   if (verbose)
+@@ -395,7 +398,7 @@
+ #ifndef _WIN32
+     std::cerr<<"libcurl needs to be installed to proceed with invocation"<<std::endl;
+     std::cerr<<"Try using the -g option to just print the soap message"<<std::endl;
+-    exit(2);
++    return 2;
+ #endif
+ #endif 
+ 
+diff -Nur wsdlpull-1.23/src/xmlpull/XmlPullParser.cpp wsdlpull-1.23_working/src/xmlpull/XmlPullParser.cpp
+--- wsdlpull-1.23/src/xmlpull/XmlPullParser.cpp	2008-12-14 05:26:32.000000000 +0100
++++ wsdlpull-1.23_working/src/xmlpull/XmlPullParser.cpp	2009-05-26 14:32:24.000000000 +0200
+@@ -21,6 +21,8 @@
+ #include "xmlpull/XmlPullParser.h"
+ #include "xmlpull/XmlPullParserException.h"
+ #include "xmlpull/XmlUtils.h"
++//
++#include <cstring>
+ 
+ 
+ XmlPullParser::XmlPullParser (std::istream & is)
+diff -Nur wsdlpull-1.23/src/xmlpull/XmlUtils.cpp wsdlpull-1.23_working/src/xmlpull/XmlUtils.cpp
+--- wsdlpull-1.23/src/xmlpull/XmlUtils.cpp	2008-12-20 14:41:56.000000000 +0100
++++ wsdlpull-1.23_working/src/xmlpull/XmlUtils.cpp	2009-05-26 14:33:45.000000000 +0200
+@@ -42,6 +42,8 @@
+ #endif
+ 
+ #include <time.h>
++#include <cstdlib>
++#include <cstring>
+ #include <fstream>
+ #include <map>
+ #include "xmlpull/XmlUtils.h"

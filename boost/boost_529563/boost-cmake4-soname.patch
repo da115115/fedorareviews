@@ -1,0 +1,21 @@
+diff -ru boost-1.40.0.cmake4/tools/build/CMake/BoostCore.cmake boost-1.40.0.cmake4_working/tools/build/CMake/BoostCore.cmake
+--- boost-1.40.0.cmake4/tools/build/CMake/BoostCore.cmake	2009-10-27 21:36:58.000000000 +0100
++++ boost-1.40.0.cmake4_working/tools/build/CMake/BoostCore.cmake	2009-10-31 23:50:02.000000000 +0100
+@@ -681,7 +681,7 @@
+         LINK_FLAGS "${THIS_VARIANT_LINK_FLAGS}"
+         LABELS "${BOOST_PROJECT_NAME}"
+         PREFIX ""
+-       # SOVERSION "${BOOST_VERSION}"
++	SOVERSION "${BOOST_VERSION}"
+         )
+     else (THIS_LIB_IS_STATIC)
+       #TODO: Check the SOVERSION behavior on Linux and Windows
+@@ -695,7 +695,7 @@
+         COMPILE_FLAGS "${THIS_VARIANT_COMPILE_FLAGS}"
+         LINK_FLAGS "${THIS_VARIANT_LINK_FLAGS}"
+         LABELS "${BOOST_PROJECT_NAME}"
+-        # SOVERSION "${BOOST_VERSION}"
++	SOVERSION "${BOOST_VERSION}"
+         )
+     endif (THIS_LIB_IS_STATIC)
+       

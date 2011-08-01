@@ -1,0 +1,15 @@
+--- boost-1.40.0.cmake4/CMakeLists.txt	2009-10-27 21:36:58.000000000 +0100
++++ boost-1.40.0.cmake4_working/CMakeLists.txt	2009-11-01 01:12:15.000000000 +0100
+@@ -293,9 +293,9 @@
+ 
+ # Add build rules for all of the Boost tools
+ # TODO: On hold while I work on the modularity code
+-add_subdirectory(tools)
++#add_subdirectory(tools)
+ ##########################################################################
+ 
+ if (UNIX)
+   add_custom_target(plastic_cats_and_dogs COMMENT "How the factory should be modeled?")
+-endif()
+\ No newline at end of file
++endif()

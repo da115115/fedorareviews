@@ -1,0 +1,28 @@
+#
+# Information on how to review STXXL
+# Review Request: https://bugzilla.redhat.com/show_bug.cgi?id=479978
+
+# RPM Specification file
+wget http://svn.debroglie.net/specs/trunk/libnewmat.spec
+
+# Sources:
+wget http://www.robertnz.net/ftp/newmat11.tar.gz
+
+# Patches:
+wget http://denisarnaud.fedorapeople.org/stxxl/121/8/stxxl-build-shared-makefile.patch
+wget http://denisarnaud.fedorapeople.org/stxxl/121/8/stxxl-build-shared.patch
+
+# (For information) Checkout from the Subversion repository
+svn co https://stxxl.svn.sourceforge.net/svnroot/stxxl stxxlsvn
+
+# Create the pristine directory
+tar zxf stxxl-1.2.1.tar.gz
+
+# Create the working directory
+cp -r stxxl-1.2.1 stxxl-1.2.1_working
+
+# Apply the patches
+cd stxxl-1.2.1_working
+patch -p1 --dry-run < ../stxxl-build-shared-makefile.patch
+patch -p1 --dry-run < ../stxxl-build-shared.patch
+

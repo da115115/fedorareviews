@@ -1,0 +1,11 @@
+
+# Review Request (bug #683591):
+midori https://bugzilla.redhat.com/show_bug.cgi?id=683591
+
+# Source Tar-ball:
+wget http://downloads.sourceforge.net/tclap/tclap-1.2.0.tar.gz
+
+# RPM Specification file:
+wget http://bugbear.postle.net/~bruno/apt/SPECS/tclap.spec
+
+

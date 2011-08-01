@@ -1,0 +1,22 @@
+diff -Nur newmat-11/myexcept.cpp newmat-11_working/myexcept.cpp
+--- newmat-11/myexcept.cpp	2005-08-19 13:01:35.000000000 +0200
++++ newmat-11_working/myexcept.cpp	2009-06-13 16:04:31.000000000 +0200
+@@ -21,6 +21,8 @@
+ 
+ #include "myexcept.h"                  // for exception handling
+ 
++#include <exception>
++
+ #ifdef use_namespace
+ namespace RBD_COMMON {
+ #endif
+@@ -227,8 +229,8 @@
+ {
+    cout << "\n\nThere has been an exception with no handler - exiting";
+    const char* what = BaseException::what();
+-   if (what) cout << what << "\n";
+-   exit(1);
++   if (what) std::cout << what << std::endl;
++   throw new std::exception();
+ }
+ 

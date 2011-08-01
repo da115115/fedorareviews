@@ -1,0 +1,164 @@
+
+###
+## WSDLPull Upstream
+
+# Vivek (https://sourceforge.net/users/vivek200120/), on Sourceforge:
+gaelon http://wsdlpull.sourceforge.net
+# Source, version 1.23 tar-ball, on Sourceforge:
+wget http://sourceforge.net/projects/wsdlpull/files/wsdlpull/wsdlpull%201.23/wsdlpull-1.23.tar.gz/download
+
+# WSDLPull browsable CVS repository (hosted on Sourceforge):
+galeon http://wsdlpull.cvs.sourceforge.net/viewvc/wsdlpull/wsdlpull/
+
+# WSDLPull CVS repository (hosted on Sourceforge):
+cvs -d:pserver:anonymous@wsdlpull.cvs.sourceforge.net:/cvsroot/wsdlpull login
+cvs -z3 -d:pserver:anonymous@wsdlpull.cvs.sourceforge.net:/cvsroot/wsdlpull co -P wsdlpull
+mv wsdlpull wsdlpullcvs
+
+
+### WSDLPull-Autotools (on fedorapeople)
+## WSDLPull-Autotools buildable version 1.23 (on fedorapeople)
+wget http://denisarnaud.fedorapeople.org/wsdlpull/123/wsdlpull.spec
+gaelon http://denisarnaud.fedorapeople.org/wsdlpull/123/
+
+
+## Extras-WSDLPull (on Sourceforge)
+# Denis' Web site on Sourceforge:
+gaelon https://sourceforge.net/projects/extras-wsdlpull/
+# Files (as Denis has write access to Vivek's project on Sourceforge, no file
+# is published on Denis' extras-wsdlpull Sourceforge site):
+gaelon https://sourceforge.net/projects/extras-wsdlpull/files/
+
+# Subversion repositories (for extras-wsdlpull on Sourceforge)
+# Branch 1.23:
+galeon http://extras-wsdlpull.svn.sourceforge.net/viewvc/extras-wsdlpull/branches/wsdlpull-1.23/
+svn co https://extras-wsdlpull.svn.sourceforge.net/svnroot/extras-wsdlpull/branches/wsdlpull-1.23 extras-wsdlpull123svn
+# Trunk:
+galeon http://extras-wsdlpull.svn.sourceforge.net/viewvc/extras-wsdlpull/trunk/wsdlpull/
+svn co https://extras-wsdlpull.svn.sourceforge.net/svnroot/extras-wsdlpull/trunk/wsdlpull extras-wsdlpullsvn
+
+
+### Support
+## Mailing lists
+# On YahooGroups (wsdlpull)
+gaelon http://tech.groups.yahoo.com/group/wsdlpull/
+# On Sourceforge (https://sourceforge.net/mail/?group_id=96736), 
+# wsdlpull-discussion:
+gaelon https://sourceforge.net/mailarchive/forum.php?forum_name=wsdlpull-discussion
+
+## Bug tracker on Sourceforge
+galeon https://sourceforge.net/tracker/?atid=615728&group_id=96736&func=browse
+## Forum (Open Discussion) on Sourceforge
+galeon https://sourceforge.net/projects/wsdlpull/forums/forum/335505
+
+
+
+## ========================================================================
+#  Not yet accepted within Fedora. The following is therefore only guessed.
+## ========================================================================
+
+###
+# WSDLPull Fedora package (Package DB):
+galeon https://admin.fedoraproject.org/pkgdb/acls/name/wsdlpull
+
+# WSDLPull Fedora Koji (build) status:
+galeon http://koji.fedoraproject.org/koji/packageinfo?packageID=xxxx
+# WSDLPull Fedora Update status:
+galeon https://admin.fedoraproject.org/updates/wsdlpull
+# WSDLPull Fedora bug reports:
+# old: galeon https://admin.fedoraproject.org/pkgdb/packages/bugs/wsdlpull
+galeon https://admin.fedoraproject.org/pkgdb/acls/bugs/wsdlpull
+# WSDLPull Fedora package sources:
+galeon http://cvs.fedoraproject.org/viewvc/rpms/wsdlpull/
+
+###
+## WSDLPull RPM package:
+# On Fedora devel (version 1.23):
+wget http://mirror.ovh.net/download.fedora.redhat.com/linux/development/source/SRPMS/wsdlpull-1.23-2.fc14.src.rpm
+
+# On Fedora 13 (version 1.23):
+wget http://mirror.ovh.net/download.fedora.redhat.com/linux/releases/13/Everything/source/SRPMS/wsdlpull-1.23-2.fc13.src.rpm
+
+
+# Spec file (for Fedora Rawhide)
+wget http://cvs.fedoraproject.org/viewvc/rpms/wsdlpull/devel/wsdlpull.spec?revision=1.2&view=co
+#           (for Fedora 13)
+wget http://cvs.fedoraproject.org/viewvc/rpms/wsdlpull/F-13/wsdlpull.spec?revision=1.2&view=co
+# Then, additional patch files have to be downloaded/obtained from the CVS repository either:
+wget http://cvs.fedoraproject.org/viewvc/rpms/wsdlpull/F-13/wsdlpull-1.23-fix-gcc43-compatibility.patch?revision=1.1&view=co
+wget http://cvs.fedoraproject.org/viewvc/rpms/wsdlpull/F-13/wsdlpull-1.23-fix-gnu-autotools-compatibility.patch?revision=1.1&view=co
+
+
+
+# ==========================================
+# Author: Denis Arnaud (denis.arnaud_fedora@m4x.org)
+# Last updated: Jul. 11, 2010
+#
+
+
+
+# =======================================
+========================
+Spec: http://denisarnaud.fedorapeople.org/wsdlpull/123/wsdlpull.spec
+SRPM: http://denisarnaud.fedorapeople.org/wsdlpull/123/wsdlpull-1.23-3.fc13.src.rpm
+========================
+
+(In reply to comment #13)
+> http://fedoraproject.org/wiki/Packaging:Guidelines#All_patches_should_have_an_upstream_bug_link_or_comment
+> This is not mandatory, but you planned to submit patches upstream and you
+> forgot to do it. I suggest you do it now and insert the links to the upstream
+> patch reports in your comments.
+
+Yes, of course, I knew that one :)
+I'll keep upstream (Vivek Krishna) updated, and include the corresponding references within the specification file.
+
+
+> From comment 6:
+> > You should use xargs option -r in
+> >         find . -name 'CVS' -print | xargs rm -rf
+> >         find . -name 'a.out' -print | xargs rm -f
+> >     in prevision of future versions not containing the targets.
+> 
+> You did not apply this change. Any reason for that ?
+
+Sorry for that. I did not understand it the first time: I thought you were referring to the -r option of the rm command, not of the xargs command... I now understand that that GNU extension to xargs is pretty useful when there is no CVS directory or a.out file.
+
+
+> > I've left the %doc in the -devel sub-package, though.
+> Please read
+> http://lists.fedoraproject.org/pipermail/devel/2010-July/138487.html and
+> http://fedoraproject.org/wiki/Packaging:Guidelines#Duplicate_Files
+
+Yes, I knew both items above. But duplicating files is tolerated... and prevents rpmlint from issuing the following warning:
+ wsdlpull-devel.x86_64: W: no-documentation
+ The package contains no documentation (README, doc, etc). You have to include
+ documentation files.
+
+So, I removed the duplicated documentation files, and the warning is back. But it has no importance, hasn't it?
+
+
+> Buildroot is no longer needed:
+> http://fedoraproject.org/wiki/Packaging:Guidelines#BuildRoot_tag
+
+You are right, and I did not remember that one. I've changed the BuildRoot tag line by:
+ %{?el5:BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)}
+which is apparently the recommended option for EPEL 5 packaging (http://fedoraproject.org/wiki/EPEL/GuidelinesAndPolicies#BuildRoot_tag).
+
+However, rpmlint reports a warning here:
+ wsdlpull.src: W: no-buildroot-tag
+
+But, as explained in that warning description, all is fine with a version of rpm greater than 4.6. Which is of course the case for all the active Fedora distributions and for EPEL 6 as well (but not for EPEL distributions for version 5 downwards).
+
+
+> You can save the "BuildRequires: dos2unix" by replacing the call to dos2unix by
+> 
+>     sed -i -e 's/\r$//'    
+
+Yes, you are right. Even better, your solution sounds more Unix than that DOS file converter...
+
+
+The only thing remaining is to submit the patches upstream (to Vivek).
+
+
+Thanks for your feedback.
+

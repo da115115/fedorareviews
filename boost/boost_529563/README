@@ -1,0 +1,88 @@
+
+##
+# Boost Fedora package (Package DB):
+# old: galeon https://admin.fedoraproject.org/pkgdb/packages/name/boost
+galeon https://admin.fedoraproject.org/pkgdb/acls/name/boost
+
+# Boost Fedora Koji (build) status:
+galeon http://koji.fedoraproject.org/koji/packageinfo?packageID=1074
+# Boost Fedora Update status:
+galeon https://admin.fedoraproject.org/updates/boost
+# Boost Fedora bug reports:
+# old: galeon https://admin.fedoraproject.org/pkgdb/packages/bugs/boost
+galeon https://admin.fedoraproject.org/pkgdb/acls/bugs/boost
+# Boost Fedora package sources:
+galeon http://cvs.fedoraproject.org/viewvc/rpms/boost/
+
+##
+# Boost sources
+#
+wget http://sourceforge.net/projects/boost/files/boost/1.43.0/boost_1_43_0.tar.bz2/download
+
+##
+# Boost-CMake
+# On gitorious:
+galeon http://gitorious.org/boost/cmake
+galeon http://gitorious.org/~zeuner/boost/zeuners-boost-cmake
+
+# To clone git repositories:
+# Zeuner's (http://gitorious.org/~zeuner) clone
+git clone git://gitorious.org/~zeuner/boost/zeuners-boost-cmake.git
+# Denis' (http://gitorious.org/~denisarnaud) clone
+git clone git://gitorious.org/~denisarnaud/boost/denisarnauds-zeuners-boost-cmake.git
+
+# On Boost Subversion:
+
+
+
+
+##
+# Boost RPM package:
+# On Fedora 11 (version 1.37, not split in sub-packages):
+wget http://mirror.ovh.net/download.fedora.redhat.com/linux/releases/11/Everything/source/SRPMS/boost-1.37.0-6.fc11.src.rpm
+
+# On Fedora devel (version 1.39, split in sub-packages):
+wget http://mirror.ovh.net/download.fedora.redhat.com/linux/development/source/SRPMS/boost-1.39.0-6.fc12.src.rpm
+
+# On Fedora 11 testing (version 1.39, split in sub-packages):
+wget http://mirror.ovh.net/download.fedora.redhat.com/linux/updates/testing/11/SRPMS/boost-1.37.0-8.fc11.src.rpm
+
+# Spec file (for Fedora Rawhide)
+wget http://cvs.fedoraproject.org/viewvc/rpms/boost/devel/boost.spec?revision=1.73&view=co
+#           (for Fedora 12)
+wget http://cvs.fedoraproject.org/viewvc/rpms/boost/F-12/boost.spec?revision=1.68
+# Then, additional patch files have to be downloaded/obtained from the CVS repository either:
+wget http://cvs.fedoraproject.org/viewvc/rpms/boost/F-12/boost-python_uint.patch?view=co
+
+
+##
+# MinGW-Boost RPM package:
+# On Fedora devel (version 1.39):
+wget http://mirror.ovh.net/download.fedora.redhat.com/linux/development/source/SRPMS/mingw32-boost-1.39.0-3.fc12.src.rpm
+
+
+## Boost BJam
+# BJAM 3.1.17
+wget https://sourceforge.net/projects/boost/files/boost-jam/3.1.17/boost-jam-3.1.17-1-linuxx86.tgz/download
+
+## Souce tar-balls
+# Version 1.41.0
+wget http://sourceforge.net/projects/boost/files/boost/1.41.0/boost_1_41_0.tar.bz2/download
+# Boost-CMake buildable version 1.41.0
+wget http://sodium.resophonic.com/boost-cmake/1.41.0.cmakebeta4/boost-1.41.0.cmakebeta4.tar.gz
+
+# Version 1.40.0
+wget http://sourceforge.net/projects/boost/files/boost/1.40.0/boost_1_40_0.tar.bz2/download
+# Boost-CMake buildable version 1.40.0
+wget http://sodium.resophonic.com/boost-cmake/1.40.0.cmake4/boost-1.40.0.cmake4.tar.gz
+
+# Version 1.39.0
+wget http://sourceforge.net/projects/boost/files/boost/1.39.0/boost_1_39_0.tar.bz2/download
+
+# Version 1.37.0
+wget http://sourceforge.net/projects/boost/files/boost/1.37.0/boost_1_37_0.tar.bz2/download
+
+## Extras-Boost (GNU Boost)
+# GNU Boost 1.0
+wget https://sourceforge.net/projects/boost-extras/files/gnu-boost%20%28setup%20files%29/1.0/gnu-boost-1.0.tar.bz2/download
+

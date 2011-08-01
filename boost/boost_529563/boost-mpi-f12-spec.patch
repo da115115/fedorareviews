@@ -1,0 +1,83 @@
+--- boost_f12.spec	2009-10-20 10:25:56.000000000 +0200
++++ boost_mpi_f12.spec	2009-10-20 10:29:12.000000000 +0200
+@@ -1,7 +1,7 @@
+ Name: boost
+ Summary: The Boost C++ Libraries
+ Version: 1.39.0
+-Release: 8%{?dist}
++Release: 9%{?dist}
+ License: Boost
+ URL: http://www.boost.org/
+ Group: System Environment/Libraries
+@@ -25,6 +25,7 @@
+ Requires: boost-system = %{version}-%{release}
+ Requires: boost-thread = %{version}-%{release}
+ Requires: boost-wave = %{version}-%{release}
++Requires: boost-mpi = %{version}-%{release}
+ 
+ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+ BuildRequires: libstdc++-devel
+@@ -34,6 +35,8 @@
+ BuildRequires: python-devel
+ BuildRequires: libicu-devel
+ BuildRequires: chrpath
++BuildRequires: mpich2-devel
++
+ Patch0: boost-version-override.patch
+ Patch1: boost-use-rpm-optflags.patch
+ Patch2: boost-run-tests.patch
+@@ -47,6 +50,7 @@
+ Patch10: boost-python_call_operator.patch
+ Patch11: boost-python_enums.patch
+ Patch12: boost-python_uint.patch
++Patch13: boost-mpi.patch
+ 
+ %bcond_with tests
+ %bcond_with docs_generated
+@@ -182,6 +186,15 @@
+ and highly configurable implementation of the mandated C99/C++
+ preprocessor functionality.
+ 
++%package mpi
++Summary: Runtime component of boost mpi library
++Group: System Environment/Libraries
++
++%description mpi
++
++Runtime support for Boost MPI, library providing a clean C++ API over
++the OpenMPI implementation of MPI.
++
+ %package thread
+ Summary: Runtime component of boost thread library
+ Group: System Environment/Libraries
+@@ -235,6 +248,7 @@
+ %patch10 -p2
+ %patch11 -p2
+ %patch12 -p2
++%patch13 -p1
+ 
+ %build
+ BOOST_ROOT=`pwd`
+@@ -432,6 +446,11 @@
+ %{_libdir}/libboost_wave*.so.%{version}
+ %{_libdir}/libboost_wave*.so.%{sonamever}
+ 
++%files mpi
++%defattr(-, root, root, -)
++%{_libdir}/libboost_mpi*.so.%{version}
++%{_libdir}/libboost_mpi*.so.%{sonamever}
++
+ %files doc
+ %defattr(-, root, root, -)
+ %doc %{_docdir}/%{name}-%{version}
+@@ -446,6 +465,10 @@
+ %{_libdir}/*.a
+ 
+ %changelog
++* Sun Oct 18 2009 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.39.0-9
++- Add support for the Boost.MPI sub-package
++- Resolves: #529563
++
+ * Thu Oct 15 2009 Petr Machata <pmachata@redhat.com> - 1.39.0-8
+ - Package index.html in the -doc subpackage
+ - Resolves: #529030

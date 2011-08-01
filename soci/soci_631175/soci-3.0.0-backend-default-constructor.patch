@@ -1,0 +1,50 @@
+Index: soci/backends/postgresql/soci-postgresql.h
+===================================================================
+--- soci/backends/postgresql/soci-postgresql.h	(revision 231)
++++ soci/backends/postgresql/soci-postgresql.h	(revision 232)
+@@ -246,6 +246,7 @@
+ 
+ struct postgresql_backend_factory : backend_factory
+ {
++	postgresql_backend_factory() {}
+     virtual postgresql_session_backend * make_session(
+         std::string const & connectString) const;
+ };
+Index: soci/backends/mysql/soci-mysql.h
+===================================================================
+--- soci/backends/mysql/soci-mysql.h	(revision 231)
++++ soci/backends/mysql/soci-mysql.h	(revision 232)
+@@ -256,11 +256,9 @@
+ 
+ struct mysql_backend_factory : backend_factory
+ {
++	mysql_backend_factory() {}
+     virtual mysql_session_backend * make_session(
+         std::string const &connectString) const;
+-
+-    mysql_backend_factory() {}
+-
+ };
+ 
+ extern SOCI_MYSQL_DECL mysql_backend_factory const mysql;
+@@ -273,6 +271,6 @@
+ 
+ } // extern "C"
+ 
+-} // namespace SOCI
++} // namespace soci
+ 
+ #endif // SOCI_MYSQL_H_INCLUDED
+Index: soci/backends/oracle/soci-oracle.h
+===================================================================
+--- soci/backends/oracle/soci-oracle.h	(revision 231)
++++ soci/backends/oracle/soci-oracle.h	(revision 232)
+@@ -274,6 +274,7 @@
+ 
+ struct oracle_backend_factory : backend_factory
+ {
++	oracle_backend_factory() {}
+     virtual oracle_session_backend * make_session(
+         std::string const &connectString) const;
+ };
+ 

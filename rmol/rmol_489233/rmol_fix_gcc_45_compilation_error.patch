@@ -1,0 +1,29 @@
+Index: rmol/service/RMOL_ServiceContext.cpp
+===================================================================
+--- rmol/service/RMOL_ServiceContext.cpp	(revision 312)
++++ rmol/service/RMOL_ServiceContext.cpp	(working copy)
+@@ -113,7 +113,7 @@
+     GeneratedDemandVector_T& lDemandVector = *itLastVector;
+     lDemandVector.reserve (K);
+     const FldDistributionParameters aDistributionParam =
+-      FldDistributionParameters::FldDistributionParameters (iMean, iDeviation);
++      FldDistributionParameters (iMean, iDeviation);
+     const Gaussian gaussianDemandGenerator (aDistributionParam);
+ 
+     // Generate K numbers
+Index: rmol/command/Optimiser.cpp
+===================================================================
+--- rmol/command/Optimiser.cpp	(revision 312)
++++ rmol/command/Optimiser.cpp	(working copy)
+@@ -185,9 +185,8 @@
+                                 BucketHolder& ioBucketHolder) {
+     
+     // Create the aggregated class/bucket.
+-    FldYieldRange aYieldRange = FldYieldRange::FldYieldRange (0);
+-    FldDistributionParameters aDistribParams =
+-      FldDistributionParameters::FldDistributionParameters (0,0);
++    FldYieldRange aYieldRange = FldYieldRange (0);
++    FldDistributionParameters aDistribParams = FldDistributionParameters(0,0);
+     Demand& aDemand =
+       FacDemand::instance().create (aDistribParams, aYieldRange);
+     Bucket& aBucket = FacBucket::instance().create (aYieldRange, aDemand);

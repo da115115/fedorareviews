@@ -1,0 +1,536 @@
+diff -Nur soci-3.0.0_4-pack/soci/backends/mysql/common.cpp soci-3.0.0_trep300/soci/backends/mysql/common.cpp
+--- soci-3.0.0_4-pack/soci/backends/mysql/common.cpp	2011-02-08 23:53:26.629880123 +0100
++++ soci-3.0.0_trep300/soci/backends/mysql/common.cpp	2009-04-16 19:37:06.000000000 +0200
+@@ -6,7 +6,13 @@
+ //
+ 
+ #include "common.h"
+-#include "soci-backend.h"
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/soci-backend.h>
++#else
++#	include <soci-backend.h>
++#endif
++//
+ #include <ciso646>
+ #include <cstdlib>
+ #include <ctime>
+diff -Nur soci-3.0.0_4-pack/soci/backends/mysql/soci-mysql.h soci-3.0.0_trep300/soci/backends/mysql/soci-mysql.h
+--- soci-3.0.0_4-pack/soci/backends/mysql/soci-mysql.h	2011-02-08 23:53:26.663880770 +0100
++++ soci-3.0.0_trep300/soci/backends/mysql/soci-mysql.h	2011-02-08 22:29:54.000000000 +0100
+@@ -23,12 +23,23 @@
+ #ifndef SOCI_MYSQL_DECL
+ # define SOCI_MYSQL_DECL
+ #endif
+-
+-#include "soci-backend.h"
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/soci-backend.h>
++#else
++#	include <soci-backend.h>
++#endif
++//
+ #ifdef _WIN32
+ #include <winsock.h> // SOCKET
+ #endif // _WIN32
+-#include <mysql.h> // MySQL Client
++//
++// MySQL Client
++#if defined(SOCI_MYSQL_HEADERS_BURIED)
++#       include <mysql/mysql.h>
++#else
++#	include <mysql.h>
++#endif
+ #include <vector>
+ 
+ 
+diff -Nur soci-3.0.0_4-pack/soci/backends/mysql/standard-into-type.cpp soci-3.0.0_trep300/soci/backends/mysql/standard-into-type.cpp
+--- soci-3.0.0_4-pack/soci/backends/mysql/standard-into-type.cpp	2011-02-08 23:53:26.665880807 +0100
++++ soci-3.0.0_trep300/soci/backends/mysql/standard-into-type.cpp	2009-04-16 19:37:06.000000000 +0200
+@@ -8,8 +8,14 @@
+ 
+ #define SOCI_MYSQL_SOURCE
+ #include "soci-mysql.h"
+-#include <soci-platform.h>
+ #include "common.h"
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/soci-platform.h>
++#else
++#	include <soci-platform.h>
++#endif
++//
+ #include <ciso646>
+ #include <cassert>
+ #include <ctime>
+diff -Nur soci-3.0.0_4-pack/soci/backends/mysql/standard-use-type.cpp soci-3.0.0_trep300/soci/backends/mysql/standard-use-type.cpp
+--- soci-3.0.0_4-pack/soci/backends/mysql/standard-use-type.cpp	2011-02-08 23:53:26.666880826 +0100
++++ soci-3.0.0_trep300/soci/backends/mysql/standard-use-type.cpp	2009-05-05 22:25:40.000000000 +0200
+@@ -9,7 +9,12 @@
+ #define SOCI_MYSQL_SOURCE
+ #include "soci-mysql.h"
+ #include "common.h"
+-#include <soci-platform.h>
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/soci-platform.h>
++#else
++#	include <soci-platform.h>
++#endif
+ //
+ #include <ciso646>
+ #include <limits>
+diff -Nur soci-3.0.0_4-pack/soci/backends/mysql/test/test-mysql.cpp soci-3.0.0_trep300/soci/backends/mysql/test/test-mysql.cpp
+--- soci-3.0.0_4-pack/soci/backends/mysql/test/test-mysql.cpp	2011-02-08 23:53:26.629880123 +0100
++++ soci-3.0.0_trep300/soci/backends/mysql/test/test-mysql.cpp	2009-04-16 19:37:06.000000000 +0200
+@@ -6,9 +6,17 @@
+ // http://www.boost.org/LICENSE_1_0.txt)
+ //
+ 
+-#include "soci.h"
+-#include "soci-mysql.h"
+-#include "test/common-tests.h"
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/soci.h>
++#       include <soci/backends/mysql/soci-mysql.h>
++#       include <soci/core/test/common-tests.h>
++#else
++#	include <soci.h>
++#	include <soci-mysql.h>
++#       include <test/common-tests.h>
++#endif
++//
+ #include <iostream>
+ #include <sstream>
+ #include <string>
+@@ -18,8 +26,14 @@
+ #include <ctime>
+ #include <ciso646>
+ #include <cstdlib>
+-#include <mysqld_error.h>
+-#include <errmsg.h>
++// MySQL Client
++#if defined(SOCI_MYSQL_HEADERS_BURIED)
++#       include <mysql/mysqld_error.h>
++#       include <mysql/errmsg.h>
++#else
++#       include <mysqld_error.h>
++#       include <errmsg.h>
++#endif
+ 
+ using namespace soci;
+ using namespace soci::tests;
+diff -Nur soci-3.0.0_4-pack/soci/backends/mysql/vector-into-type.cpp soci-3.0.0_trep300/soci/backends/mysql/vector-into-type.cpp
+--- soci-3.0.0_4-pack/soci/backends/mysql/vector-into-type.cpp	2011-02-08 23:53:26.630880142 +0100
++++ soci-3.0.0_trep300/soci/backends/mysql/vector-into-type.cpp	2009-04-16 19:37:06.000000000 +0200
+@@ -9,7 +9,13 @@
+ #define SOCI_MYSQL_SOURCE
+ #include "soci-mysql.h"
+ #include "common.h"
+-#include <soci-platform.h>
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/soci-platform.h>
++#else
++#	include <soci-platform.h>
++#endif
++//
+ #include <ciso646>
+ 
+ #ifdef _MSC_VER
+diff -Nur soci-3.0.0_4-pack/soci/backends/mysql/vector-use-type.cpp soci-3.0.0_trep300/soci/backends/mysql/vector-use-type.cpp
+--- soci-3.0.0_4-pack/soci/backends/mysql/vector-use-type.cpp	2011-02-08 23:53:26.666880826 +0100
++++ soci-3.0.0_trep300/soci/backends/mysql/vector-use-type.cpp	2009-05-05 22:23:29.000000000 +0200
+@@ -9,7 +9,12 @@
+ #define SOCI_MYSQL_SOURCE
+ #include "soci-mysql.h"
+ #include "common.h"
+-#include <soci-platform.h>
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/soci-platform.h>
++#else
++#	include <soci-platform.h>
++#endif
+ //
+ #include <ciso646>
+ #include <limits>
+diff -Nur soci-3.0.0_4-pack/soci/backends/oracle/blob.cpp soci-3.0.0_trep300/soci/backends/oracle/blob.cpp
+--- soci-3.0.0_4-pack/soci/backends/oracle/blob.cpp	2011-02-08 23:53:26.628880105 +0100
++++ soci-3.0.0_trep300/soci/backends/oracle/blob.cpp	2009-04-16 19:37:06.000000000 +0200
+@@ -7,7 +7,13 @@
+ 
+ #include "soci-oracle.h"
+ #include "error.h"
+-#include "statement.h"
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/statement.h>
++#else
++#	include <statement.h>
++#endif
++//
+ #include <cstring>
+ #include <sstream>
+ #include <cstdio>
+diff -Nur soci-3.0.0_4-pack/soci/backends/oracle/soci-oracle.h soci-3.0.0_trep300/soci/backends/oracle/soci-oracle.h
+--- soci-3.0.0_4-pack/soci/backends/oracle/soci-oracle.h	2011-02-08 23:53:26.671880922 +0100
++++ soci-3.0.0_trep300/soci/backends/oracle/soci-oracle.h	2011-02-08 22:29:54.000000000 +0100
+@@ -22,9 +22,14 @@
+ #ifndef SOCI_ORACLE_DECL
+ # define SOCI_ORACLE_DECL
+ #endif
+-
+-#include <soci-backend.h>
+-#include <oci.h> // OCI
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/soci-backend.h>
++#else
++#	include <soci-backend.h>
++#endif
++//
++#include <oci.h> // OCI (Oracle client)
+ #include <vector>
+ 
+ #ifdef _MSC_VER
+diff -Nur soci-3.0.0_4-pack/soci/backends/oracle/standard-into-type.cpp soci-3.0.0_trep300/soci/backends/oracle/standard-into-type.cpp
+--- soci-3.0.0_4-pack/soci/backends/oracle/standard-into-type.cpp	2011-02-08 23:53:26.628880105 +0100
++++ soci-3.0.0_trep300/soci/backends/oracle/standard-into-type.cpp	2009-04-16 19:37:06.000000000 +0200
+@@ -7,10 +7,18 @@
+ 
+ #define SOCI_ORACLE_SOURCE
+ #include "soci-oracle.h"
+-#include "blob.h"
+ #include "error.h"
+-#include "rowid.h"
+-#include "statement.h"
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/blob.h>
++#       include <soci/core/rowid.h>
++#       include <soci/core/statement.h>
++#else
++#       include <blob.h>
++#       include <rowid.h>
++#       include <statement.h>
++#endif
++//
+ #include <cctype>
+ #include <cstdio>
+ #include <cstring>
+diff -Nur soci-3.0.0_4-pack/soci/backends/oracle/standard-use-type.cpp soci-3.0.0_trep300/soci/backends/oracle/standard-use-type.cpp
+--- soci-3.0.0_4-pack/soci/backends/oracle/standard-use-type.cpp	2011-02-08 23:53:26.628880105 +0100
++++ soci-3.0.0_trep300/soci/backends/oracle/standard-use-type.cpp	2009-04-16 19:37:06.000000000 +0200
+@@ -7,10 +7,18 @@
+ 
+ #define soci_ORACLE_SOURCE
+ #include "soci-oracle.h"
+-#include "blob.h"
+ #include "error.h"
+-#include "rowid.h"
+-#include "statement.h"
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/blob.h>
++#       include <soci/core/rowid.h>
++#       include <soci/core/statement.h>
++#else
++#       include <blob.h>
++#       include <rowid.h>
++#       include <statement.h>
++#endif
++//
+ #include <cctype>
+ #include <cstdio>
+ #include <cstring>
+diff -Nur soci-3.0.0_4-pack/soci/backends/oracle/statement.cpp soci-3.0.0_trep300/soci/backends/oracle/statement.cpp
+--- soci-3.0.0_4-pack/soci/backends/oracle/statement.cpp	2011-02-08 23:53:26.627880086 +0100
++++ soci-3.0.0_trep300/soci/backends/oracle/statement.cpp	2009-04-16 19:37:06.000000000 +0200
+@@ -9,7 +9,13 @@
+ 
+ #include "soci-oracle.h"
+ #include "error.h"
+-#include <soci-backend.h>
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/soci-backend.h>
++#else
++#	include <soci-backend.h>
++#endif
++//
+ #include <cctype>
+ #include <cstdio>
+ #include <cstring>
+diff -Nur soci-3.0.0_4-pack/soci/backends/oracle/test/test-oracle.cpp soci-3.0.0_trep300/soci/backends/oracle/test/test-oracle.cpp
+--- soci-3.0.0_4-pack/soci/backends/oracle/test/test-oracle.cpp	2011-02-08 23:53:26.627880086 +0100
++++ soci-3.0.0_trep300/soci/backends/oracle/test/test-oracle.cpp	2009-04-16 19:37:06.000000000 +0200
+@@ -5,9 +5,17 @@
+ // http://www.boost.org/LICENSE_1_0.txt)
+ //
+ 
+-#include "soci.h"
+-#include "soci-oracle.h"
+-#include "common-tests.h"
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/soci.h>
++#       include <soci/backends/oracle/soci-oracle.h>
++#       include <soci/core/test/common-tests.h>
++#else
++#	include <soci.h>
++#	include <soci-oracle.h>
++#       include <test/common-tests.h>
++#endif
++//
+ #include <iostream>
+ #include <string>
+ #include <cassert>
+diff -Nur soci-3.0.0_4-pack/soci/backends/oracle/vector-into-type.cpp soci-3.0.0_trep300/soci/backends/oracle/vector-into-type.cpp
+--- soci-3.0.0_4-pack/soci/backends/oracle/vector-into-type.cpp	2011-02-08 23:53:26.628880105 +0100
++++ soci-3.0.0_trep300/soci/backends/oracle/vector-into-type.cpp	2009-04-16 19:37:06.000000000 +0200
+@@ -7,8 +7,14 @@
+ 
+ #define soci_ORACLE_SOURCE
+ #include "soci-oracle.h"
+-#include "statement.h"
+ #include "error.h"
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/statement.h>
++#else
++#	include <statement.h>
++#endif
++//
+ #include <cctype>
+ #include <cstdio>
+ #include <cstring>
+diff -Nur soci-3.0.0_4-pack/soci/backends/postgresql/common.cpp soci-3.0.0_trep300/soci/backends/postgresql/common.cpp
+--- soci-3.0.0_4-pack/soci/backends/postgresql/common.cpp	2011-02-08 23:53:26.673880959 +0100
++++ soci-3.0.0_trep300/soci/backends/postgresql/common.cpp	2009-05-05 22:30:52.000000000 +0200
+@@ -6,7 +6,12 @@
+ //
+ 
+ #include "common.h"
+-#include <soci-backend.h>
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/soci-backend.h>
++#else
++#	include <soci-backend.h>
++#endif
+ //
+ #include <cstdlib>
+ #include <cstdio>
+diff -Nur soci-3.0.0_4-pack/soci/backends/postgresql/soci-postgresql.h soci-3.0.0_trep300/soci/backends/postgresql/soci-postgresql.h
+--- soci-3.0.0_4-pack/soci/backends/postgresql/soci-postgresql.h	2011-02-08 23:53:26.674880978 +0100
++++ soci-3.0.0_trep300/soci/backends/postgresql/soci-postgresql.h	2011-02-08 22:29:54.000000000 +0100
+@@ -22,9 +22,14 @@
+ #ifndef SOCI_POSTGRESQL_DECL
+ # define SOCI_POSTGRESQL_DECL
+ #endif
+-
+-#include <soci-backend.h>
+-#include <libpq-fe.h>
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/soci-backend.h>
++#else
++#	include <soci-backend.h>
++#endif
++//
++#include <libpq-fe.h> // PostGreSQL client
+ #include <vector>
+ 
+ #ifdef _MSC_VER
+diff -Nur soci-3.0.0_4-pack/soci/backends/postgresql/standard-into-type.cpp soci-3.0.0_trep300/soci/backends/postgresql/standard-into-type.cpp
+--- soci-3.0.0_4-pack/soci/backends/postgresql/standard-into-type.cpp	2011-02-08 23:53:26.626880066 +0100
++++ soci-3.0.0_trep300/soci/backends/postgresql/standard-into-type.cpp	2009-04-16 19:37:05.000000000 +0200
+@@ -8,9 +8,16 @@
+ #define SOCI_POSTGRESQL_SOURCE
+ #include "soci-postgresql.h"
+ #include "common.h"
+-#include "rowid.h"
+-#include "blob.h"
+-#include <libpq/libpq-fs.h> // libpq
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/blob.h>
++#       include <soci/core/rowid.h>
++#else
++#       include <blob.h>
++#       include <rowid.h>
++#endif
++//
++#include <libpq/libpq-fs.h> // libpq (PostGreSQL client)
+ #include <cctype>
+ #include <cstdio>
+ #include <cstring>
+diff -Nur soci-3.0.0_4-pack/soci/backends/postgresql/standard-use-type.cpp soci-3.0.0_trep300/soci/backends/postgresql/standard-use-type.cpp
+--- soci-3.0.0_4-pack/soci/backends/postgresql/standard-use-type.cpp	2011-02-08 23:53:26.626880066 +0100
++++ soci-3.0.0_trep300/soci/backends/postgresql/standard-use-type.cpp	2009-04-16 19:37:05.000000000 +0200
+@@ -7,8 +7,14 @@
+ 
+ #define SOCI_POSTGRESQL_SOURCE
+ #include "soci-postgresql.h"
+-#include "rowid.h"
+-#include <libpq/libpq-fs.h> // libpq
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/rowid.h>
++#else
++#       include <rowid.h>
++#endif
++//
++#include <libpq/libpq-fs.h> // libpq (PostGreSQL client)
+ #include <cctype>
+ #include <cstdio>
+ #include <cstring>
+diff -Nur soci-3.0.0_4-pack/soci/backends/postgresql/test/test-postgresql.cpp soci-3.0.0_trep300/soci/backends/postgresql/test/test-postgresql.cpp
+--- soci-3.0.0_4-pack/soci/backends/postgresql/test/test-postgresql.cpp	2011-02-08 23:53:26.680881092 +0100
++++ soci-3.0.0_trep300/soci/backends/postgresql/test/test-postgresql.cpp	2010-01-23 13:25:57.000000000 +0100
+@@ -5,9 +5,17 @@
+ // http://www.boost.org/LICENSE_1_0.txt)
+ //
+ 
+-#include "soci.h"
+-#include "soci-postgresql.h"
+-#include "common-tests.h"
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/soci.h>
++#       include <soci/backends/postgresql/soci-postgresql.h>
++#       include <soci/core/test/common-tests.h>
++#else
++#	include <soci.h>
++#	include <soci-postgresql.h>
++#       include <test/common-tests.h>
++#endif
++//
+ #include <iostream>
+ #include <sstream>
+ #include <string>
+diff -Nur soci-3.0.0_4-pack/soci/core/backend-loader.cpp soci-3.0.0_trep300/soci/core/backend-loader.cpp
+--- soci-3.0.0_4-pack/soci/core/backend-loader.cpp	2011-02-08 23:53:26.617879896 +0100
++++ soci-3.0.0_trep300/soci/core/backend-loader.cpp	2010-01-23 13:25:57.000000000 +0100
+@@ -11,6 +11,9 @@
+ #include <map>
+ #include <cassert>
+ #include <cstdlib>
++#ifndef _MSC_VER
++#include <stdint.h>
++#endif
+ 
+ using namespace soci;
+ using namespace soci::dynamic_backends;
+diff -Nur soci-3.0.0_4-pack/soci/core/soci-platform.h soci-3.0.0_trep300/soci/core/soci-platform.h
+--- soci-3.0.0_4-pack/soci/core/soci-platform.h	2011-02-08 23:53:26.620879953 +0100
++++ soci-3.0.0_trep300/soci/core/soci-platform.h	2010-01-23 13:25:57.000000000 +0100
+@@ -12,8 +12,10 @@
+ #ifdef _MSC_VER
+ 
+ // Define if you have the vsnprintf variants.
+-#define HAVE_VSNPRINTF 1
+-#define vsnprintf _vsnprintf
++#if _MSC_VER < 1500
++# define HAVE_VSNPRINTF 1
++# define vsnprintf _vsnprintf
++#endif
+ 
+ // Define if you have the snprintf variants.
+ #define HAVE_SNPRINTF 1
+diff -Nur soci-3.0.0_4-pack/soci/core/soci-simple.cpp soci-3.0.0_trep300/soci/core/soci-simple.cpp
+--- soci-3.0.0_4-pack/soci/core/soci-simple.cpp	2011-02-08 23:53:26.677881035 +0100
++++ soci-3.0.0_trep300/soci/core/soci-simple.cpp	2010-01-23 13:25:57.000000000 +0100
+@@ -473,7 +473,7 @@
+ // helper for formatting date values
+ char const * format_date(statement_wrapper & wrapper, std::tm const & d)
+ {
+-    sprintf(wrapper.date_formatted, "%d %d %d %d %d %d",
++    std::sprintf(wrapper.date_formatted, "%d %d %d %d %d %d",
+         d.tm_year + 1900, d.tm_mon + 1, d.tm_mday,
+         d.tm_hour, d.tm_min, d.tm_sec);
+ 
+@@ -490,7 +490,7 @@
+     int hour;
+     int minute;
+     int second;
+-    int const converted = sscanf(val, "%d %d %d %d %d %d",
++    int const converted = std::sscanf(val, "%d %d %d %d %d %d",
+         &year, &month, &day, &hour, &minute, &second);
+     if (converted != 6)
+     {
+@@ -1511,7 +1511,7 @@
+ 
+     // format is: "YYYY MM DD hh mm ss"
+     std::tm const & d = wrapper->use_dates[name];
+-    sprintf(wrapper->date_formatted, "%d %d %d %d %d %d",
++    std::sprintf(wrapper->date_formatted, "%d %d %d %d %d %d",
+         d.tm_year + 1900, d.tm_mon + 1, d.tm_mday,
+         d.tm_hour, d.tm_min, d.tm_sec);
+ 
+@@ -1528,10 +1528,10 @@
+ 
+         // bind all into elements
+ 
+-        size_t const into_elements = wrapper->into_types.size();
++        int const into_elements = static_cast<int>(wrapper->into_types.size());
+         if (wrapper->into_kind == statement_wrapper::single)
+         {
+-            for (size_t i = 0; i != into_elements; ++i)
++            for (int i = 0; i != into_elements; ++i)
+             {
+                 switch (wrapper->into_types[i])
+                 {
+@@ -1563,8 +1563,7 @@
+         else
+         {
+             // vector elements
+-
+-            for (size_t i = 0; i != into_elements; ++i)
++            for (int i = 0; i != into_elements; ++i)
+             {
+                 switch (wrapper->into_types[i])
+                 {
+diff -Nur soci-3.0.0_4-pack/soci/core/test/common-tests.h soci-3.0.0_trep300/soci/core/test/common-tests.h
+--- soci-3.0.0_4-pack/soci/core/test/common-tests.h	2011-02-08 23:53:26.619879934 +0100
++++ soci-3.0.0_trep300/soci/core/test/common-tests.h	2009-05-06 00:02:36.000000000 +0200
+@@ -8,16 +8,30 @@
+ #ifndef SOCI_COMMON_TESTS_H_INCLUDED
+ #define SOCI_COMMON_TESTS_H_INCLUDED
+ 
+-#include "soci.h"
+-#include "soci-config.h"
++//
++#if defined(SOCI_HEADERS_BURIED)
++#       include <soci/core/soci.h>
++#       include <soci/core/soci-config.h>
++#       include <soci/core/boost-optional.h>
++#       include <soci/core/boost-tuple.h>
++#       include <soci/core/boost-gregorian-date.h>
++#else
++#	include <soci.h>
++#       include <soci-config.h>
++#       include <boost-optional.h>
++#       include <boost-tuple.h>
++#       include <boost-gregorian-date.h>
++#endif
++//
+ 
+ // explicitly pull conversions for Boost's optional, tuple and fusion:
+ #include <boost/version.hpp>
+-#include <boost-optional.h>
+-#include <boost-tuple.h>
+-#include <boost-gregorian-date.h>
+ #if defined(BOOST_VERSION) && BOOST_VERSION >= 103500
++#if defined(SOCI_HEADERS_BURIED)
++#include <soci/core/boost-fusion.h>
++#else
+ #include <boost-fusion.h>
++#endif
+ #endif // BOOST_VERSION
+ 
+ #include <algorithm>
