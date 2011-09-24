@@ -1,60 +1,39 @@
 Name:           tclap
-Summary:        Template-Only Command Line Argument Parser
+Summary:        Templatized Command Line Argument Parser
 Version:        1.2.0
-Release:        3%{?dist}
+Release:        2%{?dist}
 License:        MIT
 URL:            http://tclap.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/tclap/tclap-%{version}.tar.gz
-Group:          System Environment/Libraries
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildArch:      noarch
 
-BuildRequires:  doxygen graphviz libstdc++-devel
-
+BuildRequires:  doxygen graphviz pkgconfig
 
 %description
-%{name} is a small, flexible library that provides a simple interface for 
-defining and accessing command line arguments. It was initially inspired by
-the user friendly CLAP library. The difference is that this library is
-template-only, so the argument class is type independent. Type independence 
-avoids identical-except-for-type objects, such as IntArg, FloatArg, and
-StringArg. While the library is not strictly compliant with the GNU or
-POSIX standards, it is close.
-
-%{name} is written in ANSI C++ and is meant to be compatible with any
-standards-compliant C++ compiler. The library is implemented entirely
-in header files making it easy to use and distribute with other software.
-
-It implies that this package is almost empty. The actual content, i.e.,
-the header files, are provided by the development package.
-
-%{name} is now a mature, stable, and feature rich package. It probably will not
-see much further development aside from bug fixes and compatibility updates.
+%{summary}
 
 %package devel
-Summary:        Header files for the Template-Only Command Line Argument Parser
+Summary:        Templatized Command Line Argument Parser
 Group:          Development/Libraries
-Requires:       %{name}%{?isa} = %{version}-%{release}
-Requires:       pkgconfig
+Provides:       %{name} = %{version}-%{release}
 
 %description devel
-Headers for the Template-Only Command Line Argument Parser.
-Note: as that project has only headers (i.e., no library/binary object),
-this package (i.e., the -devel package) is the one containing most of the 
-project.
+This is a simple C++ library that facilitates parsing command line
+arguments in a type independent manner.  It doesn't conform exactly
+to either the GNU or POSIX standards, although it is close.
+
 
 %package doc
-Summary:        API Documentation for %{name}
-BuildArch:      noarch
+Summary:        API Documentation for tclap
 Group:          Documentation
+Requires:       %{name}-devel%{?_isa} = %{version}-%{release}
 
 %description doc
-API documentation for the Template-Only Command Line Argument Parser library
+API documentation for the Templatized Command Line Argument Parser library
 
 
 %prep
 %setup -q
-sed -i 's/\r//' docs/style.css
 
 %build
 %configure
@@ -70,9 +49,6 @@ make install DESTDIR=%{buildroot}
 %clean
 rm -rf %{buildroot}
 
-%files
-%defattr(-,root,root,-)
-%doc AUTHORS COPYING README
 
 %files devel
 %defattr(-,root,root,-)
@@ -82,13 +58,9 @@ rm -rf %{buildroot}
 
 %files doc
 %defattr(-,root,root,-)
-%doc AUTHORS COPYING README
 %{_defaultdocdir}/tclap
 
 %changelog
-* Thu Jul 28 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 1.2.0-3
-- Re-added a main package, almost empty
-
 * Mon Jul 04 2011 Bruno Postle 1.2.0-2
 - create -devel package without a base package
 
