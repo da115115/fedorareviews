@@ -1,0 +1,11 @@
+
+# Review Request (bug #677043):
+midori https://bugzilla.redhat.com/show_bug.cgi?id=677043
+
+# Source Tar-ball:
+wget http://www.catb.org/~esr/deheader/deheader-0.6.tar.gz
+
+# RPM Specification file:
+wget http://dl.dropbox.com/u/420606/fedora-packages/deheader.spec
+
+
