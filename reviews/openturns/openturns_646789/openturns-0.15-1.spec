@@ -13,7 +13,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:  gcc-c++, bison, flex, automake, libtool, autoconf, doxygen
 BuildRequires:  libxml2-devel
 BuildRequires:  tbb-devel
-BuildRequires:  R-rot
+#BuildRequires:  R-rot
 %if 0%{?suse_version}
 BuildRequires:  lapack
 BuildRequires:  gcc-fortran
