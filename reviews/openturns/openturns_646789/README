@@ -1,0 +1,11 @@
+
+# Review Request (bug #646789):
+midori https://bugzilla.redhat.com/show_bug.cgi?id=646789
+
+# Source Tar-ball:
+wget http://downloads.sourceforge.net/openturns/openturns/openturns-0.15.tar.bz2
+
+# RPM Specification file:
+wget "https://build.opensuse.org/package/view_file?file=openturns.spec&package=openturns&project=science%3Aopenturns"
+
+
