@@ -1,0 +1,12 @@
+--- lib/src/Uncertainty/Model/DistributionImplementation.cxx	(revision 2096)
++++ lib/src/Uncertainty/Model/DistributionImplementation.cxx	(working copy)
+@@ -405,7 +405,7 @@
+                                                                                          const Bool tail) const
+       {
+         const UnsignedLong size(inSample.getSize());
+-        NumericalSample outSample(size, getDimension());
++        NumericalSample outSample(size, 1);
+         for (UnsignedLong i = 0; i < size; ++i) outSample[i] = NumericalPoint(1, computeCDF(inSample[i], tail));
+         return outSample;
+       }
+

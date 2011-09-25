@@ -30,14 +30,14 @@ BuildRequires:  blas-devel
 BuildRequires:  graphviz
 %endif
 BuildRequires:  python-devel
-BuildRequires:  swig &gt;= 1.3.35
+BuildRequires:  swig >= 1.3.35
 %if 0%{?fedora}
 BuildRequires:  PyQt4
 # choices: atlas / atlas-sse2
 BuildRequires:  atlas
 BuildRequires:  rpy
 %endif
-%if 0%{?fedora} &gt;= 15
+%if 0%{?fedora} >= 15
 # choices: sane-backends-libs / sane-backends-libs-gphoto2
 BuildRequires:  sane-backends-libs
 %endif
@@ -238,13 +238,13 @@ rm -rf %{buildroot}
 %{_includedir}/%{name}/swig/
 
 %changelog
-* Sat Jul 30 2011 Julien Schueller &lt;schueller at phimeca dot com&gt; 0.15-1
+* Sat Jul 30 2011 Julien Schueller <schueller at phimeca dot com> 0.15-1
 - New upstream release
 
-* Sat Apr 9 2011 Julien Schueller &lt;schueller at phimeca dot com&gt; 0.14.0-1
+* Sat Apr 9 2011 Julien Schueller <schueller at phimeca dot com> 0.14.0-1
 - New upstream release
 
-* Sat Oct 9 2010 Julien Schueller &lt;schueller at phimeca dot com&gt; 0.13.2-1
+* Sat Oct 9 2010 Julien Schueller <schueller at phimeca dot com> 0.13.2-1
 - New upstream release
 
 * Mon Nov 26 2007 Remy Pagniez 0.11.1-1

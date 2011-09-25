@@ -1,0 +1,21 @@
+--- trunk_ex2/lib/test/check_testsuite.at	2011-07-01 10:34:36.010341000 +0200
++++ trunk_ex/lib/test/check_testsuite.at	2011-07-01 17:49:54.300345569 +0200
+@@ -71,7 +71,7 @@
+ m4_include(t_LinearNumericalMathGradientImplementation_std.at)
+ m4_include(t_ConstantNumericalMathHessianImplementation_std.at)
+ m4_include(t_MethodBoundNumericalMathEvaluationImplementation_std.at)
+-m4_include(t_NumericalMathFunction_analytical.at)
++#m4_include(t_NumericalMathFunction_analytical.at)
+ m4_include(t_NumericalMathFunction_indicator.at)
+ m4_include(t_NumericalMathFunction_dual_linear_combination.at)
+ m4_include(t_NumericalMathFunction_linear_combination.at)
+@@ -196,7 +196,7 @@
+ m4_include(t_Student_std.at)
+ m4_include(t_StudentFactory_std.at)
+ m4_include(t_Trapezoidal_std.at)
+-m4_include(t_TrapezoidalFactory_std.at)
++#m4_include(t_TrapezoidalFactory_std.at)
+ m4_include(t_Triangular_std.at)
+ m4_include(t_TriangularFactory_std.at)
+ m4_include(t_TruncatedDistribution_std.at)
+

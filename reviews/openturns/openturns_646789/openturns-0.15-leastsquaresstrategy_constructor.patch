@@ -1,0 +1,21 @@
+--- openturns-0.15.orig//lib/src/Uncertainty/Algorithm/MetaModel/FunctionalChaos/LeastSquaresStrategy.cxx	2011-08-13 20:35:29.522140001 +0200
++++ openturns-0.15/lib/src/Uncertainty/Algorithm/MetaModel/FunctionalChaos/LeastSquaresStrategy.cxx	2011-08-13 20:36:01.312140001 +0200
+@@ -89,7 +89,7 @@
+ 						 const NumericalPoint & weights,
+                                                  const ApproximationAlgorithmImplementationFactory & factory)
+         : ProjectionStrategyImplementation(inputSample, outputSample, weights),
+-          p_approximationAlgorithmImplementationFactory_( new PenalizedLeastSquaresAlgorithmFactory )
++          p_approximationAlgorithmImplementationFactory_( factory.clone() )
+       {
+         // Nothing to do
+       }
+@@ -99,7 +99,7 @@
+                                                  const NumericalSample & outputSample,
+                                                  const ApproximationAlgorithmImplementationFactory & factory)
+         : ProjectionStrategyImplementation(inputSample, outputSample, NumericalPoint(inputSample.getSize(), 1.0 / inputSample.getSize())),
+-          p_approximationAlgorithmImplementationFactory_( new PenalizedLeastSquaresAlgorithmFactory )
++          p_approximationAlgorithmImplementationFactory_( factory.clone() )
+       {
+         // Nothing to do
+       }
+
