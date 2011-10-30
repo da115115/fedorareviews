@@ -1,0 +1,7 @@
+
+# AirRAC Review Request on Fedora:
+midori https://bugzilla.redhat.com/show_bug.cgi?id=750099
+
+# Sources
+wget http://downloads.sourceforge.net/airinv/airinv-0.1.1.tar.bz2
+
