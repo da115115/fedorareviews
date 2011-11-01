@@ -37,7 +37,7 @@ BuildRequires:  boost-devel
 BuildRequires:  libtool
 
 %description
-SOCI is a C++ database access library that provides the
+%{name} is a C++ database access library that provides the
 illusion of embedding SQL in regular C++ code, staying entirely within
 the C++ standard.
 
@@ -49,9 +49,9 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 BuildRequires:  sqlite-devel
 
 %description    sqlite3
-This package contains the SQLite3 back-end for SOCI, i.e.,
+This package contains the SQLite3 back-end for %{name}, i.e.,
 dynamic library specific to the SQLite3 database. If you would like to
-use SOCI in your programs with SQLite3, you will need to
+use %{name} in your programs with SQLite3, you will need to
 install %{name}-sqlite3.}
 
 %{?with_mysql:%package        mysql
@@ -61,9 +61,9 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 BuildRequires:  mysql-devel
 
 %description    mysql
-This package contains the MySQL back-end for SOCI, i.e.,
+This package contains the MySQL back-end for %{name}, i.e.,
 dynamic library specific to the MySQL database. If you would like to
-use SOCI in your programs with MySQL, you will need to
+use %{name} in your programs with MySQL, you will need to
 install %{name}-mysql.}
 
 %{?with_postgresql:%package        postgresql
@@ -73,9 +73,9 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 BuildRequires:  postgresql-devel
 
 %description    postgresql
-This package contains the PostGreSQL back-end for SOCI, i.e.,
+This package contains the PostGreSQL back-end for %{name}, i.e.,
 dynamic library specific to the PostGreSQL database. If you would like
-to use SOCI in your programs with PostGreSQL, you will need to
+to use %{name} in your programs with PostGreSQL, you will need to
 install %{name}-postgresql.}
 
 %{?with_odbc:%package        odbc
@@ -85,9 +85,9 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 BuildRequires:  unixODBC-devel
 
 %description    odbc
-This package contains the ODBC back-end for SOCI, i.e.,
+This package contains the ODBC back-end for %{name}, i.e.,
 dynamic library specific to the ODBC connectors. If you would like to
-use SOCI in your programs with ODBC, you will need to
+use %{name} in your programs with ODBC, you will need to
 install %{name}-odbc.}
 
 %{?with_oracle:%package        oracle
@@ -96,9 +96,9 @@ Group:          System Environment/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    oracle
-This package contains the Oracle back-end for SOCI, i.e.,
+This package contains the Oracle back-end for %{name}, i.e.,
 dynamic library specific to the Oracle database. If you would like to
-use SOCI in your programs with Oracle, you will need to install
+use %{name} in your programs with Oracle, you will need to install
 %{name}-oracle.}
 
 
@@ -179,7 +179,7 @@ to install %{name}-oracle.}
 
 
 %package        doc
-Summary:        HTML documentation for the SOCI library
+Summary:        HTML documentation for the %{name} library
 Group:          Documentation
 %if 0%{?fedora} || 0%{?rhel} > 5
 BuildArch:      noarch
@@ -188,8 +188,8 @@ BuildArch:      noarch
 #BuildRequires:  doxygen, ghostscript
 
 %description    doc
-This package contains the documentation in the HTML format of the SOCI
-library. The documentation is the same as at the SOCI web page.
+This package contains the documentation in the HTML format of the %{name}
+library. The documentation is the same as at the %{name} web page.
 
 
 %prep
@@ -352,10 +352,23 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Mon Oct 31 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.1.0-1
 - Upstream integration
-
-* Sat Sep 17 2010 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.1.0.rc1-1
-- Upstream integration
 - New CMake build system
+
+* Sat Jul 23 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 3.0.0-23
+- Rebuild for Boost-1.47.0-2
+
+* Sun Jul 03 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 3.0.0-22
+- Now links with the multi-threaded versions of the Boost libraries
+
+* Mon Apr 25 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 3.0.0-21
+- Rebuild for Boost-1.46.1-2
+
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.0-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Tue Feb 08 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-19
+- Fixed a compilation error with g++ 4.6 on default constructor definition
+- Split the big patch into smaller pieces
 
 * Tue Sep 07 2010 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-18
 - Fixed bug #631175 (https://bugzilla.redhat.com/show_bug.cgi?id=631175)
