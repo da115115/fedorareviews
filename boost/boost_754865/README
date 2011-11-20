@@ -82,6 +82,20 @@ wget http://pkgs.fedoraproject.org/gitweb/?p=boost.git;a=blob_plain;f=boost-cmak
 
 
 ##
+# Calculaing the depending packages
+#
+# 1. The lazy way is to wait for the first Rawhide report (from the
+#    fedora-devel mailing list), with all the failing packages. Copy
+#    those packages into the boost_impacted_packages.txt text file.
+#    The fedora-devel list is:
+midori https://admin.fedoraproject.org/mailman/listinfo/devel
+# 
+grep "libboost" rawhide_report.txt | sed -e "s/\([A-Za-z]*\)-\([0-9.]*\)-\(.*\)/\1/g" | sort -u > boost_impacted_packages.txt
+#
+# 2. Use the RPM tools:
+repoquery --whatrequires boost
+
+##
 # MinGW-Boost RPM package:
 # On Fedora devel (version 1.48):
 wget http://mirror.ovh.net/download.fedora.redhat.com/linux/development/source/SRPMS/mingw32-boost-1.48.0-1.fc17.src.rpm
