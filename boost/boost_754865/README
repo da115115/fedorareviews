@@ -93,7 +93,7 @@ midori https://admin.fedoraproject.org/mailman/listinfo/devel
 grep "libboost" rawhide_report.txt | sed -e "s/\([A-Za-z]*\)-\([0-9.]*\)-\(.*\)/\1/g" | sort -u > boost_impacted_packages.txt
 #
 # 2. Use the RPM tools:
-repoquery --whatrequires boost
+repoquery --disablerepo='*' --enablerepo=rawhide-source --archlist=src -q --whatrequires boost-devel
 
 ##
 # MinGW-Boost RPM package:
