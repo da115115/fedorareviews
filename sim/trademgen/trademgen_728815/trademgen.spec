@@ -92,6 +92,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/py%{name}_drawBookingArrivals
 %{_bindir}/%{name}_extractBookingRequests.sh
 %{_libdir}/lib%{name}.so.*
+%{_libdir}/libpy%{name}.so.*
 %{_mandir}/man1/%{name}.1.*
 %{_mandir}/man1/%{name}_with_db.1.*
 %{_mandir}/man1/py%{name}.1.*
