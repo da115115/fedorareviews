@@ -1,0 +1,4 @@
+
+# Fedora active user status (see also http://ambre.pingoured.fr/cgit/fedora-misc.git/):
+wget http://ambre.pingoured.fr/cgit/fedora-misc.git/tree/fedora_active_user.py
+
