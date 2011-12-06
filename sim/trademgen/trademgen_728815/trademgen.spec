@@ -2,8 +2,8 @@
 %global mydocs __tmp_docdir
 #
 Name:           trademgen
-Version:        0.1.0
-Release:        2%{?dist}
+Version:        0.2.1
+Release:        1%{?dist}
 
 Summary:        C++ Simulated Travel Demand Generation Library
 
@@ -28,37 +28,36 @@ Willingness-To-Pay, preferred airline, etc).
 increased functionality, speed and accuracy. In particular the
 Boost (C++ Standard Extensions: http://www.boost.org) library is used.
 
-Install the %{name} package if you need a library for simulated travel
-demand generation C++ library.
+Install the %{name} package if you need a library of basic C++ objects
+for travel-related demand generation, mainly for simulation purpose.
 
 %package        devel
-Summary:        Header files, libraries and development documentation for %{name}
+Summary:        Header files, libraries and development helper tools for %{name}
 Group:          Development/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
 
 %description    devel
-This package contains the header files, static libraries and
-development documentation for %{name}. If you would like to develop
+This package contains the header files, shared libraries and
+development helper tools for %{name}. If you would like to develop
 programs using %{name}, you will need to install %{name}-devel.
 
-%package doc
+%package        doc
 Summary:        HTML documentation for the %{name} library
 Group:          Documentation
 %{?fedora:BuildArch:      noarch}
 BuildRequires:  tex(latex)
 BuildRequires:  doxygen, ghostscript
 
-%description doc
-This package contains the documentation in the HTML format of the %{name}
-library. The documentation is the same as at the %{name} web page.
+%description    doc
+This package contains HTML pages, as well as a PDF reference manual,
+for %{name}. All that documentation is generated thanks to Doxygen
+(http://doxygen.org). The content is the same as what can be browsed
+online (http://%{name}.org).
 
 
 %prep
 %setup -q
-# Fix some permissions and formats
-chmod -x AUTHORS ChangeLog COPYING NEWS README
-find . -type f -name '*.[hc]pp' -exec chmod -x {} \;
 
 
 %build
@@ -90,7 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/%{name}
 %{_bindir}/%{name}_with_db
 %{_bindir}/py%{name}
-%{_libdir}/lib*.so.*
+%{_bindir}/py%{name}_drawBookingArrivals
+%{_bindir}/%{name}_extractBookingRequests.sh
+%{_libdir}/lib%{name}.so.*
 %{_mandir}/man1/%{name}.1.*
 %{_mandir}/man1/%{name}_with_db.1.*
 %{_mandir}/man1/py%{name}.1.*
@@ -115,8 +116,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 05 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.2.1-1
+- Upstream update
+
 * Fri Aug 19 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.1.0-2
-- Added missing packages needed by a scratch build
+- Added (BR) missing packages needed by a mock build
 
 * Sun Aug 07 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.1.0-1
 - First package
