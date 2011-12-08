@@ -1,0 +1,20 @@
+# Reference: 
+# http://www.ibm.com/developerworks/linux/library/l-linuxvirt/?ca=dgr-lnxw01Virtual-Linux
+#
+# Text to be processed by http://ditaa.org
+#
+
+ +------------+------------+
+ | Apps c897  | Apps c897  |
+ +------------+------------+
+ |            |            |              +--------+
+ |  Guest OS  |  Guest OS  |              |        |
+ |    c978    |    c978    |      ...     |  Mgmt  |
+ +------------+------------+              |  cFB9  |
+ |    cDBF    |    cDBF    |              |        |
+ +------------+------------+--------------+--------+
+ |                 HyperVisor (VMM)       c789     |
+ +-------------------------------------------------+
+ |                    Hardware     cDEF            |
+ +-------------------------------------------------+
+

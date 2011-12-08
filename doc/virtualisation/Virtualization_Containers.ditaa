@@ -1,0 +1,18 @@
+# Reference: 
+# http://www.ibm.com/developerworks/linux/library/l-linuxvirt/?ca=dgr-lnxw01Virtual-Linux
+#
+# Text to be processed by http://ditaa.org
+#
+
+ +--------------+--------------+              +--------------+
+ |              |              |              |              |
+ | Private Zone | Private Zone |      ...     | Private Zone |
+ |     c978     |     c978     |              |     c978     |
+ +--------------+--------------+--------------+--------------+
+ |                                                           |
+ |                   Operating System (host)                 |
+ |                              c789                         |
+ +-----------------------------------------------------------+
+ |                         Hardware     cDEF                 |
+ +-----------------------------------------------------------+
+
