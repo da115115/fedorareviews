@@ -1,0 +1,130 @@
+
+Package Review
+==============
+
+Key:
+- = N/A
+x = Pass
+! = Fail
+? = Not evaluated
+
+
+
+==== Generic ====
+[ ]: MUST Package is licensed with an open-source compatible license and meets
+     other legal requirements as defined in the legal section of Packaging
+     Guidelines.
+[x]: MUST Package successfully compiles and builds into binary rpms on at
+     least one supported architecture.
+[x]: MUST All build dependencies are listed in BuildRequires, except for any
+     that are listed in the exceptions section of Packaging Guidelines.
+[x]: MUST Buildroot is not present
+     Note: Unless packager wants to package for EPEL5 this is fine
+[ ]: MUST Package contains no bundled libraries.
+[ ]: MUST Changelog in prescribed format.
+[x]: MUST Package has no %clean section with rm -rf %{buildroot} (or
+     $RPM_BUILD_ROOT)
+     Note: Clean would be needed if support for EPEL is required
+[ ]: MUST Sources contain only permissible code or content.
+[x]: MUST Each %files section contains %defattr if rpm < 4.4
+     Note: Note: defattr macros not found. They would be needed for EPEL5
+[ ]: MUST Macros in Summary, %description expandable at SRPM build time.
+[ ]: MUST Package requires other packages for directories it uses.
+[ ]: MUST Package uses nothing in %doc for runtime.
+[ ]: MUST Package is not known to require ExcludeArch.
+[x]: MUST Permissions on files are set properly.
+[x]: MUST Package does not contain duplicates in %files.
+[!]: MUST Spec file lacks Packager, Vendor, PreReq tags.
+     Note: Found : Packager: Denis Arnaud <denis.arnaud_fedora@m4x.org> Found
+     : Vendor: (Fedora packager)
+[x]: MUST Package does not run rm -rf %{buildroot} (or $RPM_BUILD_ROOT) at the
+     beginning of %install.
+     Note: rm -rf would be needed if support for EPEL5 is required
+[!]: MUST If (and only if) the source package includes the text of the
+     license(s) in its own file, then that file, containing the text of the
+     license(s) for the package is included in %doc.
+[ ]: MUST License field in the package spec file matches the actual license.
+[ ]: MUST Package consistently uses macros (instead of hard-coded directory
+     names).
+[ ]: MUST Package meets the Packaging Guidelines.
+[x]: MUST Package is named according to the Package Naming Guidelines.
+[ ]: MUST Package does not generates any conflict.
+[ ]: MUST Package obeys FHS, except libexecdir and /usr/target.
+[ ]: MUST Package must own all directories that it creates.
+[ ]: MUST Package does not own files or directories owned by other packages.
+[ ]: MUST Package installs properly.
+[ ]: MUST Requires correct, justified where necessary.
+[!]: MUST Rpmlint output is silent.
+
+rpmlint api-sanity-checker-1.12.9-1.fc17.noarch.rpm
+
+api-sanity-checker.noarch: W: summary-ended-with-dot C An automatic generator of basic unit tests for a shared C/C++ library.
+api-sanity-checker.noarch: W: no-manual-page-for-binary api-sanity-checker
+1 packages and 0 specfiles checked; 0 errors, 2 warnings.
+
+
+rpmlint api-sanity-checker-1.12.9-1.fc17.src.rpm
+
+api-sanity-checker.src: W: summary-ended-with-dot C An automatic generator of basic unit tests for a shared C/C++ library.
+1 packages and 0 specfiles checked; 0 errors, 1 warnings.
+
+
+[x]: MUST Sources used to build the package match the upstream source, as
+     provided in the spec URL.
+/home/dan/dev/fedora/fedorareviewsgit/reviews/api-sanity-checker/773011/api-sanity-checker-1.12.9.tar.gz :
+  MD5SUM this package     : d94b6cc755662baadb04510974ac3ff5
+  MD5SUM upstream package : d94b6cc755662baadb04510974ac3ff5
+
+[ ]: MUST Spec file is legible and written in American English.
+[x]: MUST Spec file name must match the spec package %{name}, in the format
+     %{name}.spec.
+[ ]: MUST Package contains a SysV-style init script if in need of one.
+[x]: MUST File names are valid UTF-8.
+[x]: SHOULD Reviewer should test that the package builds in mock.
+[ ]: SHOULD If the source package does not include license text(s) as a
+     separate file from upstream, the packager SHOULD query upstream to
+     include it.
+[x]: SHOULD Dist tag is present.
+[ ]: SHOULD No file requires outside of /etc, /bin, /sbin, /usr/bin,
+     /usr/sbin.
+[ ]: SHOULD Final provides and requires are sane (rpm -q --provides and rpm -q
+     --requires).
+[ ]: SHOULD Package functions as described.
+[ ]: SHOULD Package does not include license text files separate from
+     upstream.
+[x]: SHOULD SourceX is a working URL.
+[ ]: SHOULD Description and summary sections in the package spec file contains
+     translations for supported Non-English languages, if available.
+[ ]: SHOULD Package should compile and build into binary rpms on all supported
+     architectures.
+[ ]: SHOULD %check is present and all tests pass.
+[ ]: SHOULD Packages should try to preserve timestamps of original installed
+     files.
+[x]: SHOULD Spec use %global instead of %define.
+
+Issues:
+[!]: MUST Spec file lacks Packager, Vendor, PreReq tags.
+     Note: Found : Packager: Denis Arnaud <denis.arnaud_fedora@m4x.org> Found
+     : Vendor: (Fedora packager)
+[!]: MUST If (and only if) the source package includes the text of the
+     license(s) in its own file, then that file, containing the text of the
+     license(s) for the package is included in %doc.
+[!]: MUST Rpmlint output is silent.
+
+rpmlint api-sanity-checker-1.12.9-1.fc17.noarch.rpm
+
+api-sanity-checker.noarch: W: summary-ended-with-dot C An automatic generator of basic unit tests for a shared C/C++ library.
+api-sanity-checker.noarch: W: no-manual-page-for-binary api-sanity-checker
+1 packages and 0 specfiles checked; 0 errors, 2 warnings.
+
+
+rpmlint api-sanity-checker-1.12.9-1.fc17.src.rpm
+
+api-sanity-checker.src: W: summary-ended-with-dot C An automatic generator of basic unit tests for a shared C/C++ library.
+1 packages and 0 specfiles checked; 0 errors, 1 warnings.
+
+
+
+
+Generated by fedora-review 0.1.1
+External plugins:
