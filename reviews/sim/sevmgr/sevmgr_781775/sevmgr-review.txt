@@ -1,0 +1,142 @@
+
+Package Review
+==============
+
+Key:
+- = N/A
+x = Pass
+! = Fail
+? = Not evaluated
+
+
+
+==== C/C++ ====
+[x]: MUST ldconfig called in %post and %postun if required.
+[x]: MUST Package does not contain any libtool archives (.la)
+[ ]: MUST Package does not contain kernel modules.
+[ ]: MUST Package contains no static executables.
+[ ]: MUST Rpath absent or only used for internal libs.
+[ ]: MUST Package is not relocatable.
+[x]: MUST Development .so files in -devel subpackage, if present.
+
+
+==== Generic ====
+[ ]: MUST Package is licensed with an open-source compatible license and meets
+     other legal requirements as defined in the legal section of Packaging
+     Guidelines.
+[x]: MUST Package successfully compiles and builds into binary rpms on at
+     least one supported primary architecture.
+[x]: MUST All build dependencies are listed in BuildRequires, except for any
+     that are listed in the exceptions section of Packaging Guidelines.
+[!]: MUST Buildroot is not present
+     Note: Buildroot is not needed unless packager plans to package for EPEL5
+[ ]: MUST Package contains no bundled libraries.
+[ ]: MUST Changelog in prescribed format.
+[x]: MUST Package has no %clean section with rm -rf %{buildroot} (or
+     $RPM_BUILD_ROOT)
+     Note: Clean would be needed if support for EPEL is required
+[ ]: MUST Sources contain only permissible code or content.
+[!]: MUST Each %files section contains %defattr if rpm < 4.4
+     Note: defattr(....) present in %files devel section. This is OK if
+     packaging for EPEL5. Otherwise not needed
+[ ]: MUST Macros in Summary, %description expandable at SRPM build time.
+[ ]: MUST Package requires other packages for directories it uses.
+[ ]: MUST Package uses nothing in %doc for runtime.
+[ ]: MUST Package is not known to require ExcludeArch.
+[x]: MUST Permissions on files are set properly.
+[x]: MUST Package does not contain duplicates in %files.
+[x]: MUST Spec file lacks Packager, Vendor, PreReq tags.
+[x]: MUST Package does not run rm -rf %{buildroot} (or $RPM_BUILD_ROOT) at the
+     beginning of %install.
+     Note: rm -rf would be needed if support for EPEL5 is required
+[x]: MUST If (and only if) the source package includes the text of the
+     license(s) in its own file, then that file, containing the text of the
+     license(s) for the package is included in %doc.
+[ ]: MUST License field in the package spec file matches the actual license.
+[ ]: MUST License file installed when any subpackage combination is installed.
+[ ]: MUST Package consistently uses macros (instead of hard-coded directory
+     names).
+[ ]: MUST Package meets the Packaging Guidelines.
+[x]: MUST Package is named according to the Package Naming Guidelines.
+[ ]: MUST Package does not generates any conflict.
+[ ]: MUST Package obeys FHS, except libexecdir and /usr/target.
+[ ]: MUST Package must own all directories that it creates.
+[ ]: MUST Package does not own files or directories owned by other packages.
+[ ]: MUST Package installs properly.
+[!]: MUST Package requires pkgconfig, if .pc files are present. (EPEL5)
+     Note: Only applicable for EL-5
+[ ]: MUST Requires correct, justified where necessary.
+[x]: MUST Rpmlint output is silent.
+
+rpmlint sevmgr-doc-0.2.0-1.fc17.noarch.rpm
+
+1 packages and 0 specfiles checked; 0 errors, 0 warnings.
+
+
+rpmlint sevmgr-0.2.0-1.fc17.src.rpm
+
+1 packages and 0 specfiles checked; 0 errors, 0 warnings.
+
+
+rpmlint sevmgr-0.2.0-1.fc17.i686.rpm
+
+1 packages and 0 specfiles checked; 0 errors, 0 warnings.
+
+
+rpmlint sevmgr-devel-0.2.0-1.fc17.i686.rpm
+
+1 packages and 0 specfiles checked; 0 errors, 0 warnings.
+
+
+rpmlint sevmgr-debuginfo-0.2.0-1.fc17.i686.rpm
+
+1 packages and 0 specfiles checked; 0 errors, 0 warnings.
+
+
+[x]: MUST Sources used to build the package match the upstream source, as
+     provided in the spec URL.
+/home/dan/dev/fedora/fedorareviewsgit/reviews/sim/sevmgr/781775/sevmgr-0.2.0.tar.bz2 :
+  MD5SUM this package     : c2300b3e8abbea7899261e91a605e982
+  MD5SUM upstream package : c2300b3e8abbea7899261e91a605e982
+
+[ ]: MUST Spec file is legible and written in American English.
+[x]: MUST Spec file name must match the spec package %{name}, in the format
+     %{name}.spec.
+[ ]: MUST Package contains a SysV-style init script if in need of one.
+[x]: MUST File names are valid UTF-8.
+[x]: SHOULD Reviewer should test that the package builds in mock.
+[ ]: SHOULD If the source package does not include license text(s) as a
+     separate file from upstream, the packager SHOULD query upstream to
+     include it.
+[x]: SHOULD Dist tag is present.
+[ ]: SHOULD No file requires outside of /etc, /bin, /sbin, /usr/bin,
+     /usr/sbin.
+[ ]: SHOULD Final provides and requires are sane (rpm -q --provides and rpm -q
+     --requires).
+[ ]: SHOULD Package functions as described.
+[ ]: SHOULD Package does not include license text files separate from
+     upstream.
+[x]: SHOULD The placement of pkgconfig(.pc) files are correct.
+[ ]: SHOULD Scriptlets must be sane, if used.
+[x]: SHOULD SourceX is a working URL.
+[ ]: SHOULD Description and summary sections in the package spec file contains
+     translations for supported Non-English languages, if available.
+[ ]: SHOULD Package should compile and build into binary rpms on all supported
+     architectures.
+[ ]: SHOULD %check is present and all tests pass.
+[ ]: SHOULD Packages should try to preserve timestamps of original installed
+     files.
+[x]: SHOULD Spec use %global instead of %define.
+
+Issues:
+[!]: MUST Buildroot is not present
+     Note: Buildroot is not needed unless packager plans to package for EPEL5
+[!]: MUST Each %files section contains %defattr if rpm < 4.4
+     Note: defattr(....) present in %files devel section. This is OK if
+     packaging for EPEL5. Otherwise not needed
+[!]: MUST Package requires pkgconfig, if .pc files are present. (EPEL5)
+     Note: Only applicable for EL-5
+
+
+Generated by fedora-review 0.1.2
+External plugins:
