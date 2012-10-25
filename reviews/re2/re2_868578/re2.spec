@@ -1,7 +1,7 @@
 #
 Name:           re2
 Version:        0.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 Summary:        C++ fast alternative to backtracking RE engines
 
@@ -30,30 +30,6 @@ On large inputs, RE2 is often much faster than backtracking engines;
 its use of automata theory lets it apply optimizations that the others
 cannot.
 
-Unlike most automata-based engines, RE2 implements almost all the
-common Perl and PCRE features and syntactic sugars. It also finds the
-leftmost-first match, the same match that Perl would, and can return
-submatch information. The one significant exception is that RE2 drops
-support for backreferences¹ and generalized zero-width assertions,
-because they cannot be implemented efficiently. The syntax page gives
-full details.
-
-For those who want a simpler syntax, RE2 has a POSIX mode that accepts
-only the POSIX egrep operators and implements leftmost-longest overall
-matching.
-
-To get started writing programs that use RE2, see the C++ API
-description. For details about the implementation, see "Regular
-Expression Matching in the Wild."
-
-Technical note: there's a difference between submatches and
-backreferences. Submatches let you find out what certain
-subexpressions matched after the match is over, so that you can find
-out, after matching dogcat against (cat|dog)(cat|dog), that \1 is dog
-and \2 is cat. Backreferences let you use those subexpressions during
-the match, so that (cat|dog)\1 matches catcat and dogdog but not
-catdog or dogcat.
-
 RE2 supports submatch extraction, but not backreferences.
 
 If you absolutely need backreferences and generalized assertions, then
@@ -76,7 +52,9 @@ programs using %{name}, you will need to install %{name}-devel.
 %setup -q
 
 %build
-make %{?_smp_mflags}
+CXXFLAGS="${CXXFLAGS:-%optflags}"; export CXXFLAGS
+LDFLAGS="${LDFLAGS:-%__global_ldflags}"; export LDFLAGS
+make %{?_smp_mflags} CXXFLAGS='%optflags' LDFLAGS='%__global_ldflags' includedir=%{_includedir} libdir=%{_libdir}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -86,7 +64,7 @@ make install DESTDIR=$RPM_BUILD_ROOT includedir=%{_includedir} libdir=%{_libdir}
 find $RPM_BUILD_ROOT -name 'lib%{name}.a' -exec rm -f {} \;
 
 %check
-make test
+make %{?_smp_mflags} test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -96,18 +74,18 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS CONTRIBUTORS LICENSE README
 %{_libdir}/lib%{name}.so.*
 
 %files devel
-%defattr(-,root,root,-)
-%doc LICENSE README
 %{_includedir}/%{name}
 %{_libdir}/lib%{name}.so
 
 
 %changelog
+* Thu Oct 25 2012 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.0.0-2
+- Took into account review request (#868578) feedback.
+
 * Sat Oct 20 2012 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.0.0-1
 - RPM release for Fedora 18
 
