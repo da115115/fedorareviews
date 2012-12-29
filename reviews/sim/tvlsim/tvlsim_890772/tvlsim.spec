@@ -109,8 +109,12 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
 %{_bindir}/%{name}
+%{_bindir}/simulate
+%{_bindir}/TvlSimServer
 %{_libdir}/lib%{name}.so.*
 %{_mandir}/man1/%{name}.1.*
+%{_mandir}/man1/simulate.1.*
+%{_mandir}/man1/TvlSimServer.1.*
 
 %files devel
 %defattr(-,root,root,-)
