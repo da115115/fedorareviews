@@ -20,8 +20,8 @@ do
 	then
 		pushd ${_pack}
 		echo "Commit and build the ${_pack} Fedora package..."
-		fedpkg commit --clog -p | tee ../${LOG_FILE}
-		fedpkg build --nowait | tee ../${LOG_FILE}
+		fedpkg commit --clog -p | tee -a ../${LOG_FILE}
+		fedpkg build --nowait | tee -a ../${LOG_FILE}
 		echo "... done"
 		popd
 	else
