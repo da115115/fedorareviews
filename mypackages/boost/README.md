@@ -30,3 +30,9 @@ koji tag-pkg f19 boost-1.53.0-1.fc19
 ./commit_and_build_spec.sh
 ```
 
+## Query the status of the builds ##
+Wait a few hours and check the status of the Koji building tasks:
+```shell
+./query_status.sh
+```
+

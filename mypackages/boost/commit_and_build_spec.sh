@@ -30,9 +30,12 @@ do
 done
 popd
 
+# Collect the task numbers:
+grep "Created task" ${WS_DIR}/${LOG_FILE} | cut -d':' -f2 | cut -d' ' -f2 > boost_deplist_pack_task_all.txt
+
 # Reporting
 echo
 echo "The rebuilding of all the dependent packages has been launched. See ${WS_DIR}/${LOG_FILE} for more details."
-echo "grep http ${WS_DIR}/${LOG_FILE}"
+echo "The list of tasks is available in the boost_deplist_pack_task_all.txt file."
 echo
 
