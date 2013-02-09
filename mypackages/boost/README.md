@@ -1,4 +1,10 @@
 
+## Clone the support tools themselves ##
+```shell
+git clone http://github.com/denisarnaud/fedorareviews.git fedorareviewsgit
+cd fedorareviewsgit/mypackages/boost
+```
+
 ## Calculate the packages depending on Boost ##
 ```shell
 ./calculate_boost_dep_list.sh
