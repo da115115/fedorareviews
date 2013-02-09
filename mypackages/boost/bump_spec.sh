@@ -15,7 +15,7 @@ do
 	if [ -d ${_pack} ]
 	then
 		echo "Bumping the RPM specification file for the ${_pack} Fedora package..."
-		rpmdev-bumpspec --comment=\"- Rebuild for Boost-1.53.0\" ${_pack}/${_pack}.spec
+		rpmdev-bumpspec --comment="- Rebuild for Boost-1.53.0" ${_pack}/${_pack}.spec
 		echo "... done"
 	else
 		echo "[Warning] For whatever reason, the ${_pack} Fedora package is supposed to have been cloned, but has not"
