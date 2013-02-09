@@ -11,7 +11,7 @@ BOOST_DEPLIST=`repoquery --whatrequires boost\* --source | uniq`
 rm -f boost_deplist_pack.txt
 for _pack in $BOOST_DEPLIST
 do
-	echo ${_pack} | sed -e "s/^\(.\+\)-\([0-9]\+\).\([0-9a-z.]\+\)-\(.\+\)\.fc\([0-9]\+\)\(.*\)\.src\.rpm$/\1/g" >> boost_deplist_pack.txt
+	echo ${_pack} | grep -v "boost" | sed -e "s/^\(.\+\)-\([0-9]\+\).\([0-9a-z.]\+\)-\(.\+\)\.fc\([0-9]\+\)\(.*\)\.src\.rpm$/\1/g" >> boost_deplist_pack.txt
 	done
 uniq boost_deplist_pack.txt > boost_deplist_pack_uniq.txt
 rm -f boost_deplist_pack.txt
