@@ -58,7 +58,7 @@ failed. The following Shell script launches a rebuild for each of those packages
 ./rebuild_failures.sh
 ```
 
-## Query the status of the rebuilts ##
+## Query the status of the rebuilds ##
 Wait a few hours and check the status of the Koji building tasks:
 ```shell
 ./query_status.sh boost_deplist_pack_task_rebuilt.txt
