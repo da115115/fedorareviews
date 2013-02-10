@@ -50,3 +50,17 @@ Wait a few hours and check the status of the Koji building tasks:
 ./query_status.sh
 ```
 
+## Rebuild the failed builts ##
+The above Shell script creates the ```boost_deplist_pack_task_all_failure.txt``` file,
+giving the details (package name, task ID) on the Koji tasks of all the builds having
+failed. The following Shell script launches a rebuild for each of those packages:
+```shell
+./rebuild_failures.sh
+```
+
+## Query the status of the rebuilts ##
+Wait a few hours and check the status of the Koji building tasks:
+```shell
+./query_status.sh boost_deplist_pack_task_rebuilt.txt
+```
+

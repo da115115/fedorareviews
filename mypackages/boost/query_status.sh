@@ -1,5 +1,22 @@
 #!/bin/bash
 
+# List of tasks
+TASK_LIST_FILE=boost_deplist_pack_task_all.txt
+
+#
+if [ "$1" = "-h" -o "$1" = "--help" ]
+then
+	echo
+	echo "Usage: $0 [<File with the list of Koji tasks to be queried, one by line>]"
+	echo "  - Default file for the list of Koji tasks: '${TASK_LIST_FILE}'"
+	echo
+	exit
+fi
+if [ -n "$1" ]
+then
+	TASK_LIST_FILE=$1
+fi
+
 #
 WS_DIR=workspace
 if [ ! -d ${WS_DIR} ]
@@ -11,9 +28,11 @@ fi
 LOG_FILE=boost_deplist_pack_task_allinfo.txt
 rm -f ${LOGFILE} boost_deplist_pack_task_all_success.txt \
  boost_deplist_pack_task_all_failure.txt boost_deplist_pack_task_all_unfinished.txt
+touch boost_deplist_pack_task_all_success.txt \
+ boost_deplist_pack_task_all_failure.txt boost_deplist_pack_task_all_unfinished.txt
 
 #
-BOOST_DEP_TASKLIST=`cat boost_deplist_pack_task_all.txt`
+BOOST_DEP_TASKLIST=`cat ${TASK_LIST_FILE}`
 for _task in ${BOOST_DEP_TASKLIST}
 do
 	echo "Querying the Koji task #${_task}..."
