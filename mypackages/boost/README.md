@@ -36,7 +36,12 @@ such as http://koji.fedoraproject.org/koji/taskinfo?taskID=4943763
 
 ## Commit the RPM specification files ##
 ```shell
-./commit_and_build_spec.sh
+./commit_spec.sh
+```
+
+## Rebuild the packages ##
+```shell
+./rebuild_spec.sh
 ```
 
 ## Query the status of the builds ##
