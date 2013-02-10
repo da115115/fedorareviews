@@ -25,6 +25,15 @@ cd fedorareviewsgit/mypackages/boost
 koji tag-pkg f19 boost-1.53.0-1.fc19
 ```
 
+## Wait that the new Boost land into Rawhide ##
+When the following command returns, Boost is in the Rawhide repository:
+```shell
+koji wait-repo --build=boost-1.53.0-1.fc19 f19-build
+```
+The Fedora Rawhide repository is rebuilt and can be tracked with a task
+such as http://koji.fedoraproject.org/koji/taskinfo?taskID=4943763
+
+
 ## Commit the RPM specification files ##
 ```shell
 ./commit_and_build_spec.sh
