@@ -7,20 +7,19 @@ then
 	mkdir -p ${WS_DIR}
 fi
 
-#
-LOG_FILE=rebuild_for_boost.log
+# Logging
+LOG_FILE=boost_rebuild.log
 rm -f ${WS_DIR}/${LOG_FILE}
 
 #
-BOOST_DEPLIST=`ls ${WS_DIR}`
 pushd ${WS_DIR}
+BOOST_DEPLIST=`find . -type 'd' -maxdepth 1`
 for _pack in ${BOOST_DEPLIST}
 do
 	if [ -d ${_pack} ]
 	then
 		pushd ${_pack}
-		echo "Commit and build the ${_pack} Fedora package..."
-		fedpkg commit --clog -p | tee -a ../${LOG_FILE}
+		echo "Build the ${_pack} Fedora package..."
 		fedpkg build --nowait | tee -a ../${LOG_FILE}
 		echo "... done"
 		popd
