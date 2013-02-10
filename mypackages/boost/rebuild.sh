@@ -13,7 +13,7 @@ rm -f ${WS_DIR}/${LOG_FILE}
 
 #
 pushd ${WS_DIR}
-BOOST_DEPLIST=`find . -type 'd' -maxdepth 1`
+BOOST_DEPLIST=`find . -maxdepth 1 -type 'd'`
 for _pack in ${BOOST_DEPLIST}
 do
 	if [ -d ${_pack} ]
