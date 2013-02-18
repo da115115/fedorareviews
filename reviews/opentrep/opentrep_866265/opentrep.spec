@@ -2,8 +2,8 @@
 %global mydocs __tmp_docdir
 #
 Name:           opentrep
-Version:        0.5.0
-Release:        2%{?dist}
+Version:        0.5.2
+Release:        1%{?dist}
 
 Summary:        C++ library providing a clean API for parsing travel-focused requests
 
@@ -131,6 +131,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Feb 17 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.5.2-1
+- Upstream update
+
 * Thu Oct 25 2012 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.5.0-2
 - Took into account review request #866265 feedback
 
