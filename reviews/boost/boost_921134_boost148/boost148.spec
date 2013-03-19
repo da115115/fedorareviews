@@ -40,10 +40,11 @@
 %endif
 
 Name: boost148
+%define real_name boost
 Summary: The free peer-reviewed portable C++ source libraries
 Version: 1.48.0
 %define version_enc 1_48_0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Boost and MIT and Python
 
 # The CMake build framework (set of CMakeLists.txt and module.cmake files) is
@@ -345,11 +346,11 @@ pre-processor functionality.
 %package devel
 Summary: The Boost C++ headers and shared development libraries
 Group: Development/Libraries
-Requires: boost = %{version}-%{release}
+Requires: boost148 = %{version}-%{release}
 Provides: boost148-python-devel = %{version}-%{release}
 # for %%_datadir/cmake ownership, can consider making cmake-filesystem
 # if this dep is a problem
-Requires: cmake
+#Requires: cmake
 
 %description devel
 Headers and shared object symbolic links for the Boost C++ libraries.
@@ -768,8 +769,8 @@ find $RPM_BUILD_ROOT%{_includedir}/ \( -name '*.pl' -o -name '*.sh' \) -exec rm 
 # the files out, and rely on cmake's FindBoost to DTRT, as it had been
 # doing in pre-cmake-boost times.  For further info, see:
 #   https://bugzilla.redhat.com/show_bug.cgi?id=597020
-rm -Rfv $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}
-rm -Rfv $RPM_BUILD_ROOT%{_datadir}/cmake/%{name}
+rm -Rfv $RPM_BUILD_ROOT%{_datadir}/%{real_name}-%{version}
+rm -Rfv $RPM_BUILD_ROOT%{_datadir}/cmake/%{real_name}
 
 # Perform the necessary renaming according to package renaming
 mkdir -p $RPM_BUILD_ROOT{%{_includedir},%{_libdir}/{.,{mpich2,openmpi}/lib}}/%{name}
@@ -991,17 +992,17 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_includedir}/%{name}
-%{_libdir}/libboost_*.so
+%{_libdir}/%{name}/libboost_*.so
 
 %files static
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/*.a
+%{_libdir}/%{name}/*.a
 %if %{with mpich2}
-%{_libdir}/mpich2/lib/*.a
+%{_libdir}/mpich2/lib/%{name}/*.a
 %endif
 %if %{with openmpi}
-%{_libdir}/openmpi/lib/*.a
+%{_libdir}/openmpi/lib/%{name}/*.a
 %endif
 
 # OpenMPI packages
@@ -1016,7 +1017,7 @@ rm -rf $RPM_BUILD_ROOT
 %files openmpi-devel
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/openmpi/lib/libboost_*.so
+%{_libdir}/openmpi/lib/%{name}/libboost_*.so
 
 %files openmpi-python
 %defattr(-, root, root, -)
@@ -1043,7 +1044,7 @@ rm -rf $RPM_BUILD_ROOT
 %files mpich2-devel
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/mpich2/lib/libboost_*.so
+%{_libdir}/mpich2/lib/%{name}/libboost_*.so
 
 %files mpich2-python
 %defattr(-, root, root, -)
@@ -1070,5 +1071,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/bjam.1*
 
 %changelog
+* Tue Mar 19 2013 Radu Greab <radu@yx.ro> - 1.48.0-2
+- Really remove the .cmake files from the build root
+- The devel libraries are in versioned directories
+- boost148-devel: don't require cmake
+- boost148-devel: require boost148, not boost
+
 * Wed Mar 13 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.48.0-1
 - Transformed boost-1.48.0-14 into boost148-1.48.0-1 (#)
