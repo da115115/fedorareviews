@@ -44,7 +44,7 @@ Name: boost148
 Summary: The free peer-reviewed portable C++ source libraries
 Version: 1.48.0
 %define version_enc 1_48_0
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Boost and MIT and Python
 
 # The CMake build framework (set of CMakeLists.txt and module.cmake files) is
@@ -496,7 +496,9 @@ back-end to do the parallel work.
 Summary: Cross platform build system for C++ projects
 Group: Development/Tools
 Requires: boost148-jam
+%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 BuildArch: noarch
+%endif
 
 %description build
 Boost.Build is an easy way to build C++ projects, everywhere. You name
@@ -1071,6 +1073,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/bjam.1*
 
 %changelog
+* Wed Mar 20 2013 Radu Greab <radu@yx.ro> - 1.48.0-3
+- Set noarch for package boost148-build only on supported systems,
+  otherwise the debuginfo package is not built
+
 * Tue Mar 19 2013 Radu Greab <radu@yx.ro> - 1.48.0-2
 - Really remove the .cmake files from the build root
 - The devel libraries are in versioned directories
