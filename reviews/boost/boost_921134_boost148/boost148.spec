@@ -44,7 +44,8 @@ Name: boost148
 Summary: The free peer-reviewed portable C++ source libraries
 Version: 1.48.0
 %define version_enc 1_48_0
-Release: 3%{?dist}
+%define version_suffix 148
+Release: 4%{?dist}
 License: Boost and MIT and Python
 
 # The CMake build framework (set of CMakeLists.txt and module.cmake files) is
@@ -540,6 +541,10 @@ sed 's/_FEDORA_SONAME/%{sonamever}/' %{PATCH1} | %{__patch} -p0 --fuzz=0
 %patch16 -p1
 %patch17 -p0
 
+# Update path to boost-build 
+sed -i "s,BOOST_BUILD_PATH = /usr/share/boost-build,BOOST_BUILD_PATH = %{_datadir}/%{name}-build,g" \
+    tools/build/v2/engine/jambase.c tools/build/v2/engine/Jambase
+
 %build
 # Support for building tests.
 %define boost_testflags -DBUILD_TESTS="NONE"
@@ -686,13 +691,13 @@ find $RPM_BUILD_ROOT/%{_libdir} -name '*.cmake' -exec rm -f {} \;
 echo ============================= install jam ==================
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
 pushd tools/build/v2/engine/
-%{__install} -m 755 bin.linux*/bjam $RPM_BUILD_ROOT%{_bindir}
+%{__install} -m 755 bin.linux*/bjam $RPM_BUILD_ROOT%{_bindir}/bjam%{version_suffix}
 popd
 # Install the manual page
-%{__install} -p -m 644 tools/build/v2/doc/bjam.1 -D $RPM_BUILD_ROOT%{_mandir}/man1/bjam.1
+%{__install} -p -m 644 tools/build/v2/doc/bjam.1 -D $RPM_BUILD_ROOT%{_mandir}/man1/bjam%{version_suffix}.1
 
 echo ============================= install build ==================
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/boost-build
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}-build
 pushd tools/build/v2
 # Fix some permissions
 chmod -x build/alias.py
@@ -702,7 +707,7 @@ rm -f tools/doxygen/windows-paths-check.hpp
 # Not a real file
 rm -f build/project.ann.py
 # Move into a dedicated location
-cp -a boost-build.jam bootstrap.jam build-system.jam build/ kernel/ options/ tools/ util/ user-config.jam $RPM_BUILD_ROOT%{_datadir}/boost-build/
+cp -a boost-build.jam bootstrap.jam build-system.jam build/ kernel/ options/ tools/ util/ user-config.jam $RPM_BUILD_ROOT%{_datadir}/%{name}-build/
 popd
 
 # Install documentation files (HTML pages) within the temporary place
@@ -1064,15 +1069,18 @@ rm -rf $RPM_BUILD_ROOT
 %files build
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_datadir}/boost-build/
+%{_datadir}/%{name}-build/
 
 %files jam
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_bindir}/bjam
-%{_mandir}/man1/bjam.1*
+%{_bindir}/bjam%{version_suffix}
+%{_mandir}/man1/bjam%{version_suffix}.1*
 
 %changelog
+* Thu Mar 21 2013 Radu Greab <radu@yx.ro> - 1.48.0-4
+- Add boost version to the files from the build and jam subpackages
+
 * Wed Mar 20 2013 Radu Greab <radu@yx.ro> - 1.48.0-3
 - Set noarch for package boost148-build only on supported systems,
   otherwise the debuginfo package is not built
