@@ -3,7 +3,7 @@
 #
 Name:           airtsp
 Version:        1.01.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Provides:       airsched = %{version}-%{release}
 Obsoletes:      airsched < 1.01.0-1
 
@@ -18,6 +18,7 @@ BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires:  cmake, python-devel, boost-devel
 BuildRequires:  soci-mysql-devel, soci-sqlite3-devel, zeromq-devel, readline-devel
 BuildRequires:  stdair-devel
+BuildRequires:  graphviz, texlive-utils
 
 
 %description
@@ -113,9 +114,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jun 12 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> 1.01.0-2
+- Added a dependency on graphviz and texlive-utils (epstopdf), so as
+  build the documentation with figures
+
 * Sat Jun 08 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> 1.01.0-1
 - Renamed the package, from AirSched to AirTSP, due to trademark issue
-  with Pancor
+  with Plancor
 
 * Wed Oct 26 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.1.2-1
 - Upstream update
