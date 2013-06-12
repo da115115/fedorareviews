@@ -18,7 +18,6 @@ BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires:  cmake, python-devel, boost-devel
 BuildRequires:  soci-mysql-devel, soci-sqlite3-devel, zeromq-devel, readline-devel
 BuildRequires:  stdair-devel
-BuildRequires:  graphviz, texlive-utils
 
 
 %description
@@ -52,7 +51,7 @@ Group:          Documentation
 BuildArch:      noarch
 %endif
 BuildRequires:  tex(latex)
-BuildRequires:  doxygen, ghostscript
+BuildRequires:  doxygen, ghostscript, graphviz
 
 %description    doc
 This package contains HTML pages, as well as a PDF reference manual,
