@@ -3,7 +3,7 @@
 #
 Name:           tvlsim
 Version:        1.00.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 Summary:        Travel Market Simulator
 
@@ -94,6 +94,10 @@ mkdir -p %{mydocs}
 mv $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/html %{mydocs}
 rm -f %{mydocs}/html/installdox
 
+# Remove additional documentation files (those files are already available
+# in the project top directory)
+rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/{NEWS,README,AUTHORS}
+
 %check
 #ctest
 
@@ -135,6 +139,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jul 29 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.00.0-2
+- Fixed the docdir issue, following the F20 System Wide Change
+- Rebuild for boost 1.54.0
+
 * Sat Dec 29 2012 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.00.0-1
 - First RPM release
 
