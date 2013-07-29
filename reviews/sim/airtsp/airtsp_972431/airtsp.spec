@@ -3,7 +3,7 @@
 #
 Name:           airtsp
 Version:        1.01.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Provides:       airsched = %{version}-%{release}
 Obsoletes:      airsched < 1.01.0-1
 
@@ -76,6 +76,10 @@ mkdir -p %{mydocs}
 mv $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/html %{mydocs}
 rm -f %{mydocs}/html/installdox
 
+# Remove additional documentation files (those files are already available
+# in the project top directory)
+rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/{NEWS,README,AUTHORS}
+
 %check
 #ctest
 
@@ -113,6 +117,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jul 29 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.01.0-3
+- Fixed the docdir issue, following the F20 System Wide Change
+- Rebuild for boost 1.54.0
+
 * Wed Jun 12 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> 1.01.0-2
 - Added a dependency on graphviz and texlive-utils (epstopdf), so as
   build the documentation with figures
