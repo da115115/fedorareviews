@@ -29,10 +29,10 @@ software and aims to become the new generation PODS (http://podsresearch.com/),
 which was instrumental in the inception of the Travel Market Simulator project.
 
 Over a dozen components have been implemented and are fully functional,
-encompassing for instance (but not limited to) traveller demand generation
+encompassing for instance (but not limited to) traveler demand generation
 (booking requests), travel distribution (GDS/CRS), low fare search (LFS),
 price calculation and inventory availability calculation), customer choice
-modelling (CCM), revenue management (RM), schedule and inventory management,
+modeling (CCM), revenue management (RM), schedule and inventory management,
 revenue accounting (RA).
 
 The Travel Market Simulator can used in either batch or hosted mode. It is
