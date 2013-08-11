@@ -18,8 +18,7 @@ BuildRequires:  boost-devel, libicu-devel
 
 %description
 %{name} aims at providing a clean API, and the corresponding C++
-implementation, for parsing travel-focused requests (e.g.,
-"washington dc beijing monday a/r +aa -ua 1 week 2 adults 1 dog").
+implementation, for parsing travel-focused requests.
 
 %{name} uses Xapian (http://www.xapian.org) for the Information Retrieval part,
 on freely available travel-related data (e.g., country names and codes,
@@ -27,19 +26,19 @@ city names and codes, airline names and codes, etc.).
 
 %{name} exposes a simple, clean and object-oriented, API. For instance,
 the static Parse() method takes, as input, a string containing the travel
-request, and yields, as output, the list of the recognised terms as well as
+request, and yields, as output, the list of the recognized terms as well as
 their corresponding types. As an example, the travel request
-"washington dc beijing monday a/r +aa -ua 1 week 2 adults 1 dog" would give
+"Washington DC Beijing Monday a/r +AA -UA 1 week 2 adults 1 dog" would give
 the following list:
-  * Origin airport: Washington, DC, USA
-  * Destination airport: Beijing, China
-  * Date of travel: next Monday
-  * Date of return: 1 week after next Monday
-  * Preferred airline: American Airlines; non-preferred airline: United Airlines
-  * Number of travellers: 2 adults and a dog
+ * Origin airport: Washington, DC, USA
+ * Destination airport: Beijing, China
+ * Date of travel: next Monday
+ * Date of return: 1 week after next Monday
+ * Preferred airline: American Airlines; non-preferred airline: United Airlines
+ * Number of travelers: 2 adults and a dog
 
 The output can then be used by other systems, for instance to book the
-corresponding travel or to visualise it on a map and calendar and to
+corresponding travel or to visualize it on a map and calendar and to
 share it with others.
 
 %{name} makes an extensive use of existing open-source libraries for
