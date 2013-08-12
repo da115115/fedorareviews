@@ -2,10 +2,10 @@
 %global mydocs __tmp_docdir
 #
 Name:           airtsp
-Version:        1.01.0
-Release:        3%{?dist}
+Version:        1.01.1
+Release:        1%{?dist}
 Provides:       airsched = %{version}-%{release}
-Obsoletes:      airsched < 1.01.0-1
+Obsoletes:      airsched < 1.01.1-1
 
 Summary:        C++ Simulated Airline Travel Solution Provider Library
 
@@ -50,7 +50,7 @@ Group:          Documentation
 %if 0%{?fedora} || 0%{?rhel} > 5
 BuildArch:      noarch
 %endif
-BuildRequires:  tex(latex)
+BuildRequires:  tex(latex), tex(sectsty.sty), tex(tocloft.sty), tex(xtab.sty)
 BuildRequires:  doxygen, ghostscript, graphviz
 
 %description    doc
@@ -117,6 +117,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Aug 12 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.01.1-1
+- Took into account feedback from review request (BZ#972431):
+  airtsp-config now supports multilib (32 and 64bit versions).
+- Upstream update
+
 * Mon Jul 29 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.01.0-3
 - Fixed the docdir issue, following the F20 System Wide Change
 - Rebuild for boost 1.54.0

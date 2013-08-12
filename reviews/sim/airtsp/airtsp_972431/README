@@ -3,5 +3,5 @@
 midori https://bugzilla.redhat.com/show_bug.cgi?id=972431
 
 # Download the sources:
-wget http://downloads.sourceforge.net/airtsp/airtsp-1.01.0.tar.bz2
+wget http://downloads.sourceforge.net/airtsp/airtsp-1.01.1.tar.bz2
 
