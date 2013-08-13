@@ -1,9 +1,13 @@
 #
 %global mydocs __tmp_docdir
+%if 0%{?rhel} && 0%{?rhel} <= 5
+%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
+%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
+%endif
 #
 Name:           opentrep
 Version:        0.5.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 
 Summary:        C++ library providing a clean API for parsing travel-focused requests
 
@@ -62,7 +66,7 @@ Group:          Documentation
 %if 0%{?fedora} || 0%{?rhel} > 5
 BuildArch:      noarch
 %endif
-BuildRequires:  tex(latex)
+BuildRequires:  tex(latex), tex(sectsty.sty), tex(tocloft.sty), tex(xtab.sty)
 BuildRequires:  doxygen, ghostscript
 
 %description    doc
@@ -84,6 +88,9 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
+# From rpm version > 4.9.1, it may no longer be necessary to move the
+# documentation out of the docdir path, as the %%doc macro no longer
+# deletes the full directory before installing files into it.
 mkdir -p %{mydocs}
 mv $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/html %{mydocs}
 rm -f %{mydocs}/html/installdox
@@ -91,6 +98,14 @@ rm -f %{mydocs}/html/installdox
 # Remove additional documentation files (those files are already available
 # in the project top directory)
 rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/{NEWS,README,AUTHORS}
+
+# Python executable
+install -d $RPM_BUILD_ROOT%{python_sitelib}/%{name}/
+install -pm 0755 $RPM_BUILD_ROOT%{_bindir}/py%{name} $RPM_BUILD_ROOT%{python_sitelib}/%{name}/
+rm -f $RPM_BUILD_ROOT%{_bindir}/py%{name}
+# Python module (library)
+install -d $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}
+mv $RPM_BUILD_ROOT%{_libdir}/libpy%{name}.so* $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}/
 
 %check
 #ctest
@@ -106,9 +121,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS ChangeLog COPYING NEWS README
 %{_bindir}/%{name}-indexer
 %{_bindir}/%{name}-searcher
-%{_bindir}/py%{name}
 %{_libdir}/lib%{name}.so.*
-%{_libdir}/libpy%{name}.so.*
+%{python_sitelib}/%{name}/
+%{python_sitearch}/libpy%{name}/
 %{_mandir}/man1/py%{name}.1.*
 %{_mandir}/man1/%{name}-indexer.1.*
 %{_mandir}/man1/%{name}-searcher.1.*
@@ -121,7 +136,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/%{name}
 %{_bindir}/%{name}-config
 %{_libdir}/lib%{name}.so
-%{_libdir}/libpy%{name}.so
 %{_libdir}/pkgconfig/%{name}.pc
 %{_datadir}/aclocal/%{name}.m4
 %{_datadir}/%{name}/CMake
@@ -134,6 +148,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Aug 12 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 0.5.3-3
+- Took into account a part of the feedbacks from review request (BZ#866265):
+  opentrep-config now supports multilib (32 and 64bit versions).
+- Upstream update
+
 * Mon Jul 29 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 0.5.3-2
 - Fixed the docdir issue, following the F20 System Wide Change
 - Rebuild for boost 1.54.0
