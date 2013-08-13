@@ -67,6 +67,7 @@ Group:          Documentation
 BuildArch:      noarch
 %endif
 BuildRequires:  tex(latex), tex(sectsty.sty), tex(tocloft.sty), tex(xtab.sty)
+BuildRequires:  texlive-collection-langcyrillic, texlive-cyrillic
 BuildRequires:  doxygen, ghostscript
 
 %description    doc
