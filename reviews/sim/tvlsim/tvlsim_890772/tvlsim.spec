@@ -3,7 +3,7 @@
 #
 Name:           tvlsim
 Version:        1.00.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 
 Summary:        Travel Market Simulator
 
@@ -35,21 +35,21 @@ price calculation and inventory availability calculation), customer choice
 modeling (CCM), revenue management (RM), schedule and inventory management,
 revenue accounting (RA).
 
-The Travel Market Simulator can used in either batch or hosted mode. It is
-the main component of the Travel Market Simulator:
-http://www.travel-market-simulator
+The Travel Market Simulator can be used in either batch or hosted mode.
+It is the main component of the Travel Market Simulator:
+http://www.travel-market-simulator.com
 
 %{name} makes an extensive use of existing open-source libraries for
 increased functionality, speed and accuracy. In particular the
 Boost (C++ Standard Extensions: http://www.boost.org) library is used.
 
 The %{name} component itself aims at providing a clean API and a simple
-implementation, as a C++ library, of a travel market simulator, focusing
-on revenue management (RM) for airlines. That library uses the Standard
-Airline IT C++ object model (http://sf.net/projects/stdair).
+implementation, as a C++ library, of a full travel market simulator,
+focusing on revenue management (RM) for airlines. That library uses
+the Standard Airline IT C++ object model (http://sf.net/projects/stdair).
 
 Install the %{name} package if you need a library of basic C++ objects
-for airline-related travel market simulator.
+for airline-related travel market simulation.
 
 %package        devel
 Summary:        Header files, libraries and development helper tools for %{name}
@@ -139,6 +139,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Aug 31 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.00.0-3
+- Took into account the remaining feedbacks of the review request (#890772)
+
 * Mon Jul 29 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.00.0-2
 - Fixed the docdir issue, following the F20 System Wide Change
 - Rebuild for boost 1.54.0
