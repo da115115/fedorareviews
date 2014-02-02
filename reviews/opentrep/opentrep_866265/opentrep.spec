@@ -6,8 +6,8 @@
 %endif
 #
 Name:           opentrep
-Version:        0.5.3
-Release:        3%{?dist}
+Version:        0.6.0
+Release:        1%{?dist}
 
 Summary:        C++ library providing a clean API for parsing travel-focused requests
 
@@ -107,6 +107,8 @@ rm -f $RPM_BUILD_ROOT%{_bindir}/py%{name}
 # Python module (library)
 install -d $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}
 mv $RPM_BUILD_ROOT%{_libdir}/libpy%{name}.so* $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}/
+mv $RPM_BUILD_ROOT%{_libdir}/python/%{name}/Travel_pb2.py* $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}/
+chmod 644 $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}/Travel_pb2.py*
 
 %check
 #ctest
@@ -122,16 +124,24 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS ChangeLog COPYING NEWS README
 %{_bindir}/%{name}-indexer
 %{_bindir}/%{name}-searcher
+%{_bindir}/%{name}-dbmgr
 %{_libdir}/lib%{name}.so.*
 %{python_sitelib}/%{name}/
 %{python_sitearch}/libpy%{name}/
 %{_mandir}/man1/py%{name}.1.*
 %{_mandir}/man1/%{name}-indexer.1.*
 %{_mandir}/man1/%{name}-searcher.1.*
+%{_mandir}/man1/%{name}-dbmgr.1.*
 %dir %{_datadir}/%{name}
 %dir %{_datadir}/%{name}/data
 %dir %{_datadir}/%{name}/data/por
 %{_datadir}/%{name}/data/por/ori_por_public.csv
+%{_datadir}/%{name}/data/por/create_ori_por_public_schema.sql
+%{_datadir}/%{name}/data/por/ori_por_public.db
+%{_datadir}/%{name}/data/por/ori_por_public_4_test.csv
+%{_datadir}/%{name}/data/por/test_ori_por_public.csv
+%{_datadir}/%{name}/data/por/test_ori_por_public_schema.sql
+
 
 %files devel
 %{_includedir}/%{name}
@@ -149,6 +159,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Feb 02 2014 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.6.0-1
+- Upstream update
+
 * Mon Aug 12 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 0.5.3-3
 - Took into account a part of the feedbacks from review request (BZ#866265):
   opentrep-config now supports multilib (32 and 64bit versions).
