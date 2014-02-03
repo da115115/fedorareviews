@@ -12,8 +12,9 @@ Release:        1%{?dist}
 Summary:        C++ library providing a clean API for parsing travel-focused requests
 
 Group:          System Environment/Libraries
-# The entire source code is GPLv2+ except opentrep/basic/float_utils_google.hpp which is BSD 
-License:        LGPLv2+ and BSD
+# The entire source code is LGPLv2+ except opentrep/basic/float_utils_google.hpp which is BSD
+# The data files are under CC-BY-SA
+License:        LGPLv2+ and BSD and CC-BY-SA
 URL:            http://%{name}.sourceforge.net
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
@@ -26,16 +27,20 @@ BuildRequires:  boost-devel, libicu-devel, protobuf-devel, protobuf-compiler
 %description
 %{name} aims at providing a clean API, and the corresponding C++
 implementation, for parsing travel-focused requests.
+It powers the http://search-travel.org Web site.
 
 %{name} uses Xapian (http://www.xapian.org) for the Information Retrieval part,
 on freely available travel-related data (e.g., country names and codes,
-city names and codes, airline names and codes, etc.).
+city names and codes, airline names and codes, etc.), mainly to be found
+in the OpenTravelData project (http://github.com/opentraveldata/optd):
+http://github.com/opentraveldata/optd/tree/trunk/refdata/ORI
 
 %{name} exposes a simple, clean and object-oriented, API. For instance,
-the static Parse() method takes, as input, a string containing the travel
-request, and yields, as output, the list of the recognized terms as well as
-their corresponding types. As an example, the travel request
-"Washington DC Beijing Monday a/r +AA -UA 1 week 2 adults 1 dog" would give
+the OPENTREP::interpretTravelRequest() method takes, as input, a string
+containing the travel request, and yields, as output, the list of the
+recognized terms as well as their corresponding types.
+As an example, the travel request
+'Washington DC Beijing Monday a/r +AA -UA 1 week 2 adults 1 dog' would give
 the following list:
  * Origin airport: Washington, DC, USA
  * Destination airport: Beijing, China
@@ -50,7 +55,15 @@ share it with others.
 
 %{name} makes an extensive use of existing open-source libraries for
 increased functionality, speed and accuracy. In particular the
-Boost (C++ Standard Extensions: http://www.boost.org) library is used.
+Boost (C++ Standard Extensions: http://www.boost.org) and
+SOCI (http://soci.sourceforge.net) libraries are used.
+
+Note that %{name} currently only recognizes points of reference (POR),
+as to be found in the following file:
+http://github.com/opentraveldata/optd/blob/trunk/refdata/ORI/ori_por_public.csv
+A good complementary tool is GeoBase (http://opentraveldata.github.io/geobases),
+a Python-based software able to access to any travel-related data source.
+
 
 %package        devel
 Summary:        Header files, libraries and development helper tools for %{name}
@@ -63,6 +76,22 @@ This package contains the header files, shared libraries and
 development helper tools for %{name}. If you would like to develop
 programs using %{name}, you will need to install %{name}-devel.
 
+%package        data
+Summary:        Referential data for the %{name} library
+Group:          System Environment/Libraries
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+%if 0%{?fedora} || 0%{?rhel} > 5
+BuildArch:      noarch
+%endif
+
+%description    data
+OpenTREP uses Xapian (http://www.xapian.org) for the Information Retrieval
+part, on freely available travel-related data (e.g., country names and codes,
+city names and codes, airline names and codes, etc.), mainly to be found in
+the OpenTravelData project (http://github.com/opentraveldata/optd):
+http://github.com/opentraveldata/optd/tree/trunk/refdata/ORI
+
+
 %package        doc
 Summary:        HTML documentation for the %{name} library
 Group:          Documentation
@@ -74,10 +103,13 @@ BuildRequires:  texlive-collection-langcyrillic, texlive-cyrillic
 BuildRequires:  doxygen, ghostscript
 
 %description    doc
-This package contains HTML pages, as well as a PDF reference manual,
-for %{name}. All that documentation is generated thanks to Doxygen
-(http://doxygen.org). The content is the same as what can be browsed
-online (http://%{name}.org).
+This package contains HTML pages for %{name}. All that documentation
+is generated thanks to Doxygen (http://doxygen.org). The content is
+the same as what can be browsed online (http://opentrep.sourceforge.net).
+Note that the PDF form of the reference manual is mainly available online
+(http://opentrep.sourceforge.net/refman.pdf), as the one present in that
+package is usually corrupted: it depends on the building conditions,
+and it is therefore not reliable.
 
 
 %prep
@@ -104,18 +136,14 @@ rm -f %{mydocs}/html/installdox
 rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/{NEWS,README,AUTHORS}
 
 # (Pure) Python OpenTREP executable
-#install -d $RPM_BUILD_ROOT%%{python_sitelib}/%%{name}/
-#install -pm 0755 $RPM_BUILD_ROOT%%{_bindir}/py%%{name} $RPM_BUILD_ROOT%%{python_sitelib}/%%{name}/
 install -d $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}
 install -pm 0755 $RPM_BUILD_ROOT%{_bindir}/py%{name} $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}/
 rm -f $RPM_BUILD_ROOT%{_bindir}/py%{name}
 # (Pure) Python Protobuf module
-#install -pm 0644 $RPM_BUILD_ROOT%%{_libdir}/python/%%{name}/Travel_pb2.py* $RPM_BUILD_ROOT%%{python_sitelib}/%%{name}/
-#install -d $RPM_BUILD_ROOT%%{python_sitearch}/libpy%%{name}
-install -pm 0644 $RPM_BUILD_ROOT%{_libdir}/python/%{name}/Travel_pb2.py* $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}/
-rm -f $RPM_BUILD_ROOT%{_libdir}/python/%{name}/Travel_pb2.py*
+install -pm 0644 $RPM_BUILD_ROOT%{_libdir}/python/%{name}/*.py* $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}/
+rm -f $RPM_BUILD_ROOT%{_libdir}/python/%{name}/*.py*
 # (ELF) Binary Python module (library)
-mv $RPM_BUILD_ROOT%{_libdir}/libpy%{name}.so* $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}/
+mv $RPM_BUILD_ROOT%{_libdir}/python/%{name}/libpy%{name}.so* $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}/
 
 %check
 #ctest
@@ -133,7 +161,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/%{name}-searcher
 %{_bindir}/%{name}-dbmgr
 %{_libdir}/lib%{name}.so.*
-#%%{python_sitelib}/%%{name}/
 %{python_sitearch}/libpy%{name}/
 %{_mandir}/man1/py%{name}.1.*
 %{_mandir}/man1/%{name}-indexer.1.*
@@ -142,13 +169,10 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/%{name}
 %dir %{_datadir}/%{name}/data
 %dir %{_datadir}/%{name}/data/por
-%{_datadir}/%{name}/data/por/ori_por_public.csv
 %{_datadir}/%{name}/data/por/create_ori_por_public_schema.sql
-%{_datadir}/%{name}/data/por/ori_por_public.db
 %{_datadir}/%{name}/data/por/ori_por_public_4_test.csv
 %{_datadir}/%{name}/data/por/test_ori_por_public.csv
 %{_datadir}/%{name}/data/por/test_ori_por_public_schema.sql
-
 
 %files devel
 %{_includedir}/%{name}
@@ -159,6 +183,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/%{name}/CMake
 %{_mandir}/man1/%{name}-config.1.*
 %{_mandir}/man3/%{name}-library.3.*
+
+%files data
+%doc %{_datadir}/%{name}/data/por/README.md
+%{_datadir}/%{name}/data/por/ori_por_public.csv
+%{_datadir}/%{name}/data/por/ori_por_public.db
 
 %files doc
 %doc %{mydocs}/html
