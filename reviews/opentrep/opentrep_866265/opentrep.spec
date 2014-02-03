@@ -11,14 +11,17 @@ Release:        1%{?dist}
 
 Summary:        C++ library providing a clean API for parsing travel-focused requests
 
-Group:          System Environment/Libraries 
-License:        LGPLv2+
+Group:          System Environment/Libraries
+# The entire source code is GPLv2+ except opentrep/basic/float_utils_google.hpp which is BSD 
+License:        LGPLv2+ and BSD
 URL:            http://%{name}.sourceforge.net
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires:  cmake, python-devel, xapian-core-devel
-BuildRequires:  boost-devel, libicu-devel
+BuildRequires:  cmake, xapian-core-devel
+BuildRequires:  python2-devel
+BuildRequires:  sqlite-devel, soci-sqlite3-devel, soci-mysql-devel
+BuildRequires:  boost-devel, libicu-devel, protobuf-devel, protobuf-compiler
 
 %description
 %{name} aims at providing a clean API, and the corresponding C++
@@ -100,15 +103,19 @@ rm -f %{mydocs}/html/installdox
 # in the project top directory)
 rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/{NEWS,README,AUTHORS}
 
-# Python executable
-install -d $RPM_BUILD_ROOT%{python_sitelib}/%{name}/
-install -pm 0755 $RPM_BUILD_ROOT%{_bindir}/py%{name} $RPM_BUILD_ROOT%{python_sitelib}/%{name}/
-rm -f $RPM_BUILD_ROOT%{_bindir}/py%{name}
-# Python module (library)
+# (Pure) Python OpenTREP executable
+#install -d $RPM_BUILD_ROOT%%{python_sitelib}/%%{name}/
+#install -pm 0755 $RPM_BUILD_ROOT%%{_bindir}/py%%{name} $RPM_BUILD_ROOT%%{python_sitelib}/%%{name}/
 install -d $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}
+install -pm 0755 $RPM_BUILD_ROOT%{_bindir}/py%{name} $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}/
+rm -f $RPM_BUILD_ROOT%{_bindir}/py%{name}
+# (Pure) Python Protobuf module
+#install -pm 0644 $RPM_BUILD_ROOT%%{_libdir}/python/%%{name}/Travel_pb2.py* $RPM_BUILD_ROOT%%{python_sitelib}/%%{name}/
+#install -d $RPM_BUILD_ROOT%%{python_sitearch}/libpy%%{name}
+install -pm 0644 $RPM_BUILD_ROOT%{_libdir}/python/%{name}/Travel_pb2.py* $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}/
+rm -f $RPM_BUILD_ROOT%{_libdir}/python/%{name}/Travel_pb2.py*
+# (ELF) Binary Python module (library)
 mv $RPM_BUILD_ROOT%{_libdir}/libpy%{name}.so* $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}/
-mv $RPM_BUILD_ROOT%{_libdir}/python/%{name}/Travel_pb2.py* $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}/
-chmod 644 $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}/Travel_pb2.py*
 
 %check
 #ctest
@@ -126,7 +133,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/%{name}-searcher
 %{_bindir}/%{name}-dbmgr
 %{_libdir}/lib%{name}.so.*
-%{python_sitelib}/%{name}/
+#%%{python_sitelib}/%%{name}/
 %{python_sitearch}/libpy%{name}/
 %{_mandir}/man1/py%{name}.1.*
 %{_mandir}/man1/%{name}-indexer.1.*
