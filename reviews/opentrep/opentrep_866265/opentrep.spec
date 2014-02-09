@@ -79,7 +79,7 @@ programs using %{name}, you will need to install %{name}-devel.
 %package        data
 Summary:        Referential data for the %{name} library
 Group:          System Environment/Libraries
-Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       %{name} = %{version}-%{release}
 %if 0%{?fedora} || 0%{?rhel} > 5
 BuildArch:      noarch
 %endif
