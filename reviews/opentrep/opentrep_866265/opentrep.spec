@@ -1,27 +1,39 @@
-#
+# Documentation package/directory
 %global mydocs __tmp_docdir
-%if 0%{?rhel} && 0%{?rhel} <= 5
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
+
+# Build -python subpackage
+%bcond_without python
+%if %{with python}
+%if 0%{?rhel} && 0%{?rhel} <= 6
+%{!?__python2: %global __python2 /usr/bin/python2}
+%{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
+%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 %endif
+# See also http://fedoraproject.org/wiki/Packaging:AutoProvidesAndRequiresFiltering#Private_Libraries
+%global _privatelibs libpy%{name}[.]so.*
+%global __provides_exclude ^(%{_privatelibs})$
+%global __requires_exclude ^(%{_privatelibs})$
+%endif
+
 #
 Name:           opentrep
-Version:        0.6.0
+Version:        0.6.1
 Release:        1%{?dist}
 
 Summary:        C++ library providing a clean API for parsing travel-focused requests
 
 Group:          System Environment/Libraries
-# The entire source code is LGPLv2+ except opentrep/basic/float_utils_google.hpp which is BSD
-# The data files are under CC-BY-SA
-License:        LGPLv2+ and BSD and CC-BY-SA
+# The entire source code is LGPLv2+ except opentrep/basic/float_utils_google.hpp,
+# which is BSD
+License:        LGPLv2+ and BSD
 URL:            http://%{name}.sourceforge.net
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires:  cmake, xapian-core-devel
+Requires:       %{name}-data = %{version}-%{release}
+BuildRequires:  cmake, xapian-core-devel, readline-devel
 BuildRequires:  python2-devel
-BuildRequires:  sqlite-devel, soci-sqlite3-devel, soci-mysql-devel
+BuildRequires:  sqlite-devel, mariadb-devel, soci-sqlite3-devel, soci-mysql-devel
 BuildRequires:  boost-devel, libicu-devel, protobuf-devel, protobuf-compiler
 
 %description
@@ -69,7 +81,9 @@ a Python-based software able to access to any travel-related data source.
 Summary:        Header files, libraries and development helper tools for %{name}
 Group:          Development/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+%if 0%{?fedora} || 0%{?rhel} > 5
 Requires:       pkgconfig
+%endif
 
 %description    devel
 This package contains the header files, shared libraries and
@@ -78,8 +92,8 @@ programs using %{name}, you will need to install %{name}-devel.
 
 %package        data
 Summary:        Referential data for the %{name} library
-Group:          System Environment/Libraries
-Requires:       %{name} = %{version}-%{release}
+Group:          Applications/Databases
+License:        CC-BY-SA
 %if 0%{?fedora} || 0%{?rhel} > 5
 BuildArch:      noarch
 %endif
@@ -111,6 +125,19 @@ Note that the PDF form of the reference manual is mainly available online
 package is usually corrupted: it depends on the building conditions,
 and it is therefore not reliable.
 
+%if %{with python}
+%package        python
+Summary:        Python bindings for %{name}
+Group:          Development/Languages
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+BuildRequires:  python-devel
+BuildRequires:  python-setuptools
+Requires:       protobuf-python
+
+%description python
+This package contains Python libraries for %{name}
+%endif
+
 
 %prep
 %setup -q
@@ -135,15 +162,18 @@ rm -f %{mydocs}/html/installdox
 # in the project top directory)
 rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/{NEWS,README,AUTHORS}
 
+%if %{with python}
 # (Pure) Python OpenTREP executable
-install -d $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}
-install -pm 0755 $RPM_BUILD_ROOT%{_bindir}/py%{name} $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}/
+install -d $RPM_BUILD_ROOT%{python2_sitearch}/libpy%{name}
+install -pm 0755 $RPM_BUILD_ROOT%{_bindir}/py%{name} $RPM_BUILD_ROOT%{python2_sitearch}/libpy%{name}/
 rm -f $RPM_BUILD_ROOT%{_bindir}/py%{name}
 # (Pure) Python Protobuf module
-install -pm 0644 $RPM_BUILD_ROOT%{_libdir}/python/%{name}/*.py* $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}/
+install -pm 0644 $RPM_BUILD_ROOT%{_libdir}/python/%{name}/*.py* $RPM_BUILD_ROOT%{python2_sitearch}/libpy%{name}/
 rm -f $RPM_BUILD_ROOT%{_libdir}/python/%{name}/*.py*
 # (ELF) Binary Python module (library)
-mv $RPM_BUILD_ROOT%{_libdir}/python/%{name}/libpy%{name}.so* $RPM_BUILD_ROOT%{python_sitearch}/libpy%{name}/
+mv $RPM_BUILD_ROOT%{_libdir}/python/%{name}/libpy%{name}.so* $RPM_BUILD_ROOT%{python2_sitearch}/libpy%{name}/
+%endif
+
 
 %check
 #ctest
@@ -161,18 +191,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/%{name}-searcher
 %{_bindir}/%{name}-dbmgr
 %{_libdir}/lib%{name}.so.*
-%{python_sitearch}/libpy%{name}/
-%{_mandir}/man1/py%{name}.1.*
 %{_mandir}/man1/%{name}-indexer.1.*
 %{_mandir}/man1/%{name}-searcher.1.*
 %{_mandir}/man1/%{name}-dbmgr.1.*
 %dir %{_datadir}/%{name}
 %dir %{_datadir}/%{name}/data
 %dir %{_datadir}/%{name}/data/por
-%{_datadir}/%{name}/data/por/create_ori_por_public_schema.sql
+%{_datadir}/%{name}/data/por/create_trep_user_and_db.sql
+%{_datadir}/%{name}/data/por/create_trep_tables_sqlite3.sql
+%{_datadir}/%{name}/data/por/create_trep_tables_mysql.sql
 %{_datadir}/%{name}/data/por/ori_por_public_4_test.csv
 %{_datadir}/%{name}/data/por/test_ori_por_public.csv
 %{_datadir}/%{name}/data/por/test_ori_por_public_schema.sql
+%{_datadir}/%{name}/data/por/test_world_schedule.csv
 
 %files devel
 %{_includedir}/%{name}
@@ -187,14 +218,23 @@ rm -rf $RPM_BUILD_ROOT
 %files data
 %doc %{_datadir}/%{name}/data/por/README.md
 %{_datadir}/%{name}/data/por/ori_por_public.csv
-%{_datadir}/%{name}/data/por/ori_por_public.db
 
 %files doc
 %doc %{mydocs}/html
 %doc COPYING
 
+%if %{with python}
+%files python
+%{python2_sitearch}/libpy%{name}/
+%{_mandir}/man1/py%{name}.1.*
+%endif
+
 
 %changelog
+* Sun Apr 13 2014 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.6.1-1
+- Upstream update
+- The Python-related files are now packaged within a dedicated sub-package
+
 * Sun Feb 02 2014 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.6.0-1
 - Upstream update
 
