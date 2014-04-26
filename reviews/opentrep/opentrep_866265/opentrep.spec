@@ -231,6 +231,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Apr 27 2014 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.6.1-1
+- new package built with tito
+
 * Sun Apr 13 2014 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.6.1-1
 - Upstream update
 - The Python-related files are now packaged within a dedicated sub-package
