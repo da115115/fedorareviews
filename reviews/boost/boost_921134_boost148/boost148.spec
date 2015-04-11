@@ -5,14 +5,8 @@
 %define boost_docdir __tmp_docdir
 %define boost_examplesdir __tmp_examplesdir
 
-# Support for long double
-%define disable_long_double 0
-%ifarch %{arm}
-  %define disable_long_double 1
-%endif
-
 # Configuration of MPI back-ends
-%ifarch %{arm}
+%ifarch %{arm} ppc64
   %bcond_with mpich2
 %else
   %bcond_without mpich2
@@ -39,13 +33,17 @@
   %endif
 %endif
 
+# Configuration of Python 3
+%bcond_without python3
+%define python3_version 3.2mu
+
 Name: boost148
 %define real_name boost
 Summary: The free peer-reviewed portable C++ source libraries
 Version: 1.48.0
 %define version_enc 1_48_0
 %define version_suffix 148
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: Boost and MIT and Python
 
 # The CMake build framework (set of CMakeLists.txt and module.cmake files) is
@@ -73,23 +71,27 @@ Source0: http://downloads.sourceforge.net/boost/%{toplev_dirname}.tar.bz2
 # components, except for MPI sub-packages.  Those are "special": one
 # does not necessarily need them and the more typical scenario, I
 # think, will be that the developer wants to pick one MPI flavor.
-Requires: boost148-chrono = %{version}-%{release}
-Requires: boost148-date-time = %{version}-%{release}
-Requires: boost148-filesystem = %{version}-%{release}
-Requires: boost148-graph = %{version}-%{release}
-Requires: boost148-iostreams = %{version}-%{release}
-Requires: boost148-locale = %{version}-%{release}
-Requires: boost148-program-options = %{version}-%{release}
-Requires: boost148-python = %{version}-%{release}
-Requires: boost148-random = %{version}-%{release}
-Requires: boost148-regex = %{version}-%{release}
-Requires: boost148-serialization = %{version}-%{release}
-Requires: boost148-signals = %{version}-%{release}
-Requires: boost148-system = %{version}-%{release}
-Requires: boost148-test = %{version}-%{release}
-Requires: boost148-thread = %{version}-%{release}
-Requires: boost148-timer = %{version}-%{release}
-Requires: boost148-wave = %{version}-%{release}
+Requires: %{name}-chrono%{?_isa} = %{version}-%{release}
+Requires: %{name}-date-time%{?_isa} = %{version}-%{release}
+Requires: %{name}-filesystem%{?_isa} = %{version}-%{release}
+Requires: %{name}-graph%{?_isa} = %{version}-%{release}
+Requires: %{name}-iostreams%{?_isa} = %{version}-%{release}
+Requires: %{name}-locale%{?_isa} = %{version}-%{release}
+Requires: %{name}-math%{?_isa} = %{version}-%{release}
+Requires: %{name}-program-options%{?_isa} = %{version}-%{release}
+Requires: %{name}-python%{?_isa} = %{version}-%{release}
+%if %{with python3}
+Requires: %{name}-python3%{?_isa} = %{version}-%{release}
+%endif
+Requires: %{name}-random%{?_isa} = %{version}-%{release}
+Requires: %{name}-regex%{?_isa} = %{version}-%{release}
+Requires: %{name}-serialization%{?_isa} = %{version}-%{release}
+Requires: %{name}-signals%{?_isa} = %{version}-%{release}
+Requires: %{name}-system%{?_isa} = %{version}-%{release}
+Requires: %{name}-test%{?_isa} = %{version}-%{release}
+Requires: %{name}-thread%{?_isa} = %{version}-%{release}
+Requires: %{name}-timer%{?_isa} = %{version}-%{release}
+Requires: %{name}-wave%{?_isa} = %{version}-%{release}
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: cmake
@@ -97,6 +99,9 @@ BuildRequires: libstdc++-devel%{?_isa}
 BuildRequires: bzip2-devel%{?_isa}
 BuildRequires: zlib-devel%{?_isa}
 BuildRequires: python-devel%{?_isa}
+%if %{with python3}
+BuildRequires: python3-devel%{?_isa}
+%endif
 BuildRequires: libicu-devel%{?_isa}
 BuildRequires: chrpath
 
@@ -133,13 +138,13 @@ Patch7: boost-1.48.0-foreach.patch
 Patch8: boost-1.48.0-gcc47-pthreads.patch
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=781859
-# https://svn.boost.org/trac/boost/ticket/6406
+# https://svn.boost.org/trac/boost/ticket/6406 fixed
 # https://svn.boost.org/trac/boost/ticket/6407 fixed
 # https://svn.boost.org/trac/boost/ticket/6408
 # https://svn.boost.org/trac/boost/ticket/6409 fixed
 # https://svn.boost.org/trac/boost/ticket/6410
-# https://svn.boost.org/trac/boost/ticket/6411
-# https://svn.boost.org/trac/boost/ticket/6412
+# https://svn.boost.org/trac/boost/ticket/6411 fixed
+# https://svn.boost.org/trac/boost/ticket/6412 fixed
 # https://svn.boost.org/trac/boost/ticket/6413
 # https://svn.boost.org/trac/boost/ticket/6414 fixed
 # https://svn.boost.org/trac/boost/ticket/6415
@@ -147,12 +152,19 @@ Patch8: boost-1.48.0-gcc47-pthreads.patch
 Patch9: boost-1.48.0-attribute.patch
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=783660
-# https://svn.boost.org/trac/boost/ticket/6459
+# https://svn.boost.org/trac/boost/ticket/6459 fixed
 Patch10: boost-1.48.0-long-double-1.patch
 Patch11: boost-1.48.0-long-double.patch
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=784654
 Patch12: boost-1.48.0-polygon.patch
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=807780
+Patch13: boost-1.48.0-python3.patch
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=824810
+# https://svn.boost.org/trac/boost/ticket/6940
+Patch14: boost-1.48.0-xtime.patch
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=828856
 # https://bugzilla.redhat.com/show_bug.cgi?id=828857
@@ -174,7 +186,7 @@ Library, in the hopes of establishing "existing practice" for
 extensions and providing reference implementations so that the Boost
 libraries are suitable for eventual standardization. (Some of the
 libraries have already been proposed for inclusion in the C++
-Standards Committee's upcoming C++ Standard Library Technical Report.)
+Standards Committee''s upcoming C++ Standard Library Technical Report.)
 
 %package chrono
 Summary: Run-Time component of boost chrono library
@@ -262,6 +274,22 @@ functions and objects to Python, and vice versa, using no special
 tools -- just your C++ compiler.  This package contains run-time
 support for Boost Python Library.
 
+%if %{with python3}
+
+%package python3
+Summary: Run-Time component of boost python library for Python 3
+Group: System Environment/Libraries
+
+%description python3
+
+The Boost Python Library is a framework for interfacing Python and
+C++. It allows you to quickly and seamlessly expose C++ classes
+functions and objects to Python, and vice versa, using no special
+tools -- just your C++ compiler.  This package contains run-time
+support for Boost Python Library compiled for Python 3.
+
+%endif
+
 %package random
 Summary: Run-Time component of boost random library
 Group: System Environment/Libraries
@@ -347,8 +375,8 @@ pre-processor functionality.
 %package devel
 Summary: The Boost C++ headers and shared development libraries
 Group: Development/Libraries
-Requires: boost148 = %{version}-%{release}
-Provides: boost148-python-devel = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Provides: %{name}-python-devel%{?_isa} = %{version}-%{release}
 # for %%_datadir/cmake ownership, can consider making cmake-filesystem
 # if this dep is a problem
 #Requires: cmake
@@ -359,9 +387,9 @@ Headers and shared object symbolic links for the Boost C++ libraries.
 %package static
 Summary: The Boost C++ static development libraries
 Group: Development/Libraries
-Requires: boost148-devel = %{version}-%{release}
-Obsoletes: boost148-devel-static < 1.34.1-14
-Provides: boost148-devel-static = %{version}-%{release}
+Requires: %{name}-devel%{?_isa} = %{version}-%{release}
+Obsoletes: %{name}-devel-static%{?_isa} < 1.34.1-14
+Provides: %{name}-devel-static%{?_isa} = %{version}-%{release}
 
 %description static
 Static Boost C++ libraries.
@@ -372,7 +400,7 @@ Group: Documentation
 %if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 BuildArch: noarch
 %endif
-Provides: boost148-python-docs = %{version}-%{release}
+Provides: %{name}-python-docs%{?_isa} = %{version}-%{release}
 
 %description doc
 This package contains the documentation in the HTML format of the Boost C++
@@ -385,7 +413,7 @@ Group: Documentation
 %if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 BuildArch: noarch
 %endif
-Requires: boost148-devel = %{version}-%{release}
+Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 
 %description examples
 This package contains example source files distributed with boost.
@@ -398,7 +426,6 @@ Summary: Run-Time component of Boost.MPI library
 Group: System Environment/Libraries
 Requires: openmpi
 BuildRequires: openmpi-devel
-BuildRequires: hwloc-devel
 
 %description openmpi
 
@@ -408,10 +435,10 @@ API over the OpenMPI implementation of MPI.
 %package openmpi-devel
 Summary: Shared library symbolic links for Boost.MPI
 Group: System Environment/Libraries
-Requires: boost148-devel = %{version}-%{release}
-Requires: boost148-openmpi = %{version}-%{release}
-Requires: boost148-openmpi-python = %{version}-%{release}
-Requires: boost148-graph-openmpi = %{version}-%{release}
+Requires: %{name}-devel%{?_isa} = %{version}-%{release}
+Requires: %{name}-openmpi%{?_isa} = %{version}-%{release}
+Requires: %{name}-openmpi-python%{?_isa} = %{version}-%{release}
+Requires: %{name}-graph-openmpi%{?_isa} = %{version}-%{release}
 
 %description openmpi-devel
 
@@ -421,7 +448,7 @@ API over the OpenMPI implementation of MPI.
 %package openmpi-python
 Summary: Python run-time component of Boost.MPI library
 Group: System Environment/Libraries
-Requires: boost148-openmpi = %{version}-%{release}
+Requires: %{name}-openmpi%{?_isa} = %{version}-%{release}
 
 %description openmpi-python
 
@@ -431,7 +458,7 @@ API over the OpenMPI implementation of MPI.
 %package graph-openmpi
 Summary: Run-Time component of parallel boost graph library
 Group: System Environment/Libraries
-Requires: boost148-openmpi = %{version}-%{release}
+Requires: %{name}-openmpi%{?_isa} = %{version}-%{release}
 
 %description graph-openmpi
 
@@ -459,10 +486,10 @@ API over the MPICH2 implementation of MPI.
 %package mpich2-devel
 Summary: Shared library symbolic links for Boost.MPI
 Group: System Environment/Libraries
-Requires: boost148-devel = %{version}-%{release}
-Requires: boost148-mpich2 = %{version}-%{release}
-Requires: boost148-mpich2-python = %{version}-%{release}
-Requires: boost148-graph-mpich2 = %{version}-%{release}
+Requires: %{name}-devel%{?_isa} = %{version}-%{release}
+Requires: %{name}-mpich2%{?_isa} = %{version}-%{release}
+Requires: %{name}-mpich2-python%{?_isa} = %{version}-%{release}
+Requires: %{name}-graph-mpich2%{?_isa} = %{version}-%{release}
 
 %description mpich2-devel
 
@@ -472,7 +499,7 @@ API over the MPICH2 implementation of MPI.
 %package mpich2-python
 Summary: Python run-time component of Boost.MPI library
 Group: System Environment/Libraries
-Requires: boost148-mpich2 = %{version}-%{release}
+Requires: %{name}-mpich2%{?_isa} = %{version}-%{release}
 
 %description mpich2-python
 
@@ -482,7 +509,7 @@ API over the MPICH2 implementation of MPI.
 %package graph-mpich2
 Summary: Run-Time component of parallel boost graph library
 Group: System Environment/Libraries
-Requires: boost148-mpich2 = %{version}-%{release}
+Requires: %{name}-mpich2%{?_isa} = %{version}-%{release}
 
 %description graph-mpich2
 
@@ -496,7 +523,7 @@ back-end to do the parallel work.
 %package build
 Summary: Cross platform build system for C++ projects
 Group: Development/Tools
-Requires: boost148-jam
+Requires: %{name}-jam
 %if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 BuildArch: noarch
 %endif
@@ -506,7 +533,7 @@ Boost.Build is an easy way to build C++ projects, everywhere. You name
 your pieces of executable and libraries and list their sources.  Boost.Build
 takes care about compiling your sources with the right options,
 creating static and shared libraries, making pieces of executable, and other
-chores -- whether you're using GCC, MSVC, or a dozen more supported
+chores -- whether you''re using GCC, MSVC, or a dozen more supported
 C++ compilers -- on Windows, OSX, Linux and commercial UNIX systems.
 
 %package jam
@@ -537,6 +564,8 @@ sed 's/_FEDORA_SONAME/%{sonamever}/' %{PATCH1} | %{__patch} -p0 --fuzz=0
 %patch10 -p1
 %patch11 -p1
 %patch12 -p3
+%patch13 -p1
+%patch14 -p1
 %patch15 -p0
 %patch16 -p1
 %patch17 -p0
@@ -562,6 +591,22 @@ sed -i "s,BOOST_BUILD_PATH = /usr/share/boost-build,BOOST_BUILD_PATH = %{_datadi
          ..
   make VERBOSE=1 %{?_smp_mflags}
 )
+
+%if %{with python3}
+# Build boost-python for Python 3
+( echo ============================= build Python 3 ==================
+  mkdir serial-python3
+  cd serial-python3
+  %cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo %{boost_testflags} \
+         -DENABLE_SINGLE_THREADED=YES -DINSTALL_VERSIONED=OFF \
+         -DBUILD_PROJECTS="python" -DWITH_MPI=OFF \
+         -DPython_ADDITIONAL_VERSIONS=%{python3_version} \
+         -DPYTHON_EXECUTABLE=python%{python3_version} \
+         -DBOOST_PYTHON_SUFFIX=3 \
+         ..
+  make VERBOSE=1 %{?_smp_mflags}
+)
+%endif
 
 # Build MPI parts of Boost with OpenMPI support
 %if %{with openmpi}
@@ -679,6 +724,11 @@ rm -f $RPM_BUILD_ROOT/$MPI_LIB/*-d.*
 find $RPM_BUILD_ROOT/$MPI_LIB -name '*.cmake' -exec rm -f {} \;
 %{_mpich2_unload}
 export PATH=/bin${PATH:+:}$PATH
+%endif
+
+%if %{with python3}
+echo ============================= install Python 3 ==================
+DESTDIR=$RPM_BUILD_ROOT make -C serial-python3 VERBOSE=1 install
 %endif
 
 echo ============================= install serial ==================
@@ -844,6 +894,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %postun locale -p /sbin/ldconfig
 
+%post math -p /sbin/ldconfig
+
+%postun math -p /sbin/ldconfig
+
 %post program-options -p /sbin/ldconfig
 
 %postun program-options -p /sbin/ldconfig
@@ -944,7 +998,15 @@ rm -rf $RPM_BUILD_ROOT
 %files python
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_python*.so.%{sonamever}
+%{_libdir}/libboost_python.so.%{sonamever}
+%{_libdir}/libboost_python-mt.so.%{sonamever}
+
+%if %{with python3}
+%files python3
+%defattr(-, root, root, -)
+%doc LICENSE_1_0.txt
+%{_libdir}/libboost_python3*.so.%{sonamever}
+%endif
 
 %files random
 %defattr(-, root, root, -)
@@ -1078,6 +1140,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/bjam%{version_suffix}.1*
 
 %changelog
+* Sat Apr 11 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.48.0-5
+- Included -math subpackage into umbrella package
+- Added missing /sbin/ldconfig for -math subpackage
+
 * Thu Mar 21 2013 Radu Greab <radu@yx.ro> - 1.48.0-4
 - Add boost version to the files from the build and jam subpackages
 
@@ -1088,8 +1154,8 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Mar 19 2013 Radu Greab <radu@yx.ro> - 1.48.0-2
 - Really remove the .cmake files from the build root
 - The devel libraries are in versioned directories
-- boost148-devel: don't require cmake
+- boost148-devel: does not require cmake
 - boost148-devel: require boost148, not boost
 
 * Wed Mar 13 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.48.0-1
-- Transformed boost-1.48.0-14 into boost148-1.48.0-1 (#)
+- Transformed boost-1.48.0-14 into boost148-1.48.0-1 (#921134)
