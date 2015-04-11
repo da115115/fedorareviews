@@ -609,7 +609,9 @@ sed 's/_FEDORA_SONAME/%{sonamever}/' %{PATCH1} | %{__patch} -p0 --fuzz=0
 %patch11 -p1
 %patch12 -p3
 %patch13 -p1
+%if 0%{?rhel} >= 7
 %patch14 -p1
+%endif
 %patch15 -p0
 %patch16 -p1
 %patch17 -p0
