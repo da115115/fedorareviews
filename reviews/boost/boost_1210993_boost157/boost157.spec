@@ -70,7 +70,7 @@ Summary: The free peer-reviewed portable C++ source libraries
 Version: 1.57.0
 %define version_enc 1_57_0
 %define version_suffix 157
-Release: 5%{?dist}
+Release: 1%{?dist}
 License: Boost and MIT and Python
 
 %define toplev_dirname %{real_name}_%{version_enc}
