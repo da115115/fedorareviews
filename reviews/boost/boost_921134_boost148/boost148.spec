@@ -162,7 +162,7 @@ Patch12: boost-1.48.0-polygon.patch
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=824810
 # https://svn.boost.org/trac/boost/ticket/6940
-Patch14: boost-1.48.0-xtime.patch
+#Patch14: boost-1.48.0-xtime.patch
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=828856
 # https://bugzilla.redhat.com/show_bug.cgi?id=828857
@@ -609,7 +609,7 @@ sed 's/_FEDORA_SONAME/%{sonamever}/' %{PATCH1} | %{__patch} -p0 --fuzz=0
 %patch11 -p1
 %patch12 -p3
 #%%patch13 -p1
-%patch14 -p1
+#%%patch14 -p1
 %patch15 -p0
 %patch16 -p1
 %patch17 -p0
