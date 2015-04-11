@@ -6,10 +6,18 @@
 %define boost_examplesdir __tmp_examplesdir
 
 # Configuration of MPI back-ends
+%if 0%{?rhel} >= 7
+%ifarch ppc64le
+  %bcond_with mpich
+%else
+  %bcond_without mpich
+%endif
+%else # rhel <= 6
 %ifarch %{arm} ppc64
   %bcond_with mpich2
 %else
   %bcond_without mpich2
+%endif
 %endif
 %ifarch s390 s390x %{arm}
   # No OpenMPI support on these arches
@@ -444,6 +452,68 @@ back-end to do the parallel work.
 %endif
 
 
+%if %{with mpich}
+
+%package mpich
+Summary: Run-Time component of Boost.MPI library
+Group: System Environment/Libraries
+Requires: mpich%{?_isa}
+BuildRequires: mpich-devel
+Requires: boost-serialization%{?_isa} = %{version}-%{release}
+Provides: boost-mpich2 = %{version}-%{release}
+Obsoletes: boost-mpich2 < 1.53.0-9
+
+%description mpich
+
+Run-Time support for Boost.MPI-MPICH, a library providing a clean C++
+API over the MPICH implementation of MPI.
+
+%package mpich-devel
+Summary: Shared library symbolic links for Boost.MPI
+Group: System Environment/Libraries
+Requires: boost-devel%{?_isa} = %{version}-%{release}
+Requires: boost-mpich%{?_isa} = %{version}-%{release}
+Requires: boost-mpich-python%{?_isa} = %{version}-%{release}
+Requires: boost-graph-mpich%{?_isa} = %{version}-%{release}
+Provides: boost-mpich2-devel = %{version}-%{release}
+Obsoletes: boost-mpich2-devel < 1.53.0-9
+
+%description mpich-devel
+
+Devel package for Boost.MPI-MPICH, a library providing a clean C++
+API over the MPICH implementation of MPI.
+
+%package mpich-python
+Summary: Python run-time component of Boost.MPI library
+Group: System Environment/Libraries
+Requires: boost-mpich%{?_isa} = %{version}-%{release}
+Requires: boost-python%{?_isa} = %{version}-%{release}
+Requires: boost-serialization%{?_isa} = %{version}-%{release}
+Provides: boost-mpich2-python = %{version}-%{release}
+Obsoletes: boost-mpich2-python < 1.53.0-9
+
+%description mpich-python
+
+Python support for Boost.MPI-MPICH, a library providing a clean C++
+API over the MPICH implementation of MPI.
+
+%package graph-mpich
+Summary: Run-Time component of parallel boost graph library
+Group: System Environment/Libraries
+Requires: boost-mpich%{?_isa} = %{version}-%{release}
+Requires: boost-serialization%{?_isa} = %{version}-%{release}
+Provides: boost-graph-mpich2 = %{version}-%{release}
+Obsoletes: boost-graph-mpich2 < 1.53.0-9
+
+%description graph-mpich
+
+Run-Time support for the Parallel BGL graph library.  The interface and
+graph components are generic, in the same sense as the the Standard
+Template Library (STL).  This libraries in this package use MPICH
+back-end to do the parallel work.
+
+%endif
+
 %if %{with mpich2}
 
 %package mpich2
@@ -585,7 +655,22 @@ export MPI_COMPILER
 export PATH=/bin${PATH:+:}$PATH
 %endif
 
-# Build MPI parts of Boost with MPICH2 support
+# Build MPI parts of Boost with MPICH support
+%if %{with mpich}
+%{_mpich_load}
+( echo ============================= build $MPI_COMPILER ==================
+  mkdir $MPI_COMPILER
+  cd $MPI_COMPILER
+  %cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo %{boost_testflags} \
+         -DENABLE_SINGLE_THREADED=YES -DINSTALL_VERSIONED=OFF \
+         -DBUILD_PROJECTS="serialization;python;mpi;graph_parallel" \
+         -DBOOST_LIB_INSTALL_DIR=$MPI_LIB ..
+  make VERBOSE=1 %{?_smp_mflags}
+)
+%{_mpich_unload}
+export PATH=/bin${PATH:+:}$PATH
+%endif
+
 %if %{with mpich2}
 %{_mpich2_load}
 ( echo ============================= build $MPI_COMPILER ==================
@@ -661,6 +746,26 @@ rm -f $RPM_BUILD_ROOT/$MPI_LIB/*-d.*
 # Remove cmake configuration files used to build the Boost libraries
 find $RPM_BUILD_ROOT/$MPI_LIB -name '*.cmake' -exec rm -f {} \;
 %{_openmpi_unload}
+export PATH=/bin${PATH:+:}$PATH
+%endif
+
+%if %{with mpich}
+%{_mpich_load}
+echo ============================= install $MPI_COMPILER ==================
+DESTDIR=$RPM_BUILD_ROOT make -C $MPI_COMPILER VERBOSE=1 install
+# Remove parts of boost that we don't want installed in MPI directory.
+rm -f $RPM_BUILD_ROOT/$MPI_LIB/libboost_{python,{w,}serialization}*
+# Suppress the mpi.so python module, as it not currently properly
+# generated (some dependencies are missing. It is temporary until
+# upstream Boost-CMake fixes that (see
+# http://lists.boost.org/boost-cmake/2009/12/0859.php for more
+# details)
+rm -f $RPM_BUILD_ROOT/$MPI_LIB/mpi.so
+# Kill any debug library versions that may show up un-invited.
+rm -f $RPM_BUILD_ROOT/$MPI_LIB/*-d.*
+# Remove cmake configuration files used to build the Boost libraries
+find $RPM_BUILD_ROOT/$MPI_LIB -name '*.cmake' -exec rm -f {} \;
+%{_mpich_unload}
 export PATH=/bin${PATH:+:}$PATH
 %endif
 
@@ -783,7 +888,7 @@ rm -Rfv $RPM_BUILD_ROOT%{_datadir}/%{real_name}-%{version}
 rm -Rfv $RPM_BUILD_ROOT%{_datadir}/cmake/%{real_name}
 
 # Perform the necessary renaming according to package renaming
-mkdir -p $RPM_BUILD_ROOT{%{_includedir},%{_libdir}/{.,{mpich2,openmpi}/lib}}/%{name}
+mkdir -p $RPM_BUILD_ROOT{%{_includedir},%{_libdir}/{.,{mpich,mpich2,openmpi}/lib}}/%{name}
 mv -f $RPM_BUILD_ROOT%{_includedir}/{boost,%{name}}
 mv -f $RPM_BUILD_ROOT%{_libdir}/{*.a,%{name}}
 for library in $RPM_BUILD_ROOT%{_libdir}/*.so
@@ -791,6 +896,15 @@ do
   rm -f $library
   ln -s ../$(basename $library).%{sonamever} $RPM_BUILD_ROOT%{_libdir}/%{name}/$(basename $library)
 done
+
+%if %{with mpich}
+mv -f $RPM_BUILD_ROOT%{_libdir}/mpich/lib/{*.a,%{name}}
+for library in $RPM_BUILD_ROOT%{_libdir}/mpich/lib/*.so
+do
+  rm -f $library
+  ln -s ../$(basename $library).%{sonamever} $RPM_BUILD_ROOT%{_libdir}/mpich/lib/%{name}/$(basename $library)
+done
+%endif
 
 %if %{with mpich2}
 mv -f $RPM_BUILD_ROOT%{_libdir}/mpich2/lib/{*.a,%{name}}
@@ -1012,6 +1126,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/%{name}/*.a
+%if %{with mpich}
+%{_libdir}/mpich/lib/%{name}/*.a
+%endif
 %if %{with mpich2}
 %{_libdir}/mpich2/lib/%{name}/*.a
 %endif
@@ -1043,6 +1160,33 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE_1_0.txt
 %{_libdir}/openmpi/lib/libboost_graph_parallel.so.%{sonamever}
 %{_libdir}/openmpi/lib/libboost_graph_parallel-mt.so.%{sonamever}
+
+%endif
+
+# MPICH packages
+%if %{with mpich}
+
+%files mpich
+%defattr(-, root, root, -)
+%doc LICENSE_1_0.txt
+%{_libdir}/mpich/lib/libboost_mpi.so.%{sonamever}
+%{_libdir}/mpich/lib/libboost_mpi-mt.so.%{sonamever}
+
+%files mpich-devel
+%defattr(-, root, root, -)
+%doc LICENSE_1_0.txt
+%{_libdir}/mpich/lib/%{name}/libboost_*.so
+
+%files mpich-python
+%defattr(-, root, root, -)
+%doc LICENSE_1_0.txt
+%{_libdir}/mpich/lib/libboost_mpi_python*.so.%{sonamever}
+
+%files graph-mpich
+%defattr(-, root, root, -)
+%doc LICENSE_1_0.txt
+%{_libdir}/mpich/lib/libboost_graph_parallel.so.%{sonamever}
+%{_libdir}/mpich/lib/libboost_graph_parallel-mt.so.%{sonamever}
 
 %endif
 
