@@ -59,10 +59,10 @@ License: Boost and MIT and Python
 #   http://gitorious.org/boost/cmake
 # Upstream work is synchronised thanks to the Ryppl's hosted Git clone:
 #   https://github.com/ryppl/boost-svn/tree/trunk
-%define toplev_dirname boost_%{version_enc}
+%define toplev_dirname %{real_name}_%{version_enc}
 URL: http://www.boost.org
 Group: System Environment/Libraries
-Source0: http://downloads.sourceforge.net/boost/%{toplev_dirname}.tar.bz2
+Source0: http://downloads.sourceforge.net/%{real_name}/%{toplev_dirname}.tar.bz2
 
 # From the version 13 of Fedora, the Boost libraries are delivered
 # with sonames equal to the Boost version (e.g., 1.41.0). On EPEL versions
@@ -358,7 +358,7 @@ pre-processor functionality.
 Summary: The Boost C++ headers and shared development libraries
 Group: Development/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
-Provides: %{name}-python-devel%{?_isa} = %{version}-%{release}
+Provides: %{name}-python-devel = %{version}-%{release}
 # for %%_datadir/cmake ownership, can consider making cmake-filesystem
 # if this dep is a problem
 #Requires: cmake
@@ -370,8 +370,8 @@ Headers and shared object symbolic links for the Boost C++ libraries.
 Summary: The Boost C++ static development libraries
 Group: Development/Libraries
 Requires: %{name}-devel%{?_isa} = %{version}-%{release}
-Obsoletes: %{name}-devel-static%{?_isa} < 1.34.1-14
-Provides: %{name}-devel-static%{?_isa} = %{version}-%{release}
+Obsoletes: %{name}-devel-static < 1.34.1-14
+Provides: %{name}-devel-static = %{version}-%{release}
 
 %description static
 Static Boost C++ libraries.
@@ -382,7 +382,7 @@ Group: Documentation
 %if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 BuildArch: noarch
 %endif
-Provides: %{name}-python-docs%{?_isa} = %{version}-%{release}
+Provides: %{name}-python-docs = %{version}-%{release}
 
 %description doc
 This package contains the documentation in the HTML format of the Boost C++
