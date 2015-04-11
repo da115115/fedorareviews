@@ -638,6 +638,13 @@ sed -i "s,BOOST_BUILD_PATH = /usr/share/boost-build,BOOST_BUILD_PATH = %{_datadi
   make VERBOSE=1 %{?_smp_mflags}
 )
 
+# Build MPI parts of Boost
+%if %{with openmpi} || %{with mpich} || %{with mpich2}
+# First, purge all modules so that user environment doesn't conflict
+# with the build.
+module purge ||:
+%endif
+
 # Build MPI parts of Boost with OpenMPI support
 %if %{with openmpi}
 %{_openmpi_load}
@@ -673,6 +680,7 @@ export PATH=/bin${PATH:+:}$PATH
 export PATH=/bin${PATH:+:}$PATH
 %endif
 
+# Build MPI parts of Boost with MPICH2 support
 %if %{with mpich2}
 %{_mpich2_load}
 ( echo ============================= build $MPI_COMPILER ==================
@@ -727,6 +735,12 @@ cd %{_builddir}/%{toplev_dirname}
 rm -rf $RPM_BUILD_ROOT
 
 cd %{_builddir}/%{toplev_dirname}
+
+%if %{with openmpi} || %{with mpich} || %{with mpich2}
+# First, purge all modules so that user environment doesn't conflict
+# with the build.
+module purge ||:
+%endif
 
 %if %{with openmpi}
 %{_openmpi_load}
