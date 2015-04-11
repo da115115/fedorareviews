@@ -33,10 +33,6 @@
   %endif
 %endif
 
-# Configuration of Python 3
-%bcond_without python3
-%define python3_version 3.2mu
-
 Name: boost148
 %define real_name boost
 Summary: The free peer-reviewed portable C++ source libraries
@@ -80,9 +76,6 @@ Requires: %{name}-locale%{?_isa} = %{version}-%{release}
 Requires: %{name}-math%{?_isa} = %{version}-%{release}
 Requires: %{name}-program-options%{?_isa} = %{version}-%{release}
 Requires: %{name}-python%{?_isa} = %{version}-%{release}
-%if %{with python3}
-Requires: %{name}-python3%{?_isa} = %{version}-%{release}
-%endif
 Requires: %{name}-random%{?_isa} = %{version}-%{release}
 Requires: %{name}-regex%{?_isa} = %{version}-%{release}
 Requires: %{name}-serialization%{?_isa} = %{version}-%{release}
@@ -99,9 +92,6 @@ BuildRequires: libstdc++-devel%{?_isa}
 BuildRequires: bzip2-devel%{?_isa}
 BuildRequires: zlib-devel%{?_isa}
 BuildRequires: python-devel%{?_isa}
-%if %{with python3}
-BuildRequires: python3-devel%{?_isa}
-%endif
 BuildRequires: libicu-devel%{?_isa}
 BuildRequires: chrpath
 
@@ -160,7 +150,7 @@ Patch11: boost-1.48.0-long-double.patch
 Patch12: boost-1.48.0-polygon.patch
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=807780
-Patch13: boost-1.48.0-python3.patch
+#Patch13: boost-1.48.0-python3.patch
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=824810
 # https://svn.boost.org/trac/boost/ticket/6940
@@ -273,22 +263,6 @@ C++. It allows you to quickly and seamlessly expose C++ classes
 functions and objects to Python, and vice versa, using no special
 tools -- just your C++ compiler.  This package contains run-time
 support for Boost Python Library.
-
-%if %{with python3}
-
-%package python3
-Summary: Run-Time component of boost python library for Python 3
-Group: System Environment/Libraries
-
-%description python3
-
-The Boost Python Library is a framework for interfacing Python and
-C++. It allows you to quickly and seamlessly expose C++ classes
-functions and objects to Python, and vice versa, using no special
-tools -- just your C++ compiler.  This package contains run-time
-support for Boost Python Library compiled for Python 3.
-
-%endif
 
 %package random
 Summary: Run-Time component of boost random library
@@ -564,7 +538,7 @@ sed 's/_FEDORA_SONAME/%{sonamever}/' %{PATCH1} | %{__patch} -p0 --fuzz=0
 %patch10 -p1
 %patch11 -p1
 %patch12 -p3
-%patch13 -p1
+#%%patch13 -p1
 %patch14 -p1
 %patch15 -p0
 %patch16 -p1
@@ -591,22 +565,6 @@ sed -i "s,BOOST_BUILD_PATH = /usr/share/boost-build,BOOST_BUILD_PATH = %{_datadi
          ..
   make VERBOSE=1 %{?_smp_mflags}
 )
-
-%if %{with python3}
-# Build boost-python for Python 3
-( echo ============================= build Python 3 ==================
-  mkdir serial-python3
-  cd serial-python3
-  %cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo %{boost_testflags} \
-         -DENABLE_SINGLE_THREADED=YES -DINSTALL_VERSIONED=OFF \
-         -DBUILD_PROJECTS="python" -DWITH_MPI=OFF \
-         -DPython_ADDITIONAL_VERSIONS=%{python3_version} \
-         -DPYTHON_EXECUTABLE=python%{python3_version} \
-         -DBOOST_PYTHON_SUFFIX=3 \
-         ..
-  make VERBOSE=1 %{?_smp_mflags}
-)
-%endif
 
 # Build MPI parts of Boost with OpenMPI support
 %if %{with openmpi}
@@ -724,11 +682,6 @@ rm -f $RPM_BUILD_ROOT/$MPI_LIB/*-d.*
 find $RPM_BUILD_ROOT/$MPI_LIB -name '*.cmake' -exec rm -f {} \;
 %{_mpich2_unload}
 export PATH=/bin${PATH:+:}$PATH
-%endif
-
-%if %{with python3}
-echo ============================= install Python 3 ==================
-DESTDIR=$RPM_BUILD_ROOT make -C serial-python3 VERBOSE=1 install
 %endif
 
 echo ============================= install serial ==================
@@ -998,15 +951,7 @@ rm -rf $RPM_BUILD_ROOT
 %files python
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_python.so.%{sonamever}
-%{_libdir}/libboost_python-mt.so.%{sonamever}
-
-%if %{with python3}
-%files python3
-%defattr(-, root, root, -)
-%doc LICENSE_1_0.txt
-%{_libdir}/libboost_python3*.so.%{sonamever}
-%endif
+%{_libdir}/libboost_python*.so.%{sonamever}
 
 %files random
 %defattr(-, root, root, -)
