@@ -7,13 +7,20 @@
 %define boost_docdir __tmp_docdir
 %define boost_examplesdir __tmp_examplesdir
 
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 6
 %ifarch ppc64le
   %bcond_with mpich
 %else
   %bcond_without mpich
 %endif
-%else # fedora <= 18 or rhel <= 6
+%if 0%{?rhel} == 6
+%ifarch %{arm} ppc64
+  %bcond_with mpich
+%else
+  %bcond_without mpich
+%endif
+%endif
+%if 0%{?fedora} <= 18 || 0%{?rhel} <= 5
 %ifarch %{arm} ppc64
   %bcond_with mpich2
 %else
@@ -739,7 +746,7 @@ import os ;
 local RPM_OPT_FLAGS = [ os.environ RPM_OPT_FLAGS ] ;
 
 using gcc : : : <compileflags>$(RPM_OPT_FLAGS) ;
-%if %{with openmpi} || %{with mpich}
+%if %{with openmpi} || %{with mpich} || %{with mpich2}
 using mpi ;
 %endif
 %if %{with python3}
@@ -807,7 +814,7 @@ export PATH=/bin${PATH:+:}$PATH
 %endif
 
 # Build MPI parts of Boost with MPICH support
-%if %{with mpich} || %{with mpich2}
+%if %{with mpich}
 %{_mpich_load}
 echo ============================= build $MPI_COMPILER ==================
 ./b2 -d+2 -q %{?_smp_mflags} \
@@ -815,6 +822,18 @@ echo ============================= build $MPI_COMPILER ==================
 	variant=release threading=multi debug-symbols=on pch=off \
 	python=%{python2_version} stage
 %{_mpich_unload}
+export PATH=/bin${PATH:+:}$PATH
+%endif
+
+# Build MPI parts of Boost with MPICH2 support
+%if %{with mpich2}
+%{_mpich2_load}
+echo ============================= build $MPI_COMPILER ==================
+./b2 -d+2 -q %{?_smp_mflags} \
+	--with-mpi --with-graph_parallel --build-dir=$MPI_COMPILER \
+	variant=release threading=multi debug-symbols=on pch=off \
+	python=%{python2_version} stage
+%{_mpich2_unload}
 export PATH=/bin${PATH:+:}$PATH
 %endif
 
@@ -854,7 +873,7 @@ rm -f ${RPM_BUILD_ROOT}${MPI_HOME}/lib/libboost_{python,{w,}serialization}*
 export PATH=/bin${PATH:+:}$PATH
 %endif
 
-%if %{with mpich} || %{with mpich2}
+%if %{with mpich}
 %{_mpich_load}
 echo ============================= install $MPI_COMPILER ==================
 ./b2 -q %{?_smp_mflags} \
@@ -867,6 +886,22 @@ echo ============================= install $MPI_COMPILER ==================
 rm -f ${RPM_BUILD_ROOT}${MPI_HOME}/lib/libboost_{python,{w,}serialization}*
 
 %{_mpich_unload}
+export PATH=/bin${PATH:+:}$PATH
+%endif
+
+%if %{with mpich2}
+%{_mpich2_load}
+echo ============================= install $MPI_COMPILER ==================
+./b2 -q %{?_smp_mflags} \
+	--with-mpi --with-graph_parallel --build-dir=$MPI_COMPILER \
+	--stagedir=${RPM_BUILD_ROOT}${MPI_HOME} \
+	variant=release threading=multi debug-symbols=on pch=off \
+	python=%{python2_version} stage
+
+# Remove generic parts of boost that were built for dependencies.
+rm -f ${RPM_BUILD_ROOT}${MPI_HOME}/lib/libboost_{python,{w,}serialization}*
+
+%{_mpich2_unload}
 export PATH=/bin${PATH:+:}$PATH
 %endif
 
