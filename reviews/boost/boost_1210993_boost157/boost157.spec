@@ -13,6 +13,7 @@
   %bcond_with mpich2
 %else
   %bcond_without mpich
+  %bcond_with mpich2
 %endif
 %endif
 %if 0%{?rhel} == 6
@@ -21,6 +22,7 @@
   %bcond_with mpich2
 %else
   %bcond_without mpich
+  %bcond_with mpich2
 %endif
 %endif
 %if 0%{?fedora} <= 18 || 0%{?rhel} <= 5
@@ -28,6 +30,7 @@
   %bcond_with mpich
   %bcond_with mpich2
 %else
+  %bcond_with mpich
   %bcond_without mpich2
 %endif
 %endif
@@ -579,8 +582,6 @@ Group: System Environment/Libraries
 Requires: mpich%{?_isa}
 BuildRequires: mpich-devel
 Requires: %{name}-serialization%{?_isa} = %{version}-%{release}
-Provides: %{name}-mpich2 = %{version}-%{release}
-Obsoletes: %{name}-mpich2 < 1.53.0-9
 
 %description mpich
 
@@ -594,8 +595,6 @@ Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 Requires: %{name}-mpich%{?_isa} = %{version}-%{release}
 Requires: %{name}-mpich-python%{?_isa} = %{version}-%{release}
 Requires: %{name}-graph-mpich%{?_isa} = %{version}-%{release}
-Provides: %{name}-mpich2-devel = %{version}-%{release}
-Obsoletes: %{name}-mpich2-devel < 1.53.0-9
 
 %description mpich-devel
 
@@ -608,8 +607,6 @@ Group: System Environment/Libraries
 Requires: %{name}-mpich%{?_isa} = %{version}-%{release}
 Requires: %{name}-python%{?_isa} = %{version}-%{release}
 Requires: %{name}-serialization%{?_isa} = %{version}-%{release}
-Provides: %{name}-mpich2-python = %{version}-%{release}
-Obsoletes: %{name}-mpich2-python < 1.53.0-9
 
 %description mpich-python
 
@@ -621,8 +618,6 @@ Summary: Run-Time component of parallel boost graph library
 Group: System Environment/Libraries
 Requires: %{name}-mpich%{?_isa} = %{version}-%{release}
 Requires: %{name}-serialization%{?_isa} = %{version}-%{release}
-Provides: %{name}-graph-mpich2 = %{version}-%{release}
-Obsoletes: %{name}-graph-mpich2 < 1.53.0-9
 
 %description graph-mpich
 
