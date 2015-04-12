@@ -1,0 +1,15 @@
+
+The Boost148 package has now been approved as an official package for Fedora/CentOS/RedHat.
+References:
+* Fedora Package: https://apps.fedoraproject.org/packages/boost148
+* Review Request: http://bugzilla.redhat.com/show_bug.cgi?id=921134
+* Package source code: http://pkgs.fedoraproject.org/cgit/boost148.git/tree/?h=epel7
+
+Therefore, in order to get the source code:
+mkdir -p ~/dev/fedora/boost
+cd ~/dev/fedora/boost
+fedpkg clone boost148
+mv boost148 boost148git
+cd boost148git
+fedpkg switch-branch epel7
+
