@@ -7,13 +7,13 @@
 %define boost_docdir __tmp_docdir
 %define boost_examplesdir __tmp_examplesdir
 
-%if 0%{?rhel} >= 7
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %ifarch ppc64le
   %bcond_with mpich
 %else
   %bcond_without mpich
 %endif
-%else # rhel <= 6
+%else # fedora <= 18 or rhel <= 6
 %ifarch %{arm} ppc64
   %bcond_with mpich2
 %else
@@ -21,14 +21,14 @@
 %endif
 %endif
 
-%if 0%{?rhel} >= 7
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %ifarch s390 s390x ppc64le
   # No OpenMPI support on these arches
   %bcond_with openmpi
 %else
   %bcond_without openmpi
 %endif
-%else # rhel <= 6
+%else # fedora <= 18 or rhel <= 6
 %ifarch s390 s390x %{arm}
   # No OpenMPI support on these arches
   %bcond_with openmpi
@@ -58,9 +58,9 @@
   %bcond_without context
 %endif
 
-%if 0%{?rhel} >= 7
+%if 0%{?fedora} >= 21
   %bcond_without python3
-%else # rhel <= 6
+%else # fedora <= 20
   %bcond_with python3
 %endif
 
@@ -479,7 +479,7 @@ Static Boost C++ libraries.
 %package doc
 Summary: HTML documentation for the Boost C++ libraries
 Group: Documentation
-%if 0%{?rhel} >= 6
+%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 BuildArch: noarch
 %endif
 Provides: %{name}-python-docs = %{version}-%{release}
@@ -496,7 +496,7 @@ web page (http://www.boost.org/doc/libs/1_40_0).
 %package examples
 Summary: Source examples for the Boost C++ libraries
 Group: Documentation
-%if 0%{?rhel} >= 6
+%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 BuildArch: noarch
 %endif
 Requires: %{name}-devel = %{version}-%{release}
