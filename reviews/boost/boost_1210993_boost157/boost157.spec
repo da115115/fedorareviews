@@ -10,27 +10,21 @@
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %ifarch ppc64le
   %bcond_with mpich
-  %bcond_with mpich2
 %else
   %bcond_without mpich
-  %bcond_with mpich2
 %endif
 %endif
 %if 0%{?rhel} == 6
 %ifarch %{arm} ppc64
   %bcond_with mpich
-  %bcond_with mpich2
 %else
   %bcond_without mpich
-  %bcond_with mpich2
 %endif
 %endif
 %if 0%{?fedora} <= 18 || 0%{?rhel} <= 5
 %ifarch %{arm} ppc64
-  %bcond_with mpich
   %bcond_with mpich2
 %else
-  %bcond_with mpich
   %bcond_without mpich2
 %endif
 %endif
@@ -626,8 +620,7 @@ graph components are generic, in the same sense as the the Standard
 Template Library (STL).  This libraries in this package use MPICH
 back-end to do the parallel work.
 
-%endif
-
+%else # with mpich
 %if %{with mpich2}
 
 %package mpich2
@@ -676,7 +669,8 @@ graph components are generic, in the same sense as the the Standard
 Template Library (STL).  This libraries in this package use MPICH2
 back-end to do the parallel work.
 
-%endif
+%endif # with mpich2
+%endif # with mpich
 
 %package build
 Summary: Cross platform build system for C++ projects
@@ -822,7 +816,7 @@ echo ============================= build $MPI_COMPILER ==================
 	python=%{python2_version} stage
 %{_mpich_unload}
 export PATH=/bin${PATH:+:}$PATH
-%endif
+%else # with mpich
 
 # Build MPI parts of Boost with MPICH2 support
 %if %{with mpich2}
@@ -834,7 +828,8 @@ echo ============================= build $MPI_COMPILER ==================
 	python=%{python2_version} stage
 %{_mpich2_unload}
 export PATH=/bin${PATH:+:}$PATH
-%endif
+%endif # with mpich2
+%endif # with mpich
 
 echo ============================= build Boost.Build ==================
 (cd tools/build
@@ -886,7 +881,7 @@ rm -f ${RPM_BUILD_ROOT}${MPI_HOME}/lib/libboost_{python,{w,}serialization}*
 
 %{_mpich_unload}
 export PATH=/bin${PATH:+:}$PATH
-%endif
+%else # with mpich
 
 %if %{with mpich2}
 %{_mpich2_load}
@@ -902,7 +897,8 @@ rm -f ${RPM_BUILD_ROOT}${MPI_HOME}/lib/libboost_{python,{w,}serialization}*
 
 %{_mpich2_unload}
 export PATH=/bin${PATH:+:}$PATH
-%endif
+%endif # with mpich2
+%endif # with mpich
 
 echo ============================= install serial ==================
 ./b2 -d+2 -q %{?_smp_mflags} \
@@ -1022,7 +1018,7 @@ do
   rm -f $library
   ln -s ../$(basename $library).%{sonamever} $RPM_BUILD_ROOT%{_libdir}/mpich/lib/%{name}/$(basename $library)
 done
-%endif
+%else # with mpich
 
 %if %{with mpich2}
 mv -f $RPM_BUILD_ROOT%{_libdir}/mpich2/lib/{*.a,%{name}}
@@ -1032,7 +1028,8 @@ do
   rm -f $library
   ln -s ../$(basename $library).%{sonamever} $RPM_BUILD_ROOT%{_libdir}/mpich2/lib/%{name}/$(basename $library)
 done
-%endif
+%endif # with mpich2
+%endif # with mpich
 
 %if %{with openmpi}
 	%if 0%{?rhel} == 5
@@ -1315,10 +1312,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/*.a
 %if %{with mpich}
 %{_libdir}/mpich/lib/%{name}/*.a
-%endif
+%else
 %if %{with mpich2}
 %{_libdir}/mpich2/lib/%{name}/*.a
-%endif
+%endif # with mpich2
+%endif # with mpich
 %if %{with openmpi}
 %{_libdir}/openmpi/lib/%{name}/*.a
 %endif
@@ -1373,7 +1371,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE_1_0.txt
 %{_libdir}/mpich/lib/libboost_graph_parallel*.so.%{sonamever}
 
-%endif
+%else # with mpich
 
 # MPICH2 packages
 %if %{with mpich2}
@@ -1399,7 +1397,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE_1_0.txt
 %{_libdir}/mpich2/lib/libboost_graph_parallel*.so.%{sonamever}
 
-%endif
+%endif # with mpich2
+%endif # with mpich
 
 %files build
 %defattr(-, root, root, -)
