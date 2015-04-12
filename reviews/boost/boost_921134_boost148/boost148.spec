@@ -468,8 +468,6 @@ Group: System Environment/Libraries
 Requires: mpich%{?_isa}
 BuildRequires: mpich-devel
 Requires: boost-serialization%{?_isa} = %{version}-%{release}
-Provides: boost-mpich2 = %{version}-%{release}
-Obsoletes: boost-mpich2 < 1.53.0-9
 
 %description mpich
 
@@ -483,8 +481,6 @@ Requires: boost-devel%{?_isa} = %{version}-%{release}
 Requires: boost-mpich%{?_isa} = %{version}-%{release}
 Requires: boost-mpich-python%{?_isa} = %{version}-%{release}
 Requires: boost-graph-mpich%{?_isa} = %{version}-%{release}
-Provides: boost-mpich2-devel = %{version}-%{release}
-Obsoletes: boost-mpich2-devel < 1.53.0-9
 
 %description mpich-devel
 
@@ -497,8 +493,6 @@ Group: System Environment/Libraries
 Requires: boost-mpich%{?_isa} = %{version}-%{release}
 Requires: boost-python%{?_isa} = %{version}-%{release}
 Requires: boost-serialization%{?_isa} = %{version}-%{release}
-Provides: boost-mpich2-python = %{version}-%{release}
-Obsoletes: boost-mpich2-python < 1.53.0-9
 
 %description mpich-python
 
@@ -510,8 +504,6 @@ Summary: Run-Time component of parallel boost graph library
 Group: System Environment/Libraries
 Requires: boost-mpich%{?_isa} = %{version}-%{release}
 Requires: boost-serialization%{?_isa} = %{version}-%{release}
-Provides: boost-graph-mpich2 = %{version}-%{release}
-Obsoletes: boost-graph-mpich2 < 1.53.0-9
 
 %description graph-mpich
 
@@ -520,7 +512,7 @@ graph components are generic, in the same sense as the the Standard
 Template Library (STL).  This libraries in this package use MPICH
 back-end to do the parallel work.
 
-%endif
+%else # with mpich
 
 %if %{with mpich2}
 
@@ -574,7 +566,8 @@ graph components are generic, in the same sense as the the Standard
 Template Library (STL).  This libraries in this package use MPICH2
 back-end to do the parallel work.
 
-%endif
+%endif # with mpich2
+%endif # with mpich
 
 %package build
 Summary: Cross platform build system for C++ projects
@@ -690,7 +683,7 @@ export PATH=/bin${PATH:+:}$PATH
 )
 %{_mpich_unload}
 export PATH=/bin${PATH:+:}$PATH
-%endif
+%else # with mpich
 
 # Build MPI parts of Boost with MPICH2 support
 %if %{with mpich2}
@@ -706,7 +699,8 @@ export PATH=/bin${PATH:+:}$PATH
 )
 %{_mpich2_unload}
 export PATH=/bin${PATH:+:}$PATH
-%endif
+%endif # with mpich2
+%endif # with mpich
 
 # Build Boost Jam
 echo ============================= build Jam ==================
@@ -795,7 +789,7 @@ rm -f $RPM_BUILD_ROOT/$MPI_LIB/*-d.*
 find $RPM_BUILD_ROOT/$MPI_LIB -name '*.cmake' -exec rm -f {} \;
 %{_mpich_unload}
 export PATH=/bin${PATH:+:}$PATH
-%endif
+%else # with mpich
 
 %if %{with mpich2}
 %{_mpich2_load}
@@ -815,7 +809,8 @@ rm -f $RPM_BUILD_ROOT/$MPI_LIB/*-d.*
 find $RPM_BUILD_ROOT/$MPI_LIB -name '*.cmake' -exec rm -f {} \;
 %{_mpich2_unload}
 export PATH=/bin${PATH:+:}$PATH
-%endif
+%endif # with mpich2
+%endif # with mpich
 
 echo ============================= install serial ==================
 DESTDIR=$RPM_BUILD_ROOT make -C serial VERBOSE=1 install
@@ -932,7 +927,7 @@ do
   rm -f $library
   ln -s ../$(basename $library).%{sonamever} $RPM_BUILD_ROOT%{_libdir}/mpich/lib/%{name}/$(basename $library)
 done
-%endif
+%else # with mpich
 
 %if %{with mpich2}
 mv -f $RPM_BUILD_ROOT%{_libdir}/mpich2/lib/{*.a,%{name}}
@@ -941,7 +936,8 @@ do
   rm -f $library
   ln -s ../$(basename $library).%{sonamever} $RPM_BUILD_ROOT%{_libdir}/mpich2/lib/%{name}/$(basename $library)
 done
-%endif
+%endif # with mpich2
+%endif # with mpich
 
 %if %{with openmpi}
 	%if 0%{?rhel} == 5
@@ -1156,10 +1152,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/*.a
 %if %{with mpich}
 %{_libdir}/mpich/lib/%{name}/*.a
-%endif
+%else # with mpich
 %if %{with mpich2}
 %{_libdir}/mpich2/lib/%{name}/*.a
-%endif
+%endif # with mpich2
+%endif # with mpich
 %if %{with openmpi}
 %{_libdir}/openmpi/lib/%{name}/*.a
 %endif
@@ -1216,7 +1213,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mpich/lib/libboost_graph_parallel.so.%{sonamever}
 %{_libdir}/mpich/lib/libboost_graph_parallel-mt.so.%{sonamever}
 
-%endif
+%else # with mpich
 
 # MPICH2 packages
 %if %{with mpich2}
@@ -1243,7 +1240,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mpich2/lib/libboost_graph_parallel.so.%{sonamever}
 %{_libdir}/mpich2/lib/libboost_graph_parallel-mt.so.%{sonamever}
 
-%endif
+%endif # with mpich2
+%endif # with mpich
 
 %files build
 %defattr(-, root, root, -)
