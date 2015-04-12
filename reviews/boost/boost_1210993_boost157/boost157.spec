@@ -891,16 +891,16 @@ echo ============================= install Boost.Build ==================
 (cd tools/build
  ./b2 --prefix=$RPM_BUILD_ROOT%{_prefix} install
  # Fix some permissions
- chmod -x $RPM_BUILD_ROOT%{_datadir}/boost-build/src/build/alias.py
- chmod +x $RPM_BUILD_ROOT%{_datadir}/boost-build/src/tools/doxproc.py
+ chmod -x $RPM_BUILD_ROOT%{_datadir}/%{real_name}-build/src/build/alias.py
+ chmod +x $RPM_BUILD_ROOT%{_datadir}/%{real_name}-build/src/tools/doxproc.py
  # We don't want to distribute this
  rm -f $RPM_BUILD_ROOT%{_bindir}/b2
  # Not a real file
- rm -f $RPM_BUILD_ROOT%{_datadir}/boost-build/src/build/project.ann.py
+ rm -f $RPM_BUILD_ROOT%{_datadir}/%{real_name}-build/src/build/project.ann.py
  # Empty file
- rm -f $RPM_BUILD_ROOT%{_datadir}/boost-build/src/tools/doxygen/windows-paths-check.hpp
+ rm -f $RPM_BUILD_ROOT%{_datadir}/%{real_name}-build/src/tools/doxygen/windows-paths-check.hpp
  # Install the manual page
- %{__install} -p -m 644 v2/doc/bjam.1 -D $RPM_BUILD_ROOT%{_mandir}/man1/bjam.1
+ %{__install} -p -m 644 v2/doc/bjam.1 -D $RPM_BUILD_ROOT%{_mandir}/man1/bjam%{version_suffix}.1
 )
 
 # Install documentation files (HTML pages) within the temporary place
@@ -965,8 +965,10 @@ rm -f tmp-doc-directories
 %{__install} -p -m 644 -t $EXAMPLESPATH LICENSE_1_0.txt
 
 # Perform the necessary renaming according to package renaming
+mv -f $RPM_BUILD_ROOT%{_datadir}/{%{real_name}-build,%{name}-build}
+
 mkdir -p $RPM_BUILD_ROOT{%{_includedir},%{_libdir}/{.,{mpich,mpich2,openmpi}/lib}}/%{name}
-mv -f $RPM_BUILD_ROOT%{_includedir}/{boost,%{name}}
+mv -f $RPM_BUILD_ROOT%{_includedir}/{%{real_name},%{name}}
 mv -f $RPM_BUILD_ROOT%{_libdir}/{*.a,%{name}}
 for library in $RPM_BUILD_ROOT%{_libdir}/*.so
 do
@@ -1173,13 +1175,13 @@ rm -rf $RPM_BUILD_ROOT
 %files log
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_log*.so.%{sonamever}
+%{_libdir}/libboost_log.so.%{sonamever}
 %{_libdir}/libboost_log_setup*.so.%{sonamever}
 
 %files math
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_math_c99*.so.%{sonamever}
+%{_libdir}/libboost_math_c99.so.%{sonamever}
 %{_libdir}/libboost_math_c99f*.so.%{sonamever}
 %{_libdir}/libboost_math_c99l*.so.%{sonamever}
 %{_libdir}/libboost_math_tr1*.so.%{sonamever}
