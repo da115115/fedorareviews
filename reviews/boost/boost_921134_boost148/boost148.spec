@@ -403,7 +403,7 @@ Group: Documentation
 %if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 BuildArch: noarch
 %endif
-Requires: %{name}-devel%{?_isa} = %{version}-%{release}
+Requires: %{name}-devel = %{version}-%{release}
 
 %description examples
 This package contains example source files distributed with boost.
