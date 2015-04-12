@@ -992,6 +992,49 @@ rm -f tmp-doc-files-to-be-installed
 rm -f tmp-doc-directories
 %{__install} -p -m 644 -t $EXAMPLESPATH LICENSE_1_0.txt
 
+# Perform the necessary renaming according to package renaming
+mkdir -p $RPM_BUILD_ROOT{%{_includedir},%{_libdir}/{.,{mpich,mpich2,openmpi}/lib}}/%{name}
+mv -f $RPM_BUILD_ROOT%{_includedir}/{boost,%{name}}
+mv -f $RPM_BUILD_ROOT%{_libdir}/{*.a,%{name}}
+for library in $RPM_BUILD_ROOT%{_libdir}/*.so
+do
+  rm -f $library
+  ln -s ../$(basename $library).%{sonamever} $RPM_BUILD_ROOT%{_libdir}/%{name}/$(basename $library)
+done
+
+%if %{with mpich}
+mv -f $RPM_BUILD_ROOT%{_libdir}/mpich/lib/{*.a,%{name}}
+mv -f $RPM_BUILD_ROOT%{_libdir}/mpich/lib/{mpi.so,%{name}}
+for library in $RPM_BUILD_ROOT%{_libdir}/mpich/lib/*.so
+do
+  rm -f $library
+  ln -s ../$(basename $library).%{sonamever} $RPM_BUILD_ROOT%{_libdir}/mpich/lib/%{name}/$(basename $library)
+done
+%endif
+
+%if %{with mpich2}
+mv -f $RPM_BUILD_ROOT%{_libdir}/mpich2/lib/{*.a,%{name}}
+mv -f $RPM_BUILD_ROOT%{_libdir}/mpich2/lib/{mpi.so,%{name}}
+for library in $RPM_BUILD_ROOT%{_libdir}/mpich2/lib/*.so
+do
+  rm -f $library
+  ln -s ../$(basename $library).%{sonamever} $RPM_BUILD_ROOT%{_libdir}/mpich2/lib/%{name}/$(basename $library)
+done
+%endif
+
+%if %{with openmpi}
+	%if 0%{?rhel} == 5
+		mv -f $RPM_BUILD_ROOT%{_libdir}/openmpi/{1.4-gcc/lib/*,lib}
+	%endif
+mv -f $RPM_BUILD_ROOT%{_libdir}/openmpi/lib/{*.a,%{name}}
+mv -f $RPM_BUILD_ROOT%{_libdir}/openmpi/lib/{mpi.so,%{name}}
+for library in $RPM_BUILD_ROOT%{_libdir}/openmpi/lib/*.so
+do
+  rm -f $library
+  ln -s ../$(basename $library).%{sonamever} $RPM_BUILD_ROOT%{_libdir}/openmpi/lib/%{name}/$(basename $library)
+done
+%endif
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -1104,83 +1147,83 @@ rm -rf $RPM_BUILD_ROOT
 %files atomic
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_atomic.so.%{sonamever}
+%{_libdir}/libboost_atomic*.so.%{sonamever}
 
 %files chrono
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_chrono.so.%{sonamever}
+%{_libdir}/libboost_chrono*.so.%{sonamever}
 
 %files container
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_container.so.%{sonamever}
+%{_libdir}/libboost_container*.so.%{sonamever}
 
 %if %{with context}
 
 %files context
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_context.so.%{sonamever}
+%{_libdir}/libboost_context*.so.%{sonamever}
 
 %files coroutine
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_coroutine.so.%{sonamever}
+%{_libdir}/libboost_coroutine*.so.%{sonamever}
 
 %endif
 
 %files date-time
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_date_time.so.%{sonamever}
+%{_libdir}/libboost_date_time*.so.%{sonamever}
 
 %files filesystem
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_filesystem.so.%{sonamever}
+%{_libdir}/libboost_filesystem*.so.%{sonamever}
 
 %files graph
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_graph.so.%{sonamever}
+%{_libdir}/libboost_graph*.so.%{sonamever}
 
 %files iostreams
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_iostreams.so.%{sonamever}
+%{_libdir}/libboost_iostreams*.so.%{sonamever}
 
 %files locale
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_locale.so.%{sonamever}
+%{_libdir}/libboost_locale*.so.%{sonamever}
 
 %files log
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_log.so.%{sonamever}
-%{_libdir}/libboost_log_setup.so.%{sonamever}
+%{_libdir}/libboost_log*.so.%{sonamever}
+%{_libdir}/libboost_log_setup*.so.%{sonamever}
 
 %files math
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_math_c99.so.%{sonamever}
-%{_libdir}/libboost_math_c99f.so.%{sonamever}
-%{_libdir}/libboost_math_c99l.so.%{sonamever}
-%{_libdir}/libboost_math_tr1.so.%{sonamever}
-%{_libdir}/libboost_math_tr1f.so.%{sonamever}
-%{_libdir}/libboost_math_tr1l.so.%{sonamever}
+%{_libdir}/libboost_math_c99*.so.%{sonamever}
+%{_libdir}/libboost_math_c99f*.so.%{sonamever}
+%{_libdir}/libboost_math_c99l*.so.%{sonamever}
+%{_libdir}/libboost_math_tr1*.so.%{sonamever}
+%{_libdir}/libboost_math_tr1f*.so.%{sonamever}
+%{_libdir}/libboost_math_tr1l*.so.%{sonamever}
 
 %files test
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_prg_exec_monitor.so.%{sonamever}
-%{_libdir}/libboost_unit_test_framework.so.%{sonamever}
+%{_libdir}/libboost_prg_exec_monitor*.so.%{sonamever}
+%{_libdir}/libboost_unit_test_framework*.so.%{sonamever}
 
 %files program-options
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_program_options.so.%{sonamever}
+%{_libdir}/libboost_program_options*.so.%{sonamever}
 
 %files python
 %defattr(-, root, root, -)
@@ -1191,7 +1234,7 @@ rm -rf $RPM_BUILD_ROOT
 %files python3
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_python3.so.%{sonamever}
+%{_libdir}/libboost_python3*.so.%{sonamever}
 
 %files python3-devel
 %defattr(-, root, root, -)
@@ -1202,43 +1245,43 @@ rm -rf $RPM_BUILD_ROOT
 %files random
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_random.so.%{sonamever}
+%{_libdir}/libboost_random*.so.%{sonamever}
 
 %files regex
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_regex.so.%{sonamever}
+%{_libdir}/libboost_regex*.so.%{sonamever}
 
 %files serialization
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_serialization.so.%{sonamever}
-%{_libdir}/libboost_wserialization.so.%{sonamever}
+%{_libdir}/libboost_serialization*.so.%{sonamever}
+%{_libdir}/libboost_wserialization*.so.%{sonamever}
 
 %files signals
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_signals.so.%{sonamever}
+%{_libdir}/libboost_signals*.so.%{sonamever}
 
 %files system
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_system.so.%{sonamever}
+%{_libdir}/libboost_system*.so.%{sonamever}
 
 %files thread
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_thread.so.%{sonamever}
+%{_libdir}/libboost_thread*.so.%{sonamever}
 
 %files timer
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_timer.so.%{sonamever}
+%{_libdir}/libboost_timer*.so.%{sonamever}
 
 %files wave
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_wave.so.%{sonamever}
+%{_libdir}/libboost_wave*.so.%{sonamever}
 
 %files doc
 %defattr(-, root, root, -)
@@ -1252,52 +1295,20 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_includedir}/%{name}
-%{_libdir}/libboost_atomic.so
-%{_libdir}/libboost_chrono.so
-%{_libdir}/libboost_container.so
-%if %{with context}
-%{_libdir}/libboost_context.so
-%{_libdir}/libboost_coroutine.so
-%endif
-%{_libdir}/libboost_date_time.so
-%{_libdir}/libboost_filesystem.so
-%{_libdir}/libboost_graph.so
-%{_libdir}/libboost_iostreams.so
-%{_libdir}/libboost_locale.so
-%{_libdir}/libboost_log.so
-%{_libdir}/libboost_log_setup.so
-%{_libdir}/libboost_math_tr1.so
-%{_libdir}/libboost_math_tr1f.so
-%{_libdir}/libboost_math_tr1l.so
-%{_libdir}/libboost_math_c99.so
-%{_libdir}/libboost_math_c99f.so
-%{_libdir}/libboost_math_c99l.so
-%{_libdir}/libboost_prg_exec_monitor.so
-%{_libdir}/libboost_unit_test_framework.so
-%{_libdir}/libboost_program_options.so
-%{_libdir}/libboost_python.so
-%{_libdir}/libboost_random.so
-%{_libdir}/libboost_regex.so
-%{_libdir}/libboost_serialization.so
-%{_libdir}/libboost_wserialization.so
-%{_libdir}/libboost_signals.so
-%{_libdir}/libboost_system.so
-%{_libdir}/libboost_thread.so
-%{_libdir}/libboost_timer.so
-%{_libdir}/libboost_wave.so
+%{_libdir}/%{name}/libboost_*.so
 
 %files static
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/*.a
+%{_libdir}/%{name}/*.a
 %if %{with mpich}
-%{_libdir}/mpich/lib/*.a
+%{_libdir}/mpich/lib/%{name}/*.a
 %endif
 %if %{with mpich2}
-%{_libdir}/mpich2/lib/*.a
+%{_libdir}/mpich2/lib/%{name}/*.a
 %endif
 %if %{with openmpi}
-%{_libdir}/openmpi/lib/*.a
+%{_libdir}/openmpi/lib/%{name}/*.a
 %endif
 
 # OpenMPI packages
@@ -1306,18 +1317,18 @@ rm -rf $RPM_BUILD_ROOT
 %files openmpi
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/openmpi/lib/libboost_mpi.so.%{sonamever}
+%{_libdir}/openmpi/lib/libboost_mpi*.so.%{sonamever}
 
 %files openmpi-devel
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/openmpi/lib/libboost_*.so
+%{_libdir}/openmpi/lib/%{name}/libboost_*.so
 
 %files openmpi-python
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/openmpi/lib/libboost_mpi_python.so.%{sonamever}
-%{_libdir}/openmpi/lib/mpi.so
+%{_libdir}/openmpi/lib/libboost_mpi_python*.so.%{sonamever}
+%{_libdir}/openmpi/lib/%{name}/mpi.so
 
 %files graph-openmpi
 %defattr(-, root, root, -)
@@ -1332,23 +1343,23 @@ rm -rf $RPM_BUILD_ROOT
 %files mpich
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/mpich/lib/libboost_mpi.so.%{sonamever}
+%{_libdir}/mpich/lib/libboost_mpi*.so.%{sonamever}
 
 %files mpich-devel
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/mpich/lib/libboost_*.so
+%{_libdir}/mpich/lib/%{name}/libboost_*.so
 
 %files mpich-python
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/mpich/lib/libboost_mpi_python.so.%{sonamever}
-%{_libdir}/mpich/lib/mpi.so
+%{_libdir}/mpich/lib/libboost_mpi_python*.so.%{sonamever}
+%{_libdir}/mpich/lib/%{name}/mpi.so
 
 %files graph-mpich
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/mpich/lib/libboost_graph_parallel.so.%{sonamever}
+%{_libdir}/mpich/lib/libboost_graph_parallel*.so.%{sonamever}
 
 %endif
 
@@ -1358,36 +1369,36 @@ rm -rf $RPM_BUILD_ROOT
 %files mpich2
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/mpich2/lib/libboost_mpi.so.%{sonamever}
+%{_libdir}/mpich2/lib/libboost_mpi*.so.%{sonamever}
 
 %files mpich2-devel
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/mpich2/lib/libboost_*.so
+%{_libdir}/mpich2/lib/%{name}/libboost_*.so
 
 %files mpich2-python
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/mpich2/lib/libboost_mpi_python.so.%{sonamever}
-%{_libdir}/mpich2/lib/mpi.so
+%{_libdir}/mpich2/lib/libboost_mpi_python*.so.%{sonamever}
+%{_libdir}/mpich2/lib/%{name}/mpi.so
 
 %files graph-mpich2
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/mpich2/lib/libboost_graph_parallel.so.%{sonamever}
+%{_libdir}/mpich2/lib/libboost_graph_parallel*.so.%{sonamever}
 
 %endif
 
 %files build
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_datadir}/boost-build/
+%{_datadir}/%{name}-build/
 
 %files jam
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_bindir}/bjam
-%{_mandir}/man1/bjam.1*
+%{_bindir}/bjam%{version_suffix}
+%{_mandir}/man1/bjam%{version_suffix}.1*
 
 %changelog
 * Sun Apr 12 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.57.0-1
