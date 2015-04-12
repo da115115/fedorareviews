@@ -19,6 +19,7 @@
 %else
   %bcond_without mpich
 %endif
+%endif
 %if 0%{?rhel} == 5
 %ifarch %{arm} ppc64
   %bcond_with mpich2
