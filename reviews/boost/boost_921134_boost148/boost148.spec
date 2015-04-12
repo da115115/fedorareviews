@@ -665,7 +665,7 @@ export PATH=/bin${PATH:+:}$PATH
 %endif
 
 # Build MPI parts of Boost with MPICH support
-%if %{with mpich}
+%if %{with mpich} || %{with mpich2}
 %{_mpich_load}
 ( echo ============================= build $MPI_COMPILER ==================
   mkdir $MPI_COMPILER
@@ -677,22 +677,6 @@ export PATH=/bin${PATH:+:}$PATH
   make VERBOSE=1 %{?_smp_mflags}
 )
 %{_mpich_unload}
-export PATH=/bin${PATH:+:}$PATH
-%endif
-
-# Build MPI parts of Boost with MPICH2 support
-%if %{with mpich2}
-%{_mpich2_load}
-( echo ============================= build $MPI_COMPILER ==================
-  mkdir $MPI_COMPILER
-  cd $MPI_COMPILER
-  %cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo %{boost_testflags} \
-         -DENABLE_SINGLE_THREADED=YES -DINSTALL_VERSIONED=OFF \
-         -DBUILD_PROJECTS="serialization;python;mpi;graph_parallel" \
-         -DBOOST_LIB_INSTALL_DIR=$MPI_LIB ..
-  make VERBOSE=1 %{?_smp_mflags}
-)
-%{_mpich2_unload}
 export PATH=/bin${PATH:+:}$PATH
 %endif
 
@@ -765,7 +749,7 @@ find $RPM_BUILD_ROOT/$MPI_LIB -name '*.cmake' -exec rm -f {} \;
 export PATH=/bin${PATH:+:}$PATH
 %endif
 
-%if %{with mpich}
+%if %{with mpich} || %{with mpich2}
 %{_mpich_load}
 echo ============================= install $MPI_COMPILER ==================
 DESTDIR=$RPM_BUILD_ROOT make -C $MPI_COMPILER VERBOSE=1 install
@@ -782,26 +766,6 @@ rm -f $RPM_BUILD_ROOT/$MPI_LIB/*-d.*
 # Remove cmake configuration files used to build the Boost libraries
 find $RPM_BUILD_ROOT/$MPI_LIB -name '*.cmake' -exec rm -f {} \;
 %{_mpich_unload}
-export PATH=/bin${PATH:+:}$PATH
-%endif
-
-%if %{with mpich2}
-%{_mpich2_load}
-echo ============================= install $MPI_COMPILER ==================
-DESTDIR=$RPM_BUILD_ROOT make -C $MPI_COMPILER VERBOSE=1 install
-# Remove parts of boost that we don't want installed in MPI directory.
-rm -f $RPM_BUILD_ROOT/$MPI_LIB/libboost_{python,{w,}serialization}*
-# Suppress the mpi.so python module, as it not currently properly
-# generated (some dependencies are missing. It is temporary until
-# upstream Boost-CMake fixes that (see
-# http://lists.boost.org/boost-cmake/2009/12/0859.php for more
-# details)
-rm -f $RPM_BUILD_ROOT/$MPI_LIB/mpi.so
-# Kill any debug library versions that may show up un-invited.
-rm -f $RPM_BUILD_ROOT/$MPI_LIB/*-d.*
-# Remove cmake configuration files used to build the Boost libraries
-find $RPM_BUILD_ROOT/$MPI_LIB -name '*.cmake' -exec rm -f {} \;
-%{_mpich2_unload}
 export PATH=/bin${PATH:+:}$PATH
 %endif
 
