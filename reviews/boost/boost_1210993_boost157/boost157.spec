@@ -7,9 +7,10 @@
 %define boost_docdir __tmp_docdir
 %define boost_examplesdir __tmp_examplesdir
 
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %ifarch ppc64le
   %bcond_with mpich
+  %bcond_with mpich2
 %else
   %bcond_without mpich
 %endif
@@ -17,12 +18,14 @@
 %if 0%{?rhel} == 6
 %ifarch %{arm} ppc64
   %bcond_with mpich
+  %bcond_with mpich2
 %else
   %bcond_without mpich
 %endif
 %endif
 %if 0%{?fedora} <= 18 || 0%{?rhel} <= 5
 %ifarch %{arm} ppc64
+  %bcond_with mpich
   %bcond_with mpich2
 %else
   %bcond_without mpich2
