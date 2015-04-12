@@ -964,9 +964,13 @@ rm -f tmp-doc-files-to-be-installed
 rm -f tmp-doc-directories
 %{__install} -p -m 644 -t $EXAMPLESPATH LICENSE_1_0.txt
 
+##
 # Perform the necessary renaming according to package renaming
+# Build Tools
 mv -f $RPM_BUILD_ROOT%{_datadir}/{%{real_name}-build,%{name}-build}
+mv -f $RPM_BUILD_ROOT%{_bindir}/{bjam,bjam%{version_suffix}}
 
+# MPI
 mkdir -p $RPM_BUILD_ROOT{%{_includedir},%{_libdir}/{.,{mpich,mpich2,openmpi}/lib}}/%{name}
 mv -f $RPM_BUILD_ROOT%{_includedir}/{%{real_name},%{name}}
 mv -f $RPM_BUILD_ROOT%{_libdir}/{*.a,%{name}}
@@ -1184,7 +1188,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libboost_math_c99.so.%{sonamever}
 %{_libdir}/libboost_math_c99f*.so.%{sonamever}
 %{_libdir}/libboost_math_c99l*.so.%{sonamever}
-%{_libdir}/libboost_math_tr1*.so.%{sonamever}
+%{_libdir}/libboost_math_tr1.so.%{sonamever}
 %{_libdir}/libboost_math_tr1f*.so.%{sonamever}
 %{_libdir}/libboost_math_tr1l*.so.%{sonamever}
 
