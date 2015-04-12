@@ -916,7 +916,7 @@ rm -Rfv $RPM_BUILD_ROOT%{_datadir}/%{real_name}-%{version}
 rm -Rfv $RPM_BUILD_ROOT%{_datadir}/cmake/%{real_name}
 
 # Perform the necessary renaming according to package renaming
-mkdir -p $RPM_BUILD_ROOT{%{_includedir},%{_libdir}/{.,{mpich,openmpi}/lib}}/%{name}
+mkdir -p $RPM_BUILD_ROOT{%{_includedir},%{_libdir}/{.,{mpich,mpich2,openmpi}/lib}}/%{name}
 mv -f $RPM_BUILD_ROOT%{_includedir}/{%{real_name},%{name}}
 mv -f $RPM_BUILD_ROOT%{_libdir}/{*.a,%{name}}
 for library in $RPM_BUILD_ROOT%{_libdir}/*.so
@@ -925,12 +925,21 @@ do
   ln -s ../$(basename $library).%{sonamever} $RPM_BUILD_ROOT%{_libdir}/%{name}/$(basename $library)
 done
 
-%if %{with mpich} || %{with mpich2}
+%if %{with mpich}
 mv -f $RPM_BUILD_ROOT%{_libdir}/mpich/lib/{*.a,%{name}}
 for library in $RPM_BUILD_ROOT%{_libdir}/mpich/lib/*.so
 do
   rm -f $library
   ln -s ../$(basename $library).%{sonamever} $RPM_BUILD_ROOT%{_libdir}/mpich/lib/%{name}/$(basename $library)
+done
+%endif
+
+%if %{with mpich2}
+mv -f $RPM_BUILD_ROOT%{_libdir}/mpich2/lib/{*.a,%{name}}
+for library in $RPM_BUILD_ROOT%{_libdir}/mpich2/lib/*.so
+do
+  rm -f $library
+  ln -s ../$(basename $library).%{sonamever} $RPM_BUILD_ROOT%{_libdir}/mpich2/lib/%{name}/$(basename $library)
 done
 %endif
 
@@ -1145,8 +1154,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/%{name}/*.a
-%if %{with mpich} || %{with mpich2}
+%if %{with mpich}
 %{_libdir}/mpich/lib/%{name}/*.a
+%endif
+%if %{with mpich2}
+%{_libdir}/mpich2/lib/%{name}/*.a
 %endif
 %if %{with openmpi}
 %{_libdir}/openmpi/lib/%{name}/*.a
@@ -1180,7 +1192,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 # MPICH packages
-%if %{with mpich} || %{with mpich2}
+%if %{with mpich}
 
 %files mpich
 %defattr(-, root, root, -)
@@ -1203,6 +1215,33 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE_1_0.txt
 %{_libdir}/mpich/lib/libboost_graph_parallel.so.%{sonamever}
 %{_libdir}/mpich/lib/libboost_graph_parallel-mt.so.%{sonamever}
+
+%endif
+
+# MPICH2 packages
+%if %{with mpich2}
+
+%files mpich2
+%defattr(-, root, root, -)
+%doc LICENSE_1_0.txt
+%{_libdir}/mpich2/lib/libboost_mpi.so.%{sonamever}
+%{_libdir}/mpich2/lib/libboost_mpi-mt.so.%{sonamever}
+
+%files mpich2-devel
+%defattr(-, root, root, -)
+%doc LICENSE_1_0.txt
+%{_libdir}/mpich2/lib/%{name}/libboost_*.so
+
+%files mpich2-python
+%defattr(-, root, root, -)
+%doc LICENSE_1_0.txt
+%{_libdir}/mpich2/lib/libboost_mpi_python*.so.%{sonamever}
+
+%files graph-mpich2
+%defattr(-, root, root, -)
+%doc LICENSE_1_0.txt
+%{_libdir}/mpich2/lib/libboost_graph_parallel.so.%{sonamever}
+%{_libdir}/mpich2/lib/libboost_graph_parallel-mt.so.%{sonamever}
 
 %endif
 
