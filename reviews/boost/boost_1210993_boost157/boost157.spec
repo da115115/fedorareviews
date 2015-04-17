@@ -459,7 +459,7 @@ pre-processor functionality.
 %package devel
 Summary: The Boost C++ headers and shared development libraries
 Group: Development/Libraries
-Requires: boost%{?_isa} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 Provides: %{name}-python-devel
 Requires: libicu-devel%{?_isa}
 
