@@ -3,7 +3,7 @@
 #
 Name:           airtsp
 Version:        1.01.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Provides:       airsched = %{version}-%{release}
 Obsoletes:      airsched < 1.01.1-1
 
@@ -16,7 +16,12 @@ Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:  cmake, python-devel, boost-devel
-BuildRequires:  soci-mysql-devel, soci-sqlite3-devel, zeromq-devel, readline-devel
+BuildRequires:  soci-mysql-devel, soci-sqlite3-devel, readline-devel
+%if 0%{?fedora} >= 22
+BuildRequires:  zeromq2-devel
+%else
+BuildRequires:  zeromq-devel
+%endif
 BuildRequires:  stdair-devel
 
 
@@ -117,6 +122,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Apr 18 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.01.1-2
+- On Fedora 22+, ZeroMQ v2 is no longer the default.
+
 * Mon Aug 12 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.01.1-1
 - Took into account feedback from review request (BZ#972431):
   airtsp-config now supports multilib (32 and 64bit versions).
