@@ -3,7 +3,7 @@
 #
 Name:           tvlsim
 Version:        1.00.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 
 Summary:        Travel Market Simulator
 
@@ -14,7 +14,12 @@ Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:  cmake, python-devel
-BuildRequires:  boost-devel, soci-mysql-devel, zeromq-devel, readline-devel
+BuildRequires:  boost-devel, soci-mysql-devel, readline-devel
+%if 0%{?fedora} >= 22
+BuildRequires:  zeromq2-devel
+%else
+BuildRequires:  zeromq-devel
+%endif
 BuildRequires:  stdair-devel, airsched-devel, simfqt-devel, sevmgr-devel
 BuildRequires:  airrac-devel, rmol-devel, airinv-devel, simcrs-devel
 BuildRequires:  trademgen-devel, travelccm-devel
@@ -139,6 +144,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Apr 18 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.00.0-4
+- On Fedora 22+, ZeroMQ v2 is no longer the default.
+
 * Sat Aug 31 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.00.0-3
 - Took into account the remaining feedbacks of the review request (#890772)
 
@@ -148,4 +156,3 @@ rm -rf $RPM_BUILD_ROOT
 
 * Sat Dec 29 2012 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.00.0-1
 - First RPM release
-
