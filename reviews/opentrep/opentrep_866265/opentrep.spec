@@ -17,7 +17,7 @@
 
 #
 Name:           opentrep
-Version:        0.6.1
+Version:        0.6.5
 Release:        1%{?dist}
 
 Summary:        C++ library providing a clean API for parsing travel-focused requests
@@ -45,7 +45,7 @@ It powers the http://search-travel.org Web site.
 on freely available travel-related data (e.g., country names and codes,
 city names and codes, airline names and codes, etc.), mainly to be found
 in the OpenTravelData project (http://github.com/opentraveldata/optd):
-http://github.com/opentraveldata/optd/tree/trunk/refdata/ORI
+http://github.com/opentraveldata/opentraveldata/tree/trunk/opentraveldata
 
 %{name} exposes a simple, clean and object-oriented, API. For instance,
 the OPENTREP::interpretTravelRequest() method takes, as input, a string
@@ -72,7 +72,7 @@ SOCI (http://soci.sourceforge.net) libraries are used.
 
 Note that %{name} currently only recognizes points of reference (POR),
 as to be found in the following file:
-http://github.com/opentraveldata/optd/blob/trunk/refdata/ORI/ori_por_public.csv
+http://github.com/opentraveldata/opentraveldata/blob/trunk/opentraveldata/optd_por_public.csv
 A good complementary tool is GeoBase (http://opentraveldata.github.io/geobases),
 a Python-based software able to access to any travel-related data source.
 
@@ -102,8 +102,8 @@ BuildArch:      noarch
 OpenTREP uses Xapian (http://www.xapian.org) for the Information Retrieval
 part, on freely available travel-related data (e.g., country names and codes,
 city names and codes, airline names and codes, etc.), mainly to be found in
-the OpenTravelData project (http://github.com/opentraveldata/optd):
-http://github.com/opentraveldata/optd/tree/trunk/refdata/ORI
+the OpenTravelData project (http://github.com/opentraveldata/opentraveldata):
+http://github.com/opentraveldata/opentraveldata/tree/trunk/opentraveldata
 
 
 %package        doc
@@ -155,12 +155,12 @@ make install DESTDIR=$RPM_BUILD_ROOT
 # documentation out of the docdir path, as the %%doc macro no longer
 # deletes the full directory before installing files into it.
 mkdir -p %{mydocs}
-mv $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/html %{mydocs}
+mv $RPM_BUILD_ROOT%{_docdir}/%{name}/html %{mydocs}
 rm -f %{mydocs}/html/installdox
 
 # Remove additional documentation files (those files are already available
 # in the project top directory)
-rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/{NEWS,README,AUTHORS}
+rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}/{NEWS,README,AUTHORS}
 
 %if %{with python}
 # (Pure) Python OpenTREP executable
@@ -200,9 +200,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/%{name}/data/por/create_trep_user_and_db.sql
 %{_datadir}/%{name}/data/por/create_trep_tables_sqlite3.sql
 %{_datadir}/%{name}/data/por/create_trep_tables_mysql.sql
-%{_datadir}/%{name}/data/por/ori_por_public_4_test.csv
-%{_datadir}/%{name}/data/por/test_ori_por_public.csv
-%{_datadir}/%{name}/data/por/test_ori_por_public_schema.sql
+%{_datadir}/%{name}/data/por/optd_por_public_4_test.csv
+%{_datadir}/%{name}/data/por/test_optd_por_public.csv
+%{_datadir}/%{name}/data/por/test_optd_por_public_schema.sql
 %{_datadir}/%{name}/data/por/test_world_schedule.csv
 
 %files devel
@@ -217,7 +217,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files data
 %doc %{_datadir}/%{name}/data/por/README.md
-%{_datadir}/%{name}/data/por/ori_por_public.csv
+%{_datadir}/%{name}/data/por/optd_por_public.csv
 
 %files doc
 %doc %{mydocs}/html
@@ -231,8 +231,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Apr 27 2014 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.6.1-1
-- new package built with tito
+* Sun Apr 19 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.6.5-1
+- Upstream update
 
 * Sun Apr 13 2014 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.6.1-1
 - Upstream update
