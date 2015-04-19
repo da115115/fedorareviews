@@ -43,8 +43,8 @@ It powers the http://search-travel.org Web site.
 
 %{name} uses Xapian (http://www.xapian.org) for the Information Retrieval part,
 on freely available travel-related data (e.g., country names and codes,
-city names and codes, airline names and codes, etc.), mainly to be found
-in the OpenTravelData project (http://github.com/opentraveldata/optd):
+city names and codes, airline names and codes, etc.), mainly to be found in
+the OpenTravelData project (http://github.com/opentraveldata/opentraveldata):
 http://github.com/opentraveldata/opentraveldata/tree/trunk/opentraveldata
 
 %{name} exposes a simple, clean and object-oriented, API. For instance,
@@ -71,8 +71,7 @@ Boost (C++ Standard Extensions: http://www.boost.org) and
 SOCI (http://soci.sourceforge.net) libraries are used.
 
 Note that %{name} currently only recognizes points of reference (POR),
-as to be found in the following file:
-http://github.com/opentraveldata/opentraveldata/blob/trunk/opentraveldata/optd_por_public.csv
+as to be found in the following file: http://bit.ly/1DXIjWE
 A good complementary tool is GeoBase (http://opentraveldata.github.io/geobases),
 a Python-based software able to access to any travel-related data source.
 
