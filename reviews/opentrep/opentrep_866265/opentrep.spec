@@ -17,7 +17,7 @@
 
 #
 Name:           opentrep
-Version:        0.6.5
+Version:        0.6.6
 Release:        1%{?dist}
 
 Summary:        C++ library providing a clean API for parsing travel-focused requests
@@ -166,11 +166,7 @@ rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}/{NEWS,README,AUTHORS}
 install -d $RPM_BUILD_ROOT%{python2_sitearch}/libpy%{name}
 install -pm 0755 $RPM_BUILD_ROOT%{_bindir}/py%{name} $RPM_BUILD_ROOT%{python2_sitearch}/libpy%{name}/
 rm -f $RPM_BUILD_ROOT%{_bindir}/py%{name}
-# (Pure) Python Protobuf module
-install -pm 0644 $RPM_BUILD_ROOT%{_libdir}/python/%{name}/*.py* $RPM_BUILD_ROOT%{python2_sitearch}/libpy%{name}/
-rm -f $RPM_BUILD_ROOT%{_libdir}/python/%{name}/*.py*
-# (ELF) Binary Python module (library)
-mv $RPM_BUILD_ROOT%{_libdir}/python/%{name}/libpy%{name}.so* $RPM_BUILD_ROOT%{python2_sitearch}/libpy%{name}/
+chmod a-x $RPM_BUILD_ROOT%{python2_sitearch}/libpy%{name}/Travel_pb2.py
 %endif
 
 
@@ -230,6 +226,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Apr 19 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.6.6-1
+- Upstream update
+
 * Sun Apr 19 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.6.5-1
 - Upstream update
 
