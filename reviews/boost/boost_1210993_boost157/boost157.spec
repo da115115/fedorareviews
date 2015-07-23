@@ -7,6 +7,12 @@
 %define boost_docdir __tmp_docdir
 %define boost_examplesdir __tmp_examplesdir
 
+%if 0%{?rhel} && 0%{?rhel} <= 6
+%{!?__python2: %global __python2 /usr/bin/python2}
+%{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
+%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
+%endif
+ 
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %ifarch ppc64le
   %bcond_with mpich
@@ -78,7 +84,7 @@ Summary: The free peer-reviewed portable C++ source libraries
 Version: 1.57.0
 %define version_enc 1_57_0
 %define version_suffix 157
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Boost and MIT and Python
 
 %define toplev_dirname %{real_name}_%{version_enc}
@@ -1412,5 +1418,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/bjam%{version_suffix}.1*
 
 %changelog
+* Thu Jul 23 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.57.0-2
+- Added the Python set up macro for EPEL 5 and 6
+
 * Sun Apr 12 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.57.0-1
 - Transformed boost-1.57.0-5 into boost157-1.57.0-1 (#1210993)
