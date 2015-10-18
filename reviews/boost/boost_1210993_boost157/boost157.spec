@@ -84,7 +84,7 @@ Summary: The free peer-reviewed portable C++ source libraries
 Version: 1.57.0
 %define version_enc 1_57_0
 %define version_suffix 157
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Boost and MIT and Python
 
 %define toplev_dirname %{real_name}_%{version_enc}
@@ -632,7 +632,7 @@ back-end to do the parallel work.
 %package mpich2
 Summary: Run-Time component of Boost.MPI library
 Group: System Environment/Libraries
-Requires: mpich2
+Requires: mpich2%{?_isa}
 BuildRequires: mpich2-devel
 
 %description mpich2
@@ -681,7 +681,7 @@ back-end to do the parallel work.
 %package build
 Summary: Cross platform build system for C++ projects
 Group: Development/Tools
-Requires: %{name}-jam
+Requires: %{name}-jam%{?_isa}
 BuildArch: noarch
 
 %description build
@@ -1250,11 +1250,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_python3*.so.%{sonamever}
-
-%files python3-devel
-%defattr(-, root, root, -)
-%doc LICENSE_1_0.txt
-%{_libdir}/libboost_python3.so
 %endif
 
 %files random
@@ -1349,7 +1344,7 @@ rm -rf $RPM_BUILD_ROOT
 %files graph-openmpi
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/openmpi/lib/libboost_graph_parallel.so.%{sonamever}
+%{_libdir}/openmpi/lib/libboost_graph_parallel*.so.%{sonamever}
 
 %endif
 
@@ -1418,8 +1413,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/bjam%{version_suffix}.1*
 
 %changelog
+* Sun Oct 18 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.57.0-3
+- Added the architecture dependency where missing (BZ#1244045)
+
 * Thu Jul 23 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.57.0-2
 - Added the Python set up macro for EPEL 5 and 6
 
 * Sun Apr 12 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.57.0-1
-- Transformed boost-1.57.0-5 into boost157-1.57.0-1 (#1210993)
+- Transformed boost-1.57.0-5 into boost157-1.57.0-1 (BZ#1210993)
+
