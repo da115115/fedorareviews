@@ -66,7 +66,7 @@
 %endif
 %endif
 
-%ifnarch %{ix86} x86_64 %{arm} ppc64 ppc64le
+%ifnarch %{ix86} x86_64 %{arm} ppc64 ppc64le aarch64
   %bcond_with context
 %else
   %bcond_without context
@@ -91,7 +91,7 @@ License: Boost and MIT and Python
 URL: http://www.boost.org
 Group: System Environment/Libraries
 
-Source0: http://downloads.sourceforge.net/%{real_name}/%{toplev_dirname}.tar.bz2
+Source0: http://sourceforge.net/projects/boost/files/%{real_name}/%{version}/%{toplev_dirname}.tar.bz2
 Source1: ver.py
 Source2: libboost_thread.so
 
@@ -130,14 +130,17 @@ Requires: %{name}-wave%{?_isa} = %{version}-%{release}
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: m4
-BuildRequires: libstdc++-devel%{?_isa}
-BuildRequires: bzip2-devel%{?_isa}
-BuildRequires: zlib-devel%{?_isa}
-BuildRequires: python-devel%{?_isa}
+BuildRequires: chrpath
+BuildRequires: libstdc++-devel
+BuildRequires: bzip2-devel
+BuildRequires: zlib-devel
+BuildRequires: python-devel
+BuildRequires: numpy
 %if %{with python3}
-BuildRequires: python3-devel%{?_isa}
+BuildRequires: python34-devel
+BuildRequires: python34-numpy
 %endif
-BuildRequires: libicu-devel%{?_isa}
+BuildRequires: libicu-devel
 
 # https://svn.boost.org/trac/boost/ticket/6150
 Patch4: boost-1.50.0-fix-non-utf8-files.patch
@@ -703,6 +706,7 @@ a number of significant features and is now developed independently
 
 %prep
 %setup -q -n %{toplev_dirname}
+find ./boost -name '*.hpp' -perm /111 | xargs chmod a-x
 
 %patch4 -p1
 %patch5 -p1
@@ -738,7 +742,8 @@ a number of significant features and is now developed independently
 
 # There are many strict aliasing warnings, and it's not feasible to go
 # through them all at this time.
-export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
+# There are also lots of noisy but harmless unused local typedef warnings.
+export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -Wno-unused-local-typedefs -Wno-deprecated-declarations"
 
 cat > ./tools/build/src/user-config.jam << "EOF"
 import os ;
@@ -1250,6 +1255,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_python3*.so.%{sonamever}
+
+%files python3-devel
+%defattr(-, root, root, -)
+%doc LICENSE_1_0.txt
+%{_libdir}/libboost_python3.so
 %endif
 
 %files random
