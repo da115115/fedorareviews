@@ -66,7 +66,7 @@
 %endif
 %endif
 
-%ifnarch %{ix86} x86_64 %{arm} ppc64 ppc64le aarch64
+%ifnarch %{ix86} x86_64 %{arm} ppc64 ppc64le
   %bcond_with context
 %else
   %bcond_without context
@@ -78,20 +78,20 @@
   %bcond_with python3
 %endif
 
-Name: boost157
+Name: boost159
 %define real_name boost
 Summary: The free peer-reviewed portable C++ source libraries
-Version: 1.57.0
-%define version_enc 1_57_0
-%define version_suffix 157
-Release: 4%{?dist}
+Version: 1.59.0
+%define version_enc 1_59_0
+%define version_suffix 159
+Release: 1%{?dist}
 License: Boost and MIT and Python
 
 %define toplev_dirname %{real_name}_%{version_enc}
 URL: http://www.boost.org
 Group: System Environment/Libraries
 
-Source0: http://sourceforge.net/projects/boost/files/%{real_name}/%{version}/%{toplev_dirname}.tar.bz2
+Source0: http://downloads.sourceforge.net/%{real_name}/%{toplev_dirname}.tar.bz2
 Source1: ver.py
 Source2: libboost_thread.so
 
@@ -130,17 +130,14 @@ Requires: %{name}-wave%{?_isa} = %{version}-%{release}
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: m4
-BuildRequires: chrpath
-BuildRequires: libstdc++-devel
-BuildRequires: bzip2-devel
-BuildRequires: zlib-devel
-BuildRequires: python-devel
-BuildRequires: numpy
+BuildRequires: libstdc++-devel%{?_isa}
+BuildRequires: bzip2-devel%{?_isa}
+BuildRequires: zlib-devel%{?_isa}
+BuildRequires: python-devel%{?_isa}
 %if %{with python3}
-BuildRequires: python34-devel
-BuildRequires: python34-numpy
+BuildRequires: python3-devel%{?_isa}
 %endif
-BuildRequires: libicu-devel
+BuildRequires: libicu-devel%{?_isa}
 
 # https://svn.boost.org/trac/boost/ticket/6150
 Patch4: boost-1.50.0-fix-non-utf8-files.patch
@@ -152,7 +149,7 @@ Patch5: boost-1.48.0-add-bjam-man-page.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=828856
 # https://bugzilla.redhat.com/show_bug.cgi?id=828857
 # https://svn.boost.org/trac/boost/ticket/6701
-Patch15: boost-1.50.0-pool.patch
+Patch15: boost-1.58.0-pool.patch
 
 # https://svn.boost.org/trac/boost/ticket/5637
 Patch25: boost-1.57.0-mpl-print.patch
@@ -163,33 +160,28 @@ Patch36: boost-1.57.0-spirit-unused_typedef.patch
 # https://svn.boost.org/trac/boost/ticket/8878
 Patch45: boost-1.54.0-locale-unused_typedef.patch
 
-# https://svn.boost.org/trac/boost/ticket/8888
-Patch49: boost-1.54.0-python-unused_typedef.patch
-
 # https://svn.boost.org/trac/boost/ticket/9038
-Patch51: boost-1.57.0-pool-test_linking.patch
-
-# This was already fixed upstream, so no tracking bug.
-Patch53: boost-1.54.0-pool-max_chunks_shadow.patch
+Patch51: boost-1.58.0-pool-test_linking.patch
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=1102667
 Patch61: boost-1.57.0-python-libpython_dep.patch
 Patch62: boost-1.57.0-python-abi_letters.patch
 Patch63: boost-1.55.0-python-test-PyImport_AppendInittab.patch
 
-# https://svn.boost.org/trac/boost/ticket/10100
-# https://github.com/boostorg/signals2/pull/8
-Patch64: boost-1.57.0-signals2-weak_ptr.patch
-
 # https://bugzilla.redhat.com/show_bug.cgi?id=1190039
 Patch65: boost-1.57.0-build-optflags.patch
 
-# https://svn.boost.org/trac/boost/ticket/10510
-Patch66: boost-1.57.0-uuid-comparison.patch
+# Prevent gcc.jam from setting -m32 or -m64.
+Patch68: boost-1.58.0-address-model.patch
 
-# https://bugzilla.redhat.com/show_bug.cgi?id=1192002
-# https://svn.boost.org/trac/boost/ticket/11044
-Patch67: boost-1.57.0-move-is_class.patch
+# https://svn.boost.org/trac/boost/ticket/11549
+Patch70: boost-1.59.0-log.patch
+
+# https://github.com/boostorg/python/pull/40
+Patch80: boost-1.59-python-make_setter.patch
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=1262444
+Patch81: boost-1.59-test-fenv.patch
 
 %bcond_with tests
 %bcond_with docs_generated
@@ -262,7 +254,7 @@ Group: System Environment/Libraries
 
 %description date-time
 
-Run-Time support for Boost Date Time, set of date-time libraries based
+Run-Time support for Boost Date Time, a set of date-time libraries based
 on generic programming concepts.
 
 %package filesystem
@@ -324,7 +316,7 @@ Group: System Environment/Libraries
 
 %description math
 
-Run-Time support for C99 and C++ TR1 C-style Functions from math
+Run-Time support for C99 and C++ TR1 C-style Functions from the math
 portion of Boost.TR1.
 
 %package program-options
@@ -335,7 +327,7 @@ Group: System Environment/Libraries
 
 Run-Time support of boost program options library, which allows program
 developers to obtain (name, value) pairs from the user, via
-conventional methods such as command line and configuration file.
+conventional methods such as command-line and configuration file.
 
 %package python
 Summary: Run-Time component of boost python library
@@ -344,7 +336,7 @@ Group: System Environment/Libraries
 %description python
 
 The Boost Python Library is a framework for interfacing Python and
-C++. It allows you to quickly and seamlessly expose C++ classes
+C++. It allows you to quickly and seamlessly expose C++ classes,
 functions and objects to Python, and vice versa, using no special
 tools -- just your C++ compiler.  This package contains run-time
 support for Boost Python Library.
@@ -358,7 +350,7 @@ Group: System Environment/Libraries
 %description python3
 
 The Boost Python Library is a framework for interfacing Python and
-C++. It allows you to quickly and seamlessly expose C++ classes
+C++. It allows you to quickly and seamlessly expose C++ classes,
 functions and objects to Python, and vice versa, using no special
 tools -- just your C++ compiler.  This package contains run-time
 support for Boost Python Library compiled for Python 3.
@@ -414,8 +406,7 @@ Group: System Environment/Libraries
 %description system
 
 Run-Time component of Boost operating system support library, including
-the diagnostics support that will be part of the C++0x standard
-library.
+the diagnostics support that is part of the C++11 standard library.
 
 %package test
 Summary: Run-Time component of boost test library
@@ -496,7 +487,7 @@ Static Boost C++ libraries.
 %package doc
 Summary: HTML documentation for the Boost C++ libraries
 Group: Documentation
-%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
+%if 0%{?rhel} >= 6
 BuildArch: noarch
 %endif
 Provides: %{name}-python-docs = %{version}-%{release}
@@ -513,7 +504,7 @@ web page (http://www.boost.org/doc/libs/1_40_0).
 %package examples
 Summary: Source examples for the Boost C++ libraries
 Group: Documentation
-%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
+%if 0%{?rhel} >= 6
 BuildArch: noarch
 %endif
 Requires: %{name}-devel = %{version}-%{release}
@@ -692,8 +683,18 @@ Boost.Build is an easy way to build C++ projects, everywhere. You name
 your pieces of executable and libraries and list their sources.  Boost.Build
 takes care about compiling your sources with the right options,
 creating static and shared libraries, making pieces of executable, and other
-chores -- whether you''re using GCC, MSVC, or a dozen more supported
+chores -- whether you are using GCC, MSVC, or a dozen more supported
 C++ compilers -- on Windows, OSX, Linux and commercial UNIX systems.
+
+%package doctools
+Summary: Tools for working with Boost documentation
+Group: Applications/Publishing
+Requires: docbook-dtds
+Requires: docbook-style-xsl
+
+%description doctools
+
+Tools for working with Boost documentation in BoostBook or QuickBook format.
 
 %package jam
 Summary: A low-level build tool
@@ -706,7 +707,6 @@ a number of significant features and is now developed independently
 
 %prep
 %setup -q -n %{toplev_dirname}
-find ./boost -name '*.hpp' -perm /111 | xargs chmod a-x
 
 %patch4 -p1
 %patch5 -p1
@@ -714,16 +714,15 @@ find ./boost -name '*.hpp' -perm /111 | xargs chmod a-x
 %patch25 -p1
 %patch36 -p1
 %patch45 -p1
-%patch49 -p1
 %patch51 -p1
-%patch53 -p1
 %patch61 -p1
 %patch62 -p1
 %patch63 -p1
-%patch64 -p2
 %patch65 -p1
-%patch66 -p2
-%patch67 -p0
+%patch68 -p1
+%patch70 -p2
+%patch80 -p2
+%patch81 -p2
 
 # At least python2_version needs to be a macro so that it's visible in
 # %%install as well.
@@ -743,7 +742,7 @@ find ./boost -name '*.hpp' -perm /111 | xargs chmod a-x
 # There are many strict aliasing warnings, and it's not feasible to go
 # through them all at this time.
 # There are also lots of noisy but harmless unused local typedef warnings.
-export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -Wno-unused-local-typedefs -Wno-deprecated-declarations"
+export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -Wno-unused-local-typedefs"
 
 cat > ./tools/build/src/user-config.jam << "EOF"
 import os ;
@@ -754,8 +753,7 @@ using gcc : : : <compileflags>$(RPM_OPT_FLAGS) ;
 using mpi ;
 %endif
 %if %{with python3}
-# This _adds_ extra python version.  It doesn't replace whatever
-# python 2.X is default on the system.
+using python : %{python2_version} : /usr/bin/python2 : /usr/include/python%{python2_version} : : : : ;
 using python : %{python3_version} : /usr/bin/python3 : /usr/include/python%{python3_version}%{python3_abiflags} : : : : %{python3_abiflags} ;
 %endif
 EOF
@@ -783,8 +781,7 @@ echo ============================= build serial ==================
 	variant=release threading=multi debug-symbols=on pch=off \
 	python=%{python2_version} stage
 
-# See boost-1.54.0-thread-link_atomic.patch for where this file comes
-# from.
+# See libs/thread/build/Jamfile.v2 for where this file comes from.
 if [ $(find serial -type f -name has_atomic_flag_lockfree \
 		-print -quit | wc -l) -ne 0 ]; then
 	DEF=D
@@ -798,7 +795,7 @@ m4 -${DEF}HAS_ATOMIC_FLAG_LOCKFREE -DVERSION=%{version} \
 # Build MPI parts of Boost with OpenMPI support
 
 %if %{with openmpi} || %{with mpich} || %{with mpich2}
-# First, purge all modules so that user environment doesn't conflict
+# First, purge all modules so that user environment does not conflict
 # with the build.
 module purge ||:
 %endif
@@ -944,9 +941,22 @@ echo ============================= install Boost.Build ==================
  %{__install} -p -m 644 v2/doc/bjam.1 -D $RPM_BUILD_ROOT%{_mandir}/man1/bjam%{version_suffix}.1
 )
 
+echo ============================= install Boost.QuickBook ==================
+(cd tools/quickbook
+ ../build/b2 --prefix=$RPM_BUILD_ROOT%{_prefix}
+ %{__install} -p -m 755 ../../dist/bin/quickbook $RPM_BUILD_ROOT%{_bindir}/
+ cd ../boostbook
+ find dtd -type f -name '*.dtd' | while read tobeinstalledfiles; do
+   install -p -m 644 $tobeinstalledfiles -D $RPM_BUILD_ROOT%{_datadir}/boostbook/$tobeinstalledfiles
+ done
+ find xsl -type f | while read tobeinstalledfiles; do
+   install -p -m 644 $tobeinstalledfiles -D $RPM_BUILD_ROOT%{_datadir}/boostbook/$tobeinstalledfiles
+ done
+)
+
 # Install documentation files (HTML pages) within the temporary place
 echo ============================= install documentation ==================
-# Prepare the place to temporary store the generated documentation
+# Prepare the place to temporarily store the generated documentation
 rm -rf %{boost_docdir} && %{__mkdir_p} %{boost_docdir}/html
 DOCPATH=%{boost_docdir}
 DOCREGEX='.*\.\(html?\|css\|png\|gif\)'
@@ -959,8 +969,8 @@ sed "s:^:$DOCPATH/:" tmp-doc-directories \
     | xargs -P 0 --no-run-if-empty %{__install} -d
 
 cat tmp-doc-directories | while read tobeinstalleddocdir; do
-    find $tobeinstalleddocdir -mindepth 1 -maxdepth 1 -regex $DOCREGEX \
-    | xargs -P 0 %{__install} -p -m 644 -t $DOCPATH/$tobeinstalleddocdir
+    find $tobeinstalleddocdir -mindepth 1 -maxdepth 1 -regex $DOCREGEX -print0 \
+    | xargs -P 0 -0 %{__install} -p -m 644 -t $DOCPATH/$tobeinstalleddocdir
 done
 rm -f tmp-doc-directories
 %{__install} -p -m 644 -t $DOCPATH LICENSE_1_0.txt index.htm index.html boost.png rst.css boost.css
@@ -979,7 +989,7 @@ do
   rm -f libs/${tmp_doc_file}.iso8859
 done
 
-# Prepare the place to temporary store the examples
+# Prepare the place to temporarily store the examples
 rm -rf %{boost_examplesdir} && mkdir -p %{boost_examplesdir}/html
 EXAMPLESPATH=%{boost_examplesdir}
 find libs -type d -name example -exec find {} -type f \; \
@@ -1158,6 +1168,30 @@ rm -rf $RPM_BUILD_ROOT
 
 %postun wave -p /sbin/ldconfig
 
+%post doctools
+CATALOG=%{_sysconfdir}/xml/catalog
+%{_bindir}/xmlcatalog --noout --add "rewriteSystem" \
+ "http://www.boost.org/tools/boostbook/dtd" \
+ "file://%{_datadir}/boostbook/dtd" $CATALOG
+%{_bindir}/xmlcatalog --noout --add "rewriteURI" \
+ "http://www.boost.org/tools/boostbook/dtd" \
+ "file://%{_datadir}/boostbook/dtd" $CATALOG
+%{_bindir}/xmlcatalog --noout --add "rewriteSystem" \
+ "http://www.boost.org/tools/boostbook/xsl" \
+ "file://%{_datadir}/boostbook/xsl" $CATALOG
+%{_bindir}/xmlcatalog --noout --add "rewriteURI" \
+ "http://www.boost.org/tools/boostbook/xsl" \
+ "file://%{_datadir}/boostbook/xsl" $CATALOG
+
+%postun doctools
+# remove entries only on removal of package
+if [ "$1" = 0 ]; then
+  CATALOG=%{_sysconfdir}/xml/catalog
+  %{_bindir}/xmlcatalog --noout --del \
+    "file://%{_datadir}/boostbook/dtd" $CATALOG
+  %{_bindir}/xmlcatalog --noout --del \
+    "file://%{_datadir}/boostbook/xsl" $CATALOG
+fi
 
 
 %files
@@ -1221,7 +1255,7 @@ rm -rf $RPM_BUILD_ROOT
 %files log
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_libdir}/libboost_log.so.%{sonamever}
+%{_libdir}/libboost_log*.so.%{sonamever}
 %{_libdir}/libboost_log_setup*.so.%{sonamever}
 
 %files math
@@ -1255,11 +1289,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_python3*.so.%{sonamever}
-
-%files python3-devel
-%defattr(-, root, root, -)
-%doc LICENSE_1_0.txt
-%{_libdir}/libboost_python3.so
 %endif
 
 %files random
@@ -1416,6 +1445,12 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE_1_0.txt
 %{_datadir}/%{name}-build/
 
+%files doctools
+%defattr(-, root, root, -)
+%doc LICENSE_1_0.txt
+%{_bindir}/quickbook
+%{_datadir}/boostbook/
+
 %files jam
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
@@ -1423,15 +1458,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/bjam%{version_suffix}.1*
 
 %changelog
-* Sun Oct 8 2017 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.57.0-4
-- Added the architecture dependency where missing
-
-* Sun Oct 18 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.57.0-3
-- Added the architecture dependency where missing (BZ#1244045)
-
-* Thu Jul 23 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.57.0-2
-- Added the Python set up macro for EPEL 5 and 6
-
-* Sun Apr 12 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.57.0-1
-- Transformed boost-1.57.0-5 into boost157-1.57.0-1 (BZ#1210993)
-
+* Sun Oct 18 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.59.0-1
+- Transformed boost-1.59.0-6 into boost159-1.59.0-1 (BZ#xxx)
