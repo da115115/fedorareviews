@@ -4,8 +4,8 @@
 # directory.
 # XXX note that as of rpm 4.9.1, this shouldn't be necessary anymore.
 # We should be able to install directly.
-%define boost_docdir __tmp_docdir
-%define boost_examplesdir __tmp_examplesdir
+%global boost_docdir __tmp_docdir
+%global boost_examplesdir __tmp_examplesdir
 
 %if 0%{?rhel} && 0%{?rhel} <= 6
 %{!?__python2: %global __python2 /usr/bin/python2}
@@ -13,7 +13,7 @@
 %{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 %endif
  
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
+%if 0%{?fedora} || 0%{?rhel} >= 7
 %ifarch ppc64le
   %bcond_with mpich
 %else
@@ -27,42 +27,20 @@
   %bcond_without mpich
 %endif
 %endif
-%if 0%{?fedora} <= 18 || 0%{?rhel} <= 5
-%ifarch %{arm} ppc64
-  %bcond_with mpich2
-%else
-  %bcond_without mpich2
-%endif
-%endif
 
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
+%if 0%{?fedora} || 0%{?rhel} >= 7
 %ifarch s390 s390x ppc64le
   # No OpenMPI support on these arches
   %bcond_with openmpi
 %else
   %bcond_without openmpi
 %endif
-%else # fedora <= 18 or rhel <= 6
+%else # rhel <= 6
 %ifarch s390 s390x %{arm}
   # No OpenMPI support on these arches
   %bcond_with openmpi
 %else
   %bcond_without openmpi
-  # OpenMPI from RHEL 5 does not provide /etc/rpm/macros.openmpi-%{_arch}
-  # Work around so far: http://fedoraproject.org/wiki/PackagingDrafts/MPI
-  %if 0%{?rhel} == 5
-    %define _openmpi_load \
-      mpi-selector --set `mpi-selector --list | grep openmpi` \
-      source %{_sysconfdir}/profile.d/mpi-selector.sh \
-      export MPI_INCLUDE_PATH="%{_libdir}/openmpi/1.4-gcc/include" \
-      export MPI_LIB="%{_libdir}/openmpi/1.4-gcc/lib" \
-      export MPI_SUFFIX="_openmpi"
-    %define _openmpi_unload \
-      mpi-selector --unset \
-      unset MPI_INCLUDE_PATH \
-      unset MPI_LIB \
-      unset MPI_SUFFIX
-  %endif
 %endif
 %endif
 
@@ -72,22 +50,22 @@
   %bcond_without context
 %endif
 
-%if 0%{?fedora} >= 21
+%if 0%{?fedora}
   %bcond_without python3
-%else # fedora <= 20
+%else # rhel
   %bcond_with python3
 %endif
 
 Name: boost157
-%define real_name boost
+%global real_name boost
 Summary: The free peer-reviewed portable C++ source libraries
 Version: 1.57.0
-%define version_enc 1_57_0
-%define version_suffix 157
-Release: 4%{?dist}
+%global version_enc 1_57_0
+%global version_suffix 157
+Release: 5%{?dist}
 License: Boost and MIT and Python
 
-%define toplev_dirname %{real_name}_%{version_enc}
+%global toplev_dirname %{real_name}_%{version_enc}
 URL: http://www.boost.org
 Group: System Environment/Libraries
 
@@ -97,7 +75,7 @@ Source2: libboost_thread.so
 
 # Since Fedora 13, the Boost libraries are delivered with sonames
 # equal to the Boost version (e.g., 1.41.0).
-%define sonamever %{version}
+%global sonamever %{version}
 
 # boost is an "umbrella" package that pulls in all other boost
 # components, except for MPI and Python 3 sub-packages.  Those are
@@ -128,7 +106,6 @@ Requires: %{name}-thread%{?_isa} = %{version}-%{release}
 Requires: %{name}-timer%{?_isa} = %{version}-%{release}
 Requires: %{name}-wave%{?_isa} = %{version}-%{release}
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: m4
 BuildRequires: libstdc++-devel
 BuildRequires: bzip2-devel
@@ -850,7 +827,6 @@ echo ============================= build Boost.Build ==================
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 cd %{_builddir}/%{toplev_dirname}
 
 %if %{with openmpi} || %{with mpich} || %{with mpich2}
@@ -1054,9 +1030,6 @@ do
 done
 %endif
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 
 # MPI subpackages don't need the ldconfig magic.  They are hidden by
 # default, in MPI back-end-specific directory, and only show to the
@@ -1160,71 +1133,58 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 
 %files atomic
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_atomic*.so.%{sonamever}
 
 %files chrono
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_chrono*.so.%{sonamever}
 
 %files container
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_container*.so.%{sonamever}
 
 %if %{with context}
 
 %files context
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_context*.so.%{sonamever}
 
 %files coroutine
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_coroutine*.so.%{sonamever}
 
 %endif
 
 %files date-time
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_date_time*.so.%{sonamever}
 
 %files filesystem
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_filesystem*.so.%{sonamever}
 
 %files graph
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_graph*.so.%{sonamever}
 
 %files iostreams
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_iostreams*.so.%{sonamever}
 
 %files locale
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_locale*.so.%{sonamever}
 
 %files log
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_log.so.%{sonamever}
 %{_libdir}/libboost_log_setup*.so.%{sonamever}
 
 %files math
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_math_c99.so.%{sonamever}
 %{_libdir}/libboost_math_c99f*.so.%{sonamever}
@@ -1234,90 +1194,73 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libboost_math_tr1l*.so.%{sonamever}
 
 %files test
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_prg_exec_monitor*.so.%{sonamever}
 %{_libdir}/libboost_unit_test_framework*.so.%{sonamever}
 
 %files program-options
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_program_options*.so.%{sonamever}
 
 %files python
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_python.so.%{sonamever}
 
 %if %{with python3}
 %files python3
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_python3*.so.%{sonamever}
 
 %files python3-devel
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_python3.so
 %endif
 
 %files random
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_random*.so.%{sonamever}
 
 %files regex
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_regex*.so.%{sonamever}
 
 %files serialization
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_serialization*.so.%{sonamever}
 %{_libdir}/libboost_wserialization*.so.%{sonamever}
 
 %files signals
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_signals*.so.%{sonamever}
 
 %files system
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_system*.so.%{sonamever}
 
 %files thread
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_thread*.so.%{sonamever}
 
 %files timer
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_timer*.so.%{sonamever}
 
 %files wave
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_wave*.so.%{sonamever}
 
 %files doc
-%defattr(-, root, root, -)
 %doc %{boost_docdir}/*
 
 %files examples
-%defattr(-, root, root, -)
 %doc %{boost_examplesdir}/*
 
 %files devel
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_includedir}/%{name}
 %{_libdir}/%{name}/libboost_*.so
 
 %files static
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/%{name}/*.a
 %if %{with mpich}
@@ -1335,23 +1278,19 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with openmpi}
 
 %files openmpi
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/openmpi/lib/libboost_mpi*.so.%{sonamever}
 
 %files openmpi-devel
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/openmpi/lib/%{name}/libboost_*.so
 
 %files openmpi-python
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/openmpi/lib/libboost_mpi_python*.so.%{sonamever}
 %{_libdir}/openmpi/lib/%{name}/mpi.so
 
 %files graph-openmpi
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/openmpi/lib/libboost_graph_parallel*.so.%{sonamever}
 
@@ -1361,23 +1300,19 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with mpich}
 
 %files mpich
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/mpich/lib/libboost_mpi*.so.%{sonamever}
 
 %files mpich-devel
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/mpich/lib/%{name}/libboost_*.so
 
 %files mpich-python
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/mpich/lib/libboost_mpi_python*.so.%{sonamever}
 %{_libdir}/mpich/lib/%{name}/mpi.so
 
 %files graph-mpich
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/mpich/lib/libboost_graph_parallel*.so.%{sonamever}
 
@@ -1387,23 +1322,19 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with mpich2}
 
 %files mpich2
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/mpich2/lib/libboost_mpi*.so.%{sonamever}
 
 %files mpich2-devel
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/mpich2/lib/%{name}/libboost_*.so
 
 %files mpich2-python
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/mpich2/lib/libboost_mpi_python*.so.%{sonamever}
 %{_libdir}/mpich2/lib/%{name}/mpi.so
 
 %files graph-mpich2
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/mpich2/lib/libboost_graph_parallel*.so.%{sonamever}
 
@@ -1411,17 +1342,18 @@ rm -rf $RPM_BUILD_ROOT
 %endif # with mpich
 
 %files build
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_datadir}/%{name}-build/
 
 %files jam
-%defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_bindir}/bjam%{version_suffix}
 %{_mandir}/man1/bjam%{version_suffix}.1*
 
 %changelog
+* Thu Oct 19 2017 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.57.0-5
+- Simplified, as no more need to support old EPEL/Fedora versions
+
 * Sun Oct 8 2017 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.57.0-4
 - Added the architecture dependency where missing
 
