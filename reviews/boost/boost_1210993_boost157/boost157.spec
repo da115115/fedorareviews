@@ -62,7 +62,7 @@ Summary: The free peer-reviewed portable C++ source libraries
 Version: 1.57.0
 %global version_enc 1_57_0
 %global version_suffix 157
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: Boost and MIT and Python
 
 %global toplev_dirname %{real_name}_%{version_enc}
@@ -1133,59 +1133,59 @@ done
 
 
 %files
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 
 %files atomic
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_atomic*.so.%{sonamever}
 
 %files chrono
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_chrono*.so.%{sonamever}
 
 %files container
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_container*.so.%{sonamever}
 
 %if %{with context}
 
 %files context
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_context*.so.%{sonamever}
 
 %files coroutine
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_coroutine*.so.%{sonamever}
 
 %endif
 
 %files date-time
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_date_time*.so.%{sonamever}
 
 %files filesystem
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_filesystem*.so.%{sonamever}
 
 %files graph
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_graph*.so.%{sonamever}
 
 %files iostreams
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_iostreams*.so.%{sonamever}
 
 %files locale
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_locale*.so.%{sonamever}
 
 %files log
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_log.so.%{sonamever}
 %{_libdir}/libboost_log_setup*.so.%{sonamever}
 
 %files math
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_math_c99.so.%{sonamever}
 %{_libdir}/libboost_math_c99f*.so.%{sonamever}
 %{_libdir}/libboost_math_c99l*.so.%{sonamever}
@@ -1194,59 +1194,59 @@ done
 %{_libdir}/libboost_math_tr1l*.so.%{sonamever}
 
 %files test
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_prg_exec_monitor*.so.%{sonamever}
 %{_libdir}/libboost_unit_test_framework*.so.%{sonamever}
 
 %files program-options
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_program_options*.so.%{sonamever}
 
 %files python
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_python.so.%{sonamever}
 
 %if %{with python3}
 %files python3
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_python3*.so.%{sonamever}
 
 %files python3-devel
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_python3.so
 %endif
 
 %files random
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_random*.so.%{sonamever}
 
 %files regex
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_regex*.so.%{sonamever}
 
 %files serialization
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_serialization*.so.%{sonamever}
 %{_libdir}/libboost_wserialization*.so.%{sonamever}
 
 %files signals
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_signals*.so.%{sonamever}
 
 %files system
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_system*.so.%{sonamever}
 
 %files thread
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_thread*.so.%{sonamever}
 
 %files timer
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_timer*.so.%{sonamever}
 
 %files wave
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/libboost_wave*.so.%{sonamever}
 
 %files doc
@@ -1256,12 +1256,12 @@ done
 %doc %{boost_examplesdir}/*
 
 %files devel
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_includedir}/%{name}
 %{_libdir}/%{name}/libboost_*.so
 
 %files static
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/%{name}/*.a
 %if %{with mpich}
 %{_libdir}/mpich/lib/%{name}/*.a
@@ -1278,20 +1278,20 @@ done
 %if %{with openmpi}
 
 %files openmpi
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/openmpi/lib/libboost_mpi*.so.%{sonamever}
 
 %files openmpi-devel
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/openmpi/lib/%{name}/libboost_*.so
 
 %files openmpi-python
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/openmpi/lib/libboost_mpi_python*.so.%{sonamever}
 %{_libdir}/openmpi/lib/%{name}/mpi.so
 
 %files graph-openmpi
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/openmpi/lib/libboost_graph_parallel*.so.%{sonamever}
 
 %endif
@@ -1300,20 +1300,20 @@ done
 %if %{with mpich}
 
 %files mpich
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/mpich/lib/libboost_mpi*.so.%{sonamever}
 
 %files mpich-devel
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/mpich/lib/%{name}/libboost_*.so
 
 %files mpich-python
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/mpich/lib/libboost_mpi_python*.so.%{sonamever}
 %{_libdir}/mpich/lib/%{name}/mpi.so
 
 %files graph-mpich
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/mpich/lib/libboost_graph_parallel*.so.%{sonamever}
 
 %else # with mpich
@@ -1322,35 +1322,38 @@ done
 %if %{with mpich2}
 
 %files mpich2
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/mpich2/lib/libboost_mpi*.so.%{sonamever}
 
 %files mpich2-devel
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/mpich2/lib/%{name}/libboost_*.so
 
 %files mpich2-python
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/mpich2/lib/libboost_mpi_python*.so.%{sonamever}
 %{_libdir}/mpich2/lib/%{name}/mpi.so
 
 %files graph-mpich2
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_libdir}/mpich2/lib/libboost_graph_parallel*.so.%{sonamever}
 
 %endif # with mpich2
 %endif # with mpich
 
 %files build
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_datadir}/%{name}-build/
 
 %files jam
-%doc LICENSE_1_0.txt
+%license LICENSE_1_0.txt
 %{_bindir}/bjam%{version_suffix}
 %{_mandir}/man1/bjam%{version_suffix}.1*
 
 %changelog
+* Tue Oct 24 2017 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.57.0-6
+- %%doc to %%license
+
 * Thu Oct 19 2017 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.57.0-5
 - Simplified, as no more need to support old EPEL/Fedora versions
 
