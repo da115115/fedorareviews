@@ -17,7 +17,7 @@
 
 #
 Name:           opentrep
-Version:        0.6.6
+Version:        0.07.0
 Release:        1%{?dist}
 
 Summary:        C++ library providing a clean API for parsing travel-focused requests
@@ -26,8 +26,8 @@ Group:          System Environment/Libraries
 # The entire source code is LGPLv2+ except opentrep/basic/float_utils_google.hpp,
 # which is BSD
 License:        LGPLv2+ and BSD
-URL:            http://%{name}.sourceforge.net
-Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
+URL:            http://github.com/trep/%{name}
+Source0:        https://github.com/trep/%{name}/archive/%{name}-%{version}.tar.gz
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 Requires:       %{name}-data = %{version}-%{release}
@@ -139,7 +139,7 @@ This package contains Python libraries for %{name}
 
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{name}-%{version}
 
 
 %build
@@ -159,7 +159,7 @@ rm -f %{mydocs}/html/installdox
 
 # Remove additional documentation files (those files are already available
 # in the project top directory)
-rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}/{NEWS,README,AUTHORS}
+rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}/{NEWS,README.md,AUTHORS}
 
 %if %{with python}
 # (Pure) Python OpenTREP executable
@@ -181,7 +181,7 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 %files
-%doc AUTHORS ChangeLog COPYING NEWS README
+%doc AUTHORS ChangeLog COPYING NEWS README.md
 %{_bindir}/%{name}-indexer
 %{_bindir}/%{name}-searcher
 %{_bindir}/%{name}-dbmgr
@@ -226,6 +226,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Oct 16 2018 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.07.0-1
+- Upstream update
+
 * Sun Apr 19 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.6.6-1
 - Upstream update
 
