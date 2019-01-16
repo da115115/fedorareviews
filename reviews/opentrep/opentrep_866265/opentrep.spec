@@ -171,6 +171,13 @@ chmod a-x %{buildroot}%{python3_sitearch}/py%{name}/Travel_pb2.py
 #check
 #ctest
 
+%if %{with python}
+%post -n python3-%{name}
+ln -s -f %{python3_sitearch}/py%{name}/py%{name} %{_bindir}/py%{name}
+
+%postun -n python3-%{name}
+rm -f %{_bindir}/py%{name}
+%endif
 
 %files
 %doc AUTHORS ChangeLog COPYING NEWS README.md
@@ -212,6 +219,7 @@ chmod a-x %{buildroot}%{python3_sitearch}/py%{name}/Travel_pb2.py
 
 %if %{with python}
 %files -n python3-%{name}
+#%%{_bindir}/py%%{name}
 %{python3_sitearch}/py%{name}/
 %{_mandir}/man1/py%{name}.1.*
 %endif
