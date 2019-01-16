@@ -129,7 +129,7 @@ Summary:        Python bindings for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 BuildRequires:  python3-devel
 BuildRequires:  python3-setuptools
-Requires:       protobuf-python
+Requires:       python3-protobuf
 %{?python_provide:%python_provide python3-%{name}}
 
 %description -n python3-%{name}
