@@ -1,15 +1,11 @@
-# Documentation package/directory
+#
 %global mydocs __tmp_docdir
 
 # Build -python subpackage
 %bcond_without python
-%if %{with python}
-%if 0%{?rhel} && 0%{?rhel} <= 6
-%{!?__python2: %global __python2 /usr/bin/python2}
-%{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%endif
+
 # See also http://fedoraproject.org/wiki/Packaging:AutoProvidesAndRequiresFiltering#Private_Libraries
+%if %{with python}
 %global _privatelibs libpy%{name}[.]so.*
 %global __provides_exclude ^(%{_privatelibs})$
 %global __requires_exclude ^(%{_privatelibs})$
@@ -17,24 +13,33 @@
 
 #
 Name:           opentrep
-Version:        0.07.0
+Version:        0.07.1
 Release:        1%{?dist}
 
 Summary:        C++ library providing a clean API for parsing travel-focused requests
 
-Group:          System Environment/Libraries
 # The entire source code is LGPLv2+ except opentrep/basic/float_utils_google.hpp,
 # which is BSD
 License:        LGPLv2+ and BSD
 URL:            http://github.com/trep/%{name}
-Source0:        https://github.com/trep/%{name}/archive/%{name}-%{version}.tar.gz
-BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+Source0:        %{url}/%{name}/archive/%{name}-%{version}.tar.gz
 
 Requires:       %{name}-data = %{version}-%{release}
-BuildRequires:  cmake, xapian-core-devel, readline-devel
-BuildRequires:  python2-devel
-BuildRequires:  sqlite-devel, mariadb-devel, soci-sqlite3-devel, soci-mysql-devel
-BuildRequires:  boost-devel, libicu-devel, protobuf-devel, protobuf-compiler
+
+BuildRequires:  gcc-c++
+BuildRequires:  cmake
+BuildRequires:  python3-devel
+BuildRequires:  boost-devel
+BuildRequires:  boost-python3-devel
+BuildRequires:  readline-devel
+BuildRequires:  soci-mysql-devel
+BuildRequires:  soci-sqlite3-devel
+BuildRequires:  xapian-core-devel
+BuildRequires:  sqlite-devel
+BuildRequires:  mariadb-devel
+BuildRequires:  libicu-devel
+BuildRequires:  protobuf-devel
+BuildRequires:  protobuf-compiler
 
 %description
 %{name} aims at providing a clean API, and the corresponding C++
@@ -78,11 +83,8 @@ a Python-based software able to access to any travel-related data source.
 
 %package        devel
 Summary:        Header files, libraries and development helper tools for %{name}
-Group:          Development/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} || 0%{?rhel} > 5
 Requires:       pkgconfig
-%endif
 
 %description    devel
 This package contains the header files, shared libraries and
@@ -93,9 +95,7 @@ programs using %{name}, you will need to install %{name}-devel.
 Summary:        Referential data for the %{name} library
 Group:          Applications/Databases
 License:        CC-BY-SA
-%if 0%{?fedora} || 0%{?rhel} > 5
 BuildArch:      noarch
-%endif
 
 %description    data
 OpenTREP uses Xapian (http://www.xapian.org) for the Information Retrieval
@@ -108,12 +108,11 @@ http://github.com/opentraveldata/opentraveldata/tree/trunk/opentraveldata
 %package        doc
 Summary:        HTML documentation for the %{name} library
 Group:          Documentation
-%if 0%{?fedora} || 0%{?rhel} > 5
 BuildArch:      noarch
-%endif
 BuildRequires:  tex(latex), tex(sectsty.sty), tex(tocloft.sty), tex(xtab.sty)
 BuildRequires:  texlive-collection-langcyrillic, texlive-cyrillic
-BuildRequires:  doxygen, ghostscript
+BuildRequires:  doxygen
+BuildRequires:  ghostscript
 
 %description    doc
 This package contains HTML pages for %{name}. All that documentation
@@ -125,15 +124,15 @@ package is usually corrupted: it depends on the building conditions,
 and it is therefore not reliable.
 
 %if %{with python}
-%package        python
+%package        -n python3-%{name}
 Summary:        Python bindings for %{name}
-Group:          Development/Languages
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-BuildRequires:  python-devel
-BuildRequires:  python-setuptools
+BuildRequires:  python3-devel
+BuildRequires:  python3-setuptools
 Requires:       protobuf-python
+%{?python_provide:%python_provide python3-%{name}}
 
-%description python
+%description -n python3-%{name}
 This package contains Python libraries for %{name}
 %endif
 
@@ -144,41 +143,34 @@ This package contains Python libraries for %{name}
 
 %build
 %cmake .
-make %{?_smp_mflags}
+%make_build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
+%make_install
 
 # From rpm version > 4.9.1, it may no longer be necessary to move the
 # documentation out of the docdir path, as the %%doc macro no longer
 # deletes the full directory before installing files into it.
 mkdir -p %{mydocs}
-mv $RPM_BUILD_ROOT%{_docdir}/%{name}/html %{mydocs}
+mv %{buildroot}%{_docdir}/%{name}/html %{mydocs}
 rm -f %{mydocs}/html/installdox
 
 # Remove additional documentation files (those files are already available
 # in the project top directory)
-rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}/{NEWS,README.md,AUTHORS}
+rm -f %{buildroot}%{_docdir}/%{name}/{NEWS,README.md,AUTHORS}
 
 %if %{with python}
 # (Pure) Python OpenTREP executable
-install -d $RPM_BUILD_ROOT%{python2_sitearch}/libpy%{name}
-install -pm 0755 $RPM_BUILD_ROOT%{_bindir}/py%{name} $RPM_BUILD_ROOT%{python2_sitearch}/libpy%{name}/
-rm -f $RPM_BUILD_ROOT%{_bindir}/py%{name}
-chmod a-x $RPM_BUILD_ROOT%{python2_sitearch}/libpy%{name}/Travel_pb2.py
+install -d %{buildroot}%{python3_sitearch}/py%{name}
+install -pm 0755 %{buildroot}%{_bindir}/py%{name} %{buildroot}%{python3_sitearch}/py%{name}/
+rm -f %{buildroot}%{_bindir}/py%{name}
+chmod a-x %{buildroot}%{python3_sitearch}/py%{name}/Travel_pb2.py
 %endif
 
 
-%check
+#check
 #ctest
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
 
 %files
 %doc AUTHORS ChangeLog COPYING NEWS README.md
@@ -219,13 +211,16 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING
 
 %if %{with python}
-%files python
-%{python2_sitearch}/libpy%{name}/
+%files -n python3-%{name}
+%{python3_sitearch}/py%{name}/
 %{_mandir}/man1/py%{name}.1.*
 %endif
 
 
 %changelog
+* Tue Jan 16 2019 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.07.1-1
+- Upstream update
+
 * Tue Oct 16 2018 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.07.0-1
 - Upstream update
 
