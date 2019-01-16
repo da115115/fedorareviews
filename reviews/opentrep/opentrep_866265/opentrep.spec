@@ -22,7 +22,7 @@ Summary:        C++ library providing a clean API for parsing travel-focused req
 # which is BSD
 License:        LGPLv2+ and BSD
 URL:            http://github.com/trep/%{name}
-Source0:        %{url}/%{name}/archive/%{name}-%{version}.tar.gz
+Source0:        %{url}/archive/%{name}-%{version}.tar.gz
 
 Requires:       %{name}-data = %{version}-%{release}
 
@@ -218,7 +218,7 @@ chmod a-x %{buildroot}%{python3_sitearch}/py%{name}/Travel_pb2.py
 
 
 %changelog
-* Tue Jan 16 2019 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.07.1-1
+* Wed Jan 16 2019 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.07.1-1
 - Upstream update
 
 * Tue Oct 16 2018 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.07.0-1
