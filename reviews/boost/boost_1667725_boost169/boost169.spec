@@ -8,7 +8,7 @@
 %global boost_examplesdir __tmp_examplesdir
 
 %if 0%{?rhel} && 0%{?rhel} <= 6
-%{!?__python2: %global __python2 /usr/bin/python2}
+%{!?__python2: %global __python2 /usr/bin/python}
 %{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
 %{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 %endif
@@ -120,9 +120,14 @@ BuildRequires: m4
 BuildRequires: libstdc++-devel
 BuildRequires: bzip2-devel
 BuildRequires: zlib-devel
+%if %{with python2}
 BuildRequires: python-devel
+BuildRequires: python2-numpy
+%endif
+%if %{with python3}
 BuildRequires: python34-devel
 BuildRequires: python34-numpy
+%endif
 BuildRequires: libicu-devel
 %if %{with quadmath}
 BuildRequires: libquadmath-devel
@@ -1433,7 +1438,6 @@ fi
 %defattr(-, root, root, -)
 %license LICENSE_1_0.txt
 %{_libdir}/libboost_log*.so.%{sonamever}
-%{_libdir}/libboost_log_setup*.so.%{sonamever}
 
 %files math
 %defattr(-, root, root, -)
