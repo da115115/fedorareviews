@@ -594,7 +594,7 @@ API over the OpenMPI implementation of MPI.
 Summary: Python 2 run-time component of Boost.MPI library
 Group: System Environment/Libraries
 Requires: %{name}-openmpi%{?_isa} = %{version}-%{release}
-Requires: %{name}-python%{?_isa} = %{version}-%{release}
+Requires: %{name}-python2%{?_isa} = %{version}-%{release}
 Requires: %{name}-serialization%{?_isa} = %{version}-%{release}
 
 %description openmpi-python2
