@@ -102,7 +102,6 @@ Requires: %{name}-locale%{?_isa} = %{version}-%{release}
 Requires: %{name}-log%{?_isa} = %{version}-%{release}
 Requires: %{name}-math%{?_isa} = %{version}-%{release}
 Requires: %{name}-program-options%{?_isa} = %{version}-%{release}
-Requires: %{name}-python%{?_isa} = %{version}-%{release}
 Requires: %{name}-random%{?_isa} = %{version}-%{release}
 Requires: %{name}-regex%{?_isa} = %{version}-%{release}
 Requires: %{name}-serialization%{?_isa} = %{version}-%{release}
