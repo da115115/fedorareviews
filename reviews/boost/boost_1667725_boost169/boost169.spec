@@ -330,6 +330,7 @@ portion of Boost.TR1.
 Summary: Run-time component of boost numpy library for Python 2
 Group: System Environment/Libraries
 Requires: %{name}-python2%{?_isa} = %{version}-%{release}
+Requires: python2-numpy
 
 %description numpy2
 
@@ -346,7 +347,7 @@ support for the NumPy extension of the Boost Python Library for Python 2.
 %package numpy3
 Summary: Run-time component of boost numpy library for Python 3
 Requires: %{name}-python3%{?_isa} = %{version}-%{release}
-Requires: python3-numpy
+Requires: python34-numpy
 
 %description numpy3
 
