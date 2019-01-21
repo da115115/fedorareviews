@@ -1,35 +1,33 @@
 # Build -python subpackage
 %bcond_without python
 # Build -java subpackage
-%bcond_without java
+%bcond_with java
+# Don't require gtest
+%bcond_with gtest
 
 %global emacs_version %(pkg-config emacs --modversion)
 %global emacs_lispdir %(pkg-config emacs --variable sitepkglispdir)
 %global emacs_startdir %(pkg-config emacs --variable sitestartdir)
 
-#global rcver rc2
-
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
-Version:        3.6.1
-Release:        1%{?dist}
+Version:        3.0.0
+Release:        0.1%{?dist}.beta4.1
 License:        BSD
-URL:            https://github.com/protocolbuffers/protobuf
-Source:         https://github.com/protocolbuffers/protobuf/archive/v%{version}%{?rcver}/%{name}-%{version}%{?rcver}-all.tar.gz
+Group:          Development/Libraries
+Source:         https://github.com/google/protobuf/archive/v%{version}-beta-4.tar.gz
 Source1:        ftdetect-proto.vim
 Source2:        protobuf-init.el
-# For tests
-Source3:        https://github.com/google/googlemock/archive/release-1.7.0.tar.gz#/googlemock-1.7.0.tar.gz
-Source4:        https://github.com/google/googletest/archive/release-1.7.0.tar.gz#/googletest-1.7.0.tar.gz
-
-BuildRequires:  autoconf
-BuildRequires:  automake
+Patch0:         protobuf-2.5.0-emacs-24.4.patch
+Patch1:         protobuf-3.0.0-fedora-gmock.patch
+URL:            https://github.com/google/protobuf
+BuildRequires:  automake autoconf libtool pkgconfig zlib-devel
 BuildRequires:  emacs(bin)
 BuildRequires:  emacs-el >= 24.1
-BuildRequires:  gcc-c++
-BuildRequires:  libtool
-BuildRequires:  pkgconfig
-BuildRequires:  zlib-devel
+%if %{with gtest}
+BuildRequires:  gmock-devel
+%endif
+#BuildRequires:  mvn(org.easymock:easymock)
 
 %description
 Protocol Buffers are a way of encoding structured data in an efficient
@@ -45,33 +43,37 @@ variety of languages. You can even update your data structure without
 breaking deployed programs that are compiled against the "old" format.
 
 %package compiler
-Summary:        Protocol Buffers compiler
-Requires:       %{name} = %{version}-%{release}
+Summary: Protocol Buffers compiler
+Group: Development/Libraries
+Requires: %{name} = %{version}-%{release}
 
 %description compiler
 This package contains Protocol Buffers compiler for all programming
 languages
 
 %package devel
-Summary:        Protocol Buffers C++ headers and libraries
-Requires:       %{name} = %{version}-%{release}
-Requires:       %{name}-compiler = %{version}-%{release}
-Requires:       zlib-devel
-Requires:       pkgconfig
+Summary: Protocol Buffers C++ headers and libraries
+Group: Development/Libraries
+Requires: %{name} = %{version}-%{release}
+Requires: %{name}-compiler = %{version}-%{release}
+Requires: zlib-devel
+Requires: pkgconfig
 
 %description devel
 This package contains Protocol Buffers compiler for all languages and
 C++ headers and libraries
 
 %package static
-Summary:        Static development files for %{name}
-Requires:       %{name}-devel = %{version}-%{release}
+Summary: Static development files for %{name}
+Group: Development/Libraries
+Requires: %{name}-devel = %{version}-%{release}
 
 %description static
 Static libraries for Protocol Buffers
 
 %package lite
-Summary:        Protocol Buffers LITE_RUNTIME libraries
+Summary: Protocol Buffers LITE_RUNTIME libraries
+Group: Development/Libraries
 
 %description lite
 Protocol Buffers built with optimize_for = LITE_RUNTIME.
@@ -81,9 +83,9 @@ which only depends libprotobuf-lite, which is much smaller than libprotobuf but
 lacks descriptors, reflection, and some other features.
 
 %package lite-devel
-Summary:        Protocol Buffers LITE_RUNTIME development libraries
-Requires:       %{name}-devel = %{version}-%{release}
-Requires:       %{name}-lite = %{version}-%{release}
+Summary: Protocol Buffers LITE_RUNTIME development libraries
+Requires: %{name}-devel = %{version}-%{release}
+Requires: %{name}-lite = %{version}-%{release}
 
 %description lite-devel
 This package contains development libraries built with
@@ -94,8 +96,9 @@ which only depends libprotobuf-lite, which is much smaller than libprotobuf but
 lacks descriptors, reflection, and some other features.
 
 %package lite-static
-Summary:        Static development files for %{name}-lite
-Requires:       %{name}-devel = %{version}-%{release}
+Summary: Static development files for %{name}-lite
+Group: Development/Libraries
+Requires: %{name}-devel = %{version}-%{release}
 
 %description lite-static
 This package contains static development libraries built with
@@ -106,142 +109,82 @@ which only depends libprotobuf-lite, which is much smaller than libprotobuf but
 lacks descriptors, reflection, and some other features.
 
 %if %{with python}
-%package -n python2-%{name}
-Summary:        Python 2 bindings for Google Protocol Buffers
-BuildArch:      noarch
-BuildRequires:  python2-devel
-BuildRequires:  python2-setuptools
+%package python
+Summary: Python bindings for Google Protocol Buffers
+Group: Development/Languages
+BuildRequires: python-devel
+BuildRequires: python-setuptools
 # For tests
-BuildRequires:  python2-google-apputils
-Requires:       python2-six >= 1.9
-Conflicts:      %{name}-compiler > %{version}
-Conflicts:      %{name}-compiler < %{version}
-Obsoletes:      %{name}-python < 3.1.0-4
-Provides:       %{name}-python = %{version}-%{release}
-%{?python_provide:%python_provide python2-%{name}}
+BuildRequires: python-google-apputils
+Conflicts: %{name}-compiler > %{version}
+Conflicts: %{name}-compiler < %{version}
 
-%description -n python2-%{name}
-This package contains Python 2 libraries for Google Protocol Buffers
-
-%package -n python%{python3_pkgversion}-%{name}
-Summary:        Python 3 bindings for Google Protocol Buffers
-BuildArch:      noarch
-BuildRequires:  python%{python3_pkgversion}-devel
-BuildRequires:  python%{python3_pkgversion}-setuptools
-# For tests
-BuildRequires:  python%{python3_pkgversion}-google-apputils
-Requires:       python%{python3_pkgversion}-six >= 1.9
-Conflicts:      %{name}-compiler > %{version}
-Conflicts:      %{name}-compiler < %{version}
-Provides:       %{name}-python3 = %{version}-%{release}
-%{?python_provide:%python_provide python%{python3_pkgversion}-%{name}}
-
-%description -n python%{python3_pkgversion}-%{name}
-This package contains Python 3 libraries for Google Protocol Buffers
+%description python
+This package contains Python libraries for Google Protocol Buffers
 %endif
 
 %package vim
-Summary:        Vim syntax highlighting for Google Protocol Buffers descriptions
-BuildArch:      noarch
-Requires:       vim-enhanced
+Summary: Vim syntax highlighting for Google Protocol Buffers descriptions
+Group: Development/Libraries
+Requires: vim-enhanced
 
 %description vim
 This package contains syntax highlighting for Google Protocol Buffers
 descriptions in Vim editor
 
 %package emacs
-Summary:        Emacs mode for Google Protocol Buffers descriptions
-BuildArch:      noarch
-Requires:       emacs(bin) >= 0%{emacs_version}
+Summary: Emacs mode for Google Protocol Buffers descriptions
+Group: Applications/Editors
+Requires: emacs(bin) >= 0%{emacs_version}
 
 %description emacs
 This package contains syntax highlighting for Google Protocol Buffers
 descriptions in the Emacs editor.
 
 %package emacs-el
-Summary:        Elisp source files for Google protobuf Emacs mode
-BuildArch:      noarch
-Requires:       protobuf-emacs = %{version}
+Summary: Elisp source files for Google protobuf Emacs mode
+Group: Applications/Editors
+Requires: protobuf-emacs = %{version}
 
 %description emacs-el
-This package contains the elisp source files for %{name}-emacs
+This package contains the elisp source files for %{pkgname}-emacs
 under GNU Emacs. You do not need to install this package to use
-%{name}-emacs.
+%{pkgname}-emacs.
 
 
 %if %{with java}
 %package java
-Summary:        Java Protocol Buffers runtime library
-BuildArch:      noarch
-BuildRequires:  maven-local
-BuildRequires:  mvn(com.google.code.gson:gson)
-BuildRequires:  mvn(com.google.guava:guava)
-BuildRequires:  mvn(junit:junit)
-BuildRequires:  mvn(org.apache.felix:maven-bundle-plugin)
-BuildRequires:  mvn(org.apache.maven.plugins:maven-antrun-plugin)
-BuildRequires:  mvn(org.apache.maven.plugins:maven-source-plugin)
-BuildRequires:  mvn(org.codehaus.mojo:build-helper-maven-plugin)
-BuildRequires:  mvn(org.easymock:easymock)
-Conflicts:      %{name}-compiler > %{version}
-Conflicts:      %{name}-compiler < %{version}
-Obsoletes:      %{name}-javanano < 3.6.0
+Summary: Java Protocol Buffers runtime library
+Group:   Development/Languages
+BuildRequires:    maven-local
+BuildRequires:    mvn(org.apache.felix:maven-bundle-plugin)
+BuildRequires:    mvn(org.apache.maven.plugins:maven-antrun-plugin)
+Conflicts:        %{name}-compiler > %{version}
+Conflicts:        %{name}-compiler < %{version}
 
 %description java
 This package contains Java Protocol Buffers runtime library.
 
-%package java-util
-Summary:        Utilities for Protocol Buffers
-BuildArch:      noarch
-
-%description java-util
-Utilities to work with protos. It contains JSON support
-as well as utilities to work with proto3 well-known types.
-
 %package javadoc
-Summary:        Javadoc for %{name}-java
-BuildArch:      noarch
+Summary: Javadocs for %{name}-java
+Group:   Documentation
+Requires: %{name}-java = %{version}-%{release}
 
 %description javadoc
 This package contains the API documentation for %{name}-java.
 
-%package parent
-Summary:        Protocol Buffer Parent POM
-BuildArch:      noarch
-
-%description parent
-Protocol Buffer Parent POM.
-
 %endif
 
 %prep
-%setup -q -n %{name}-%{version}%{?rcver} -a 3 -a 4
-%autopatch -p1
-mv googlemock-release-1.7.0 gmock
-mv googletest-release-1.7.0 gmock/gtest
-find -name \*.cc -o -name \*.h | xargs chmod -x
+%setup -q -n %{name}-%{version}-beta-4
+%patch0 -p1 -b .emacs
+%patch1 -p1 -b .gmock
 chmod 644 examples/*
 %if %{with java}
 %pom_remove_parent java/pom.xml
-%pom_remove_dep org.easymock:easymockclassextension java/pom.xml java/*/pom.xml
-# These use easymockclassextension
-rm java/core/src/test/java/com/google/protobuf/ServiceTest.java
-#rm -r java/core/src/test
-
-# Make OSGi dependency on sun.misc package optional
-%pom_xpath_inject "pom:configuration/pom:instructions" "<Import-Package>sun.misc;resolution:=optional,*</Import-Package>" java/core
-
-# Backward compatibility symlink
-%mvn_file :protobuf-java:jar: %{name}/%{name}-java %{name}
-
-# This test is incredibly slow on arm
-# https://github.com/google/protobuf/issues/2389
-%ifarch %{arm}
-mv java/core/src/test/java/com/google/protobuf/IsValidUtf8Test.java \
-   java/core/src/test/java/com/google/protobuf/IsValidUtf8Test.java.slow
+%pom_remove_dep org.easymock:easymockclassextension java/pom.xml
+rm -rf java/src/test
 %endif
-%endif
-
-rm -f src/solaris/libstdc++.la
 
 %build
 iconv -f iso8859-1 -t utf-8 CONTRIBUTORS.txt > CONTRIBUTORS.txt.utf8
@@ -254,40 +197,43 @@ make %{?_smp_mflags}
 
 %if %{with python}
 pushd python
-%py2_build
-%py3_build
+python ./setup.py build
+sed -i -e 1d build/lib/google/protobuf/descriptor_pb2.py
 popd
 %endif
 
 %if %{with java}
-%mvn_build -s -- -f java/pom.xml
+pushd java
+%mvn_file : %{name}
+%mvn_build
+popd
 %endif
 
 emacs -batch -f batch-byte-compile editors/protobuf-mode.el
 
+%if %{with gtest}
+# Tests are not working with our version of gmock
 %check
-# TODO: failures; get them fixed and remove || :
-# https://github.com/google/protobuf/issues/631
-make %{?_smp_mflags} check || :
+make %{?_smp_mflags} check
+%endif
 
 %install
+rm -rf %{buildroot}
 make %{?_smp_mflags} install DESTDIR=%{buildroot} STRIPBINARIES=no INSTALL="%{__install} -p" CPPROG="cp -p"
 find %{buildroot} -type f -name "*.la" -exec rm -f {} \;
 
 %if %{with python}
 pushd python
-#python ./setup.py install --root=%{buildroot} --single-version-externally-managed --record=INSTALLED_FILES --optimize=1
-%py2_install
-%py3_install
-find %{buildroot}%{python2_sitelib} %{buildroot}%{python3_sitelib} -name \*.py |
-  xargs sed -i -e '1{\@^#!@d}'
+python ./setup.py install --root=%{buildroot} --single-version-externally-managed --record=INSTALLED_FILES --optimize=1
 popd
 %endif
 install -p -m 644 -D %{SOURCE1} %{buildroot}%{_datadir}/vim/vimfiles/ftdetect/proto.vim
 install -p -m 644 -D editors/proto.vim %{buildroot}%{_datadir}/vim/vimfiles/syntax/proto.vim
 
 %if %{with java}
+pushd java
 %mvn_install
+popd
 %endif
 
 mkdir -p $RPM_BUILD_ROOT%{emacs_lispdir}
@@ -296,18 +242,24 @@ install -p -m 0644 editors/protobuf-mode.el $RPM_BUILD_ROOT%{emacs_lispdir}
 install -p -m 0644 editors/protobuf-mode.elc $RPM_BUILD_ROOT%{emacs_lispdir}
 install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 
-%ldconfig_scriptlets
-%ldconfig_scriptlets lite
-%ldconfig_scriptlets compiler
+
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
+
+%post lite -p /sbin/ldconfig
+%postun lite -p /sbin/ldconfig
+
+%post compiler -p /sbin/ldconfig
+%postun compiler -p /sbin/ldconfig
 
 %files
-%{_libdir}/libprotobuf.so.17*
+%{_libdir}/libprotobuf.so.*
 %doc CHANGES.txt CONTRIBUTORS.txt README.md
 %license LICENSE
 
 %files compiler
 %{_bindir}/protoc
-%{_libdir}/libprotoc.so.17*
+%{_libdir}/libprotoc.so.*
 %doc README.md
 %license LICENSE
 
@@ -317,14 +269,14 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %{_libdir}/libprotobuf.so
 %{_libdir}/libprotoc.so
 %{_libdir}/pkgconfig/protobuf.pc
-%doc examples/add_person.cc examples/addressbook.proto examples/list_people.cc examples/Makefile examples/README.md
+%doc examples/add_person.cc examples/addressbook.proto examples/list_people.cc examples/Makefile examples/README.txt
 
 %files static
 %{_libdir}/libprotobuf.a
 %{_libdir}/libprotoc.a
 
 %files lite
-%{_libdir}/libprotobuf-lite.so.17*
+%{_libdir}/libprotobuf-lite.so.*
 
 %files lite-devel
 %{_libdir}/libprotobuf-lite.so
@@ -334,19 +286,11 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %{_libdir}/libprotobuf-lite.a
 
 %if %{with python}
-%files -n python2-protobuf
-%dir %{python2_sitelib}/google
-%{python2_sitelib}/google/protobuf/
-%{python2_sitelib}/protobuf-%{version}%{?rcver}-py2.?.egg-info/
-%{python2_sitelib}/protobuf-%{version}%{?rcver}-py2.?-nspkg.pth
-%doc python/README.md
-%doc examples/add_person.py examples/list_people.py examples/addressbook.proto
-
-%files -n python%{python3_pkgversion}-protobuf
-%dir %{python3_sitelib}/google
-%{python3_sitelib}/google/protobuf/
-%{python3_sitelib}/protobuf-%{version}%{?rcver}-py3.?.egg-info/
-%{python3_sitelib}/protobuf-%{version}%{?rcver}-py3.?-nspkg.pth
+%files python
+%dir %{python_sitelib}/google
+%{python_sitelib}/google/protobuf/
+%{python_sitelib}/protobuf-%{version}*-py2.?.egg-info/
+%{python_sitelib}/protobuf-%{version}*-py2.?-nspkg.pth
 %doc python/README.md
 %doc examples/add_person.py examples/list_people.py examples/addressbook.proto
 %endif
@@ -363,105 +307,15 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %{emacs_lispdir}/protobuf-mode.el
 
 %if %{with java}
-%files java -f .mfiles-protobuf-java
+%files java -f java/.mfiles
 %doc examples/AddPerson.java examples/ListPeople.java
-%doc java/README.md
-%license LICENSE
 
-%files java-util -f .mfiles-protobuf-java-util
-
-%files javadoc -f .mfiles-javadoc
-%license LICENSE
-
-%files parent -f .mfiles-protobuf-parent
-%license LICENSE
+%files javadoc -f java/.mfiles-javadoc
 %endif
 
 %changelog
-* Tue Oct 23 2018 Felix Kaechele <heffer@fedoraproject.org> - 3.6.1-1
-- update to 3.6.1
-- obsolete javanano subpackage; discontinued upstream
-
-* Fri Jul 27 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3.5.0-8
-- Rebuild for new binutils
-
-* Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 3.5.0-7
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
-
-* Tue Jun 19 2018 Miro Hrončok <mhroncok@redhat.com> - 3.5.0-6
-- Rebuilt for Python 3.7
-
-* Wed Feb 21 2018 Iryna Shcherbina <ishcherb@redhat.com> - 3.5.0-5
-- Update Python 2 dependency declarations to new packaging standards
-  (See https://fedoraproject.org/wiki/FinalizingFedoraSwitchtoPython3)
-
-* Fri Feb 09 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3.5.0-4
-- Escape macros in %%changelog
-
-* Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 3.5.0-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
-
-* Fri Feb 02 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3.5.0-2
-- Switch to %%ldconfig_scriptlets
-
-* Thu Nov 23 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3.5.0-1
-- Update to 3.5.0
-
-* Mon Nov 13 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 3.4.1-1
-- Update to 3.4.1
-
-* Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 3.3.1-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
-
-* Thu Jul 27 2017 Fedora Release Engineering <releng@fedoraproject.org> - 3.3.1-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
-
-* Tue Jun 27 2017 Mat Booth <mat.booth@redhat.com> - 3.3.1-2
-- Make OSGi dependency on sun.misc package optional. This package is not
-  available in all execution environments and will not be available in Java 9.
-
-* Mon Jun 12 2017 Orion Poplawski <orion@cora.nwra.com> - 3.3.1-1
-- Update to 3.3.1
-
-* Mon May 15 2017 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.0-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_27_Mass_Rebuild
-
-* Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 3.2.0-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
-
-* Fri Jan 27 2017 Orion Poplawski <orion@cora.nwra.com> - 3.2.0-1
-- Update to 3.2.0 final
-
-* Mon Jan 23 2017 Orion Poplawski <orion@cora.nwra.com> - 3.2.0-0.1.rc2
-- Update to 3.2.0rc2
-
-* Mon Dec 19 2016 Miro Hrončok <mhroncok@redhat.com> - 3.1.0-6
-- Rebuild for Python 3.6
-
-* Sat Nov 19 2016 Orion Poplawski <orion@cora.nwra.com> - 3.1.0-5
-- Disable slow test on arm
-
-* Fri Nov 18 2016 Orion Poplawski <orion@cora.nwra.com> - 3.1.0-4
-- Ship python 3 module
-
-* Fri Nov 18 2016 Orion Poplawski <orion@cora.nwra.com> - 3.1.0-3
-- Fix jar file compat symlink
-
-* Fri Nov 18 2016 Orion Poplawski <orion@cora.nwra.com> - 3.1.0-2
-- Add needed python requirement
-
-* Fri Nov 04 2016 Orion Poplawski <orion@cora.nwra.com> - 3.1.0-2
-- Make various sub-packages noarch
-
-* Fri Nov 04 2016 gil cattaneo <puntogil@libero.it> 3.1.0-2
-- enable javanano
-- minor changes to adapt to current guidelines
-
-* Fri Nov 04 2016 Orion Poplawski <orion@cora.nwra.com> - 3.1.0-1
-- Update to 3.1.0
-
-* Tue Jul 19 2016 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6.1-5
-- https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
+* Fri Jul 22 2016 Troy Dawson <tdawson@redhat.com> - 3.0.0-0.beta-4
+- Update to 3.0.0 beta4
 
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 2.6.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
@@ -589,7 +443,7 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 - Rebuilt for https://fedoraproject.org/wiki/Features/Python_2.7/MassRebuild
 
 * Thu Jul 15 2010 James Laska <jlaska@redhat.com> - 2.3.0-3
-- Correct use of %%bcond macros
+- Correct use of %bcond macros
 
 * Wed Jul 14 2010 James Laska <jlaska@redhat.com> - 2.3.0-2
 - Enable python and java sub-packages
