@@ -2,27 +2,39 @@
 %global mydocs __tmp_docdir
 #
 Name:           tvlsim
-Version:        1.00.0
-Release:        4%{?dist}
+Version:        1.01.1
+Release:        1%{?dist}
 
 Summary:        Travel Market Simulator
 
-Group:          System Environment/Libraries 
 License:        LGPLv2+
-URL:            http://%{name}.sourceforge.net
-Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
-BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+URL:            http://github.com/airsim/%{name}
+Source0:        %{url}/archive/%{name}-%{version}.tar.gz
 
-BuildRequires:  cmake, python-devel
-BuildRequires:  boost-devel, soci-mysql-devel, readline-devel
-%if 0%{?fedora} >= 22
-BuildRequires:  zeromq2-devel
-%else
+BuildRequires:  gcc-c++
+BuildRequires:  cmake
+BuildRequires:  python3-devel
+BuildRequires:  boost-devel
+BuildRequires:  boost-python3-devel
+BuildRequires:  readline-devel
 BuildRequires:  zeromq-devel
-%endif
-BuildRequires:  stdair-devel, airsched-devel, simfqt-devel, sevmgr-devel
-BuildRequires:  airrac-devel, rmol-devel, airinv-devel, simcrs-devel
-BuildRequires:  trademgen-devel, travelccm-devel
+BuildRequires:  cppzmq-devel
+BuildRequires:  sevmgr-devel
+BuildRequires:  soci-mysql-devel
+BuildRequires:  soci-sqlite3-devel
+BuildRequires:  stdair-devel
+BuildRequires:  airrac-devel
+BuildRequires:  rmol-devel
+BuildRequires:  python3-rmol
+BuildRequires:  sevmgr-devel
+BuildRequires:  /usr/bin/epstopdf
+BuildRequires:  airtsp-devel
+BuildRequires:  simfqt-devel
+BuildRequires:  airinv-devel
+BuildRequires:  simcrs-devel
+BuildRequires:  trademgen-devel
+BuildRequires:  python3-trademgen
+BuildRequires:  travelccm-devel
 
 
 %description
@@ -58,7 +70,6 @@ for airline-related travel market simulation.
 
 %package        devel
 Summary:        Header files, libraries and development helper tools for %{name}
-Group:          Development/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -69,12 +80,10 @@ programs using %{name}, you will need to install %{name}-devel.
 
 %package        doc
 Summary:        HTML documentation for the %{name} library
-Group:          Documentation
-%if 0%{?fedora} || 0%{?rhel} > 5
 BuildArch:      noarch
-%endif
 BuildRequires:  tex(latex)
-BuildRequires:  doxygen, ghostscript
+BuildRequires:  doxygen
+BuildRequires:  ghostscript
 
 %description    doc
 This package contains HTML pages, as well as a PDF reference manual,
@@ -84,39 +93,31 @@ online (http://%{name}.org).
 
 
 %prep
-%setup -q
+%autosetup -n %{name}-%{name}-%{version} 
 
 
 %build
 %cmake .
-make %{?_smp_mflags}
+%make_build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
+%make_install
 
 mkdir -p %{mydocs}
-mv $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/html %{mydocs}
+mv $RPM_BUILD_ROOT%{_docdir}/%{name}/html %{mydocs}
 rm -f %{mydocs}/html/installdox
 
 # Remove additional documentation files (those files are already available
 # in the project top directory)
-rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/{NEWS,README,AUTHORS}
+rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}/{NEWS,README,AUTHORS}
 
 %check
 #ctest
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
 
 
 %files
-%defattr(-,root,root,-)
-%doc AUTHORS ChangeLog COPYING NEWS README
+%doc AUTHORS ChangeLog COPYING NEWS README.md
 %{_bindir}/%{name}
 %{_bindir}/simulate
 %{_bindir}/TvlSimServer
@@ -126,7 +127,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/TvlSimServer.1.*
 
 %files devel
-%defattr(-,root,root,-)
 %{_includedir}/%{name}
 %{_bindir}/%{name}-config
 %{_libdir}/lib%{name}.so
@@ -138,12 +138,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/%{name}-library.3.*
 
 %files doc
-%defattr(-,root,root,-)
 %doc %{mydocs}/html
 %doc COPYING
 
 
 %changelog
+* Thu Jan 17 2019 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.01.1-1
+- Upstream update
+
 * Sat Apr 18 2015 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.00.0-4
 - On Fedora 22+, ZeroMQ v2 is no longer the default.
 

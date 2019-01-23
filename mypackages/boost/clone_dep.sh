@@ -1,14 +1,14 @@
 #!/bin/bash
 
 #
-WS_DIR=workspace
+WS_DIR="workspace"
 if [ ! -d ${WS_DIR} ]
 then
 	mkdir -p ${WS_DIR}
 fi
 
 #
-BOOST_DEPLIST=`cat boost_deplist_pack_uniq.txt`
+BOOST_DEPLIST=$(cat boost_deplist_pack_uniq.txt)
 pushd ${WS_DIR}
 for _pack in ${BOOST_DEPLIST}
 do

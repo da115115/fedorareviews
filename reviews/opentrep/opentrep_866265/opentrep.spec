@@ -22,7 +22,7 @@ Summary:        C++ library providing a clean API for parsing travel-focused req
 # which is BSD
 License:        LGPLv2+ and BSD
 URL:            http://github.com/trep/%{name}
-Source0:        %{url}/%{name}/archive/%{name}-%{version}.tar.gz
+Source0:        %{url}/archive/%{name}-%{version}.tar.gz
 
 Requires:       %{name}-data = %{version}-%{release}
 
@@ -129,7 +129,7 @@ Summary:        Python bindings for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 BuildRequires:  python3-devel
 BuildRequires:  python3-setuptools
-Requires:       protobuf-python
+Requires:       python3-protobuf
 %{?python_provide:%python_provide python3-%{name}}
 
 %description -n python3-%{name}
@@ -171,6 +171,13 @@ chmod a-x %{buildroot}%{python3_sitearch}/py%{name}/Travel_pb2.py
 #check
 #ctest
 
+%if %{with python}
+%post -n python3-%{name}
+ln -s -f %{python3_sitearch}/py%{name}/py%{name} %{_bindir}/py%{name}
+
+%postun -n python3-%{name}
+rm -f %{_bindir}/py%{name}
+%endif
 
 %files
 %doc AUTHORS ChangeLog COPYING NEWS README.md
@@ -212,13 +219,14 @@ chmod a-x %{buildroot}%{python3_sitearch}/py%{name}/Travel_pb2.py
 
 %if %{with python}
 %files -n python3-%{name}
+#%%{_bindir}/py%%{name}
 %{python3_sitearch}/py%{name}/
 %{_mandir}/man1/py%{name}.1.*
 %endif
 
 
 %changelog
-* Tue Jan 16 2019 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.07.1-1
+* Wed Jan 16 2019 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.07.1-1
 - Upstream update
 
 * Tue Oct 16 2018 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.07.0-1
