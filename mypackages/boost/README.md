@@ -32,7 +32,10 @@ f30-boost                      f30-boost                      f30-boost
 ## Clone and build Boost itself with the build tag
 ```bash
 $ cd workspace && fedpkg clone boost && cd boost
-$ fedpkg build --nowait --target 'f30-boost' --srpm
+$ fedpkg build --nowait --target 'f30-boost'
+Building boost-1.69.0-1.fc30 for f30-boost
+Created task: 32204506
+Task info: https://koji.fedoraproject.org/koji/taskinfo?taskID=32204506
 $ cd ../..
 ```
 
