@@ -55,12 +55,12 @@
   %bcond_without quadmath
 %endif
 
-Name: boost169
+%global version_suffix 1.69
+%global version_enc 1_69_0
+Name: boost%{version_suffix}
 %global real_name boost
 Summary: The free peer-reviewed portable C++ source libraries
 Version: 1.69.0
-%global version_enc 1_69_0
-%global version_suffix 169
 Release: 1%{?dist}
 License: Boost and MIT and Python
 
@@ -1685,5 +1685,6 @@ fi
 %{_mandir}/man1/bjam%{version_suffix}.1*
 
 %changelog
-* Sat Jan 19 2019 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.69.0-1
-- Transformed boost-1.69.0-1 into boost169-1.69.0-1 (BZ#xxx)
+* Wed Jan 23 2019 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 1.69.0-1
+- Transformed boost-1.69.0-1 into boost169-1.69.0-1 (BZ#1667725)
+
